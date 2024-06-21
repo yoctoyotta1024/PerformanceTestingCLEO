@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.3.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/36dba4ad1ae0175447caa6f1ecc4b8b36b433270..v0.3.0) - 2024-06-21
+#### Bug Fixes
+- make kokkos and cleo includes work - ([829e4e3](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/829e4e3055e6500a812d0dac8d4e930098c97903)) - clara.bayley
+- correct conda environment - ([06029a3](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/06029a3955290835a799372fe23e07f0eaa72eeb)) - clara.bayley
+- correct urls in changelog - ([83a7c80](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/83a7c806396c4de3dc963fcbf9f986fedbefee9b)) - clara.bayley
+- use correct repo for cog - ([4b37a66](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/4b37a6683168767a3c8879965bea82378189e517)) - clara.bayley
+#### Features
+- importing CLEO library, building and compiling works - ([6b4295e](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/6b4295e5c5680730286b289d72c5afdd0f7ca904)) - clara.bayley
+- CMakeLists used to fetch external libraries for CLEO, Kokkos and yaml-cpp - ([36dba4a](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/36dba4ad1ae0175447caa6f1ecc4b8b36b433270)) - clara.bayley
+#### Miscellaneous Chores
+- formatting - ([a152cd8](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/a152cd895bfc577db295ef7d68adb249d1e44695)) - clara.bayley
+
+- - -
+
 ## [v0.2.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/5f19b9318f501442018bc321f27f02825b14ab02..v0.2.0) - 2024-06-21
 #### Features
 - more pre-commit and CI features - ([b0f7cc5](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/b0f7cc5c53e4098e7d77038cfb3b48711cf65ab6)) - clara.bayley

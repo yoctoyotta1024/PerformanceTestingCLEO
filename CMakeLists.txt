@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.18.0)
 project(project
   LANGUAGES CXX
   DESCRIPTION "PerformanceTestingCLEO"
-  VERSION 0.0.0
+  VERSION 0.1.0
 )
 
 ## Find and use the pybind11 package

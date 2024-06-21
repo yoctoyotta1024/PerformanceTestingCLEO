@@ -1,25 +1,36 @@
+# set cmake version
 cmake_minimum_required(VERSION 3.18.0)
+# cmake_minimum_required(VERSION 3.21.1) ### if using Kokkos with nvc++ compiler on Levante
+
 project(project
   LANGUAGES CXX
-  DESCRIPTION "PerformanceTestingCLEO"
+  DESCRIPTION "PerformanceTestingCLEO by Clara Bayley"
   VERSION 0.1.0
 )
 
-## Find and use the pybind11 package
-include(FetchContent)
-FetchContent_Declare(
-  pybind11
-  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-  URL https://github.com/pybind/pybind11/archive/refs/tags/v2.11.1.tar.gz
-  URL_HASH MD5=49e92f92244021912a56935918c927d0
-)
-FetchContent_MakeAvailable(pybind11)
+# ensure C++ compiler uses certain settings
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+set(CMAKE_CXX_STANDARD "20")
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CXX_EXTENSIONS ON)
 
-## Create the Python extension module from C++ source files
-set(SOURCES libs/src_cxx/mock_cxx.cpp)
-pybind11_add_module(mock_cxx MODULE ${SOURCES})
+# install CLEO for project
+set(cleopath ${CMAKE_SOURCE_DIR}/extern/cleo)
+message(STATUS "Using CLEO installation from: ${cleopath}")
+add_subdirectory(${cleopath})
 
-set_target_properties(mock_cxx PROPERTIES
-  CXX_STANDARD 20
-  CMAKE_CXX_STANDARD_REQUIRED ON
-  CMAKE_CXX_EXTENSIONS ON)
+# install Kokkos for project
+set(kokkospath ${CMAKE_SOURCE_DIR}/extern/kokkos)
+message(STATUS "Using Kokkos installation from: ${kokkospath}")
+add_subdirectory(${kokkospath})
+
+# install yaml-cpp for project
+set(yamlcpppath ${CMAKE_SOURCE_DIR}/extern/yaml-cpp)
+message(STATUS "Using yaml-cpp installation from: ${yamlcpppath}")
+add_subdirectory(${yamlcpppath})
+
+# print default compiler flags
+message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
+
+# add directories of CLEO libray and main program
+add_subdirectory(src)

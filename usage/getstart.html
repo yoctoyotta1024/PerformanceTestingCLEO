@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Our Docs" href="ourdocs.html" /><link rel="prev" title="Welcome to GoodSciProjTemplate’s Documentation!" href="../index.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Our Docs" href="ourdocs.html" /><link rel="prev" title="Welcome to PerformanceTestingCLEO’s Documentation!" href="../index.html" />
 
     <!-- Generated with Sphinx 7.3.7 and Furo 2024.05.06 -->
-        <title>Getting Started - GoodSciProjTemplate 0.0.0 documentation</title>
+        <title>Getting Started - PerformanceTestingCLEO 0.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=362ab14a" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=387cc868" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -180,7 +180,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">GoodSciProjTemplate 0.0.0 documentation</div></a>
+      <a href="../index.html"><div class="brand">PerformanceTestingCLEO 0.0.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -204,7 +204,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
   
-  <span class="sidebar-brand-text">GoodSciProjTemplate 0.0.0 documentation</span>
+  <span class="sidebar-brand-text">PerformanceTestingCLEO 0.0.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -216,15 +216,7 @@
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ourdocs.html">Our Docs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ourtests.html">Our Tests</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../src_py/index.html">Python Package</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Python Package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../src_py/mock.html">Python Mock Module</a></li>
-</ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../src_cxx/index.html">C++ Package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of C++ Package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../src_cxx/mock_cxx.html">C++ Mock Module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/yoctoyotta1024/GoodSciProjTemplate.git">GitHub Repo</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/yoctoyotta1024/PerformanceTestingCLEO.git">GitHub Repo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact Us!</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
@@ -270,14 +262,14 @@
         <article role="main" id="furo-main-content">
           <section id="getting-started">
 <span id="getstart"></span><h1>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h1>
-<p>Clone GoodSciProjTemplate’s GitHub repository:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/yoctoyotta1024/GoodSciProjTemplate.git
+<p>Clone PerformanceTestingCLEO’s GitHub repository:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/yoctoyotta1024/PerformanceTestingCLEO.git
 </pre></div>
 </div>
 <p>and then create an environment with the necessary dependencies installed (using micromamba, mamba
 or conda as listed in the environment.yml):</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>micromamba<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>environment.yml
-<span class="gp">$ </span>micromamba<span class="w"> </span>activate<span class="w"> </span>scienv
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>micromamba<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>--file<span class="w"> </span>environment.yml<span class="w"> </span>--prefix<span class="w"> </span><span class="o">[</span>name<span class="w"> </span><span class="k">for</span><span class="w"> </span>your<span class="w"> </span>environment<span class="o">]</span>
+<span class="gp">$ </span>micromamba<span class="w"> </span>activate<span class="w"> </span><span class="o">[</span>name<span class="w"> </span>of<span class="w"> </span>your<span class="w"> </span>environment<span class="o">]</span>
 </pre></div>
 </div>
 <p>Finally install the pre-commit hooks:</p>
@@ -300,7 +292,7 @@ GitHub repo…</p>
 <section id="necessary-second-steps">
 <h2>Necessary second steps:<a class="headerlink" href="#necessary-second-steps" title="Link to this heading">¶</a></h2>
 <ol class="arabic simple">
-<li><p>Make the project name yours instead of “GoodSciProjTemplate”.</p></li>
+<li><p>Make the project name yours instead of “PerformanceTestingCLEO”.</p></li>
 <li><p>Make the release/version yours instead of “0.0.0”.</p></li>
 <li><p>Make the citation and liscence refer to you instead of me.</p></li>
 <li><p>Write a new README.md (shorter is generally better) and include a link to your documentation in it.</p></li>

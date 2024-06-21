@@ -7,6 +7,9 @@ project(project
   VERSION 0.1.0
 )
 
+message("CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}")
+message("CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
+
 # ensure C++ compiler uses certain settings
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 set(CMAKE_CXX_STANDARD "20")
@@ -18,15 +21,8 @@ set(cleopath ${CMAKE_SOURCE_DIR}/extern/cleo)
 message(STATUS "Using CLEO installation from: ${cleopath}")
 add_subdirectory(${cleopath})
 
-# install Kokkos for project
-set(kokkospath ${CMAKE_SOURCE_DIR}/extern/kokkos)
-message(STATUS "Using Kokkos installation from: ${kokkospath}")
-add_subdirectory(${kokkospath})
-
-# install yaml-cpp for project
-set(yamlcpppath ${CMAKE_SOURCE_DIR}/extern/yaml-cpp)
-message(STATUS "Using yaml-cpp installation from: ${yamlcpppath}")
-add_subdirectory(${yamlcpppath})
+message("CLEO_SOURCE_DIR: ${CLEO_SOURCE_DIR}")
+message("CLEO_BINARY_DIR: ${CLEO_BINARY_DIR}")
 
 # print default compiler flags
 message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")

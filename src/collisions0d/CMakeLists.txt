@@ -17,7 +17,7 @@ add_executable(${exec} EXCLUDE_FROM_ALL "main.cpp")
 # Add directories and link libraries to target
 target_link_libraries(${exec} PRIVATE cartesiandomain "${CLEOLIBS}")
 target_link_libraries(${exec} PUBLIC Kokkos::kokkos)
-target_include_directories(${exec} PRIVATE "${CMAKE_SOURCE_DIR}/libs")
+target_include_directories(${exec} PRIVATE "${CLEO_BINARY_DIR}/lib") # CLEO libs directory
 
 # set specific C++ compiler options for target (optional)
 #target_compile_options(${exec} PRIVATE)

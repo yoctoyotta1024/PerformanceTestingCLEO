@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.18.0)
 project(project
   LANGUAGES CXX
   DESCRIPTION "PerformanceTestingCLEO by Clara Bayley"
-  VERSION 0.1.0
+  VERSION 1.0.0
 )
 
 message("CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}")

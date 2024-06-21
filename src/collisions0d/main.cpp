@@ -18,9 +18,17 @@
  * File Description:
  */
 
+#include <Kokkos_Core.hpp>
 #include <iostream>
 
+#include "zarr/fsstore.hpp"
+
 int main(int argc, char *argv[]) {
-  std::cout << "Hello World\n";
+  auto store = FSStore("/home/m/m300950/performance_testing_cleo/test.zarr");
+
+  Kokkos::initialize(argc, argv);
+  { std::cout << "Hello World\n"; }
+  Kokkos::finalize();
+
   return 0;
 }

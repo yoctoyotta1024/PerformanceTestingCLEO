@@ -32,7 +32,7 @@ Contents
    usage/getstart
    usage/ourdocs
    usage/ourtests
-   
+
    GitHub Repo <https://github.com/yoctoyotta1024/PerformanceTestingCLEO.git>
    usage/contributing
    usage/contact

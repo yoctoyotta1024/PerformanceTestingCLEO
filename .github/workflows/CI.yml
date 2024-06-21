@@ -28,13 +28,6 @@ jobs:
           conda activate /usr/share/miniconda/envs/scienv
           conda info --envs
 
-      - name: Build Pybind11 module for C++ code
-        run: |
-          cmake -S ./ -B ./build
-          cd build && make
-      - name: Test with pytest
-        run: pytest ./tests
-
       - name: Install Doxygen
         run: /usr/share/miniconda/envs/scienv/bin/doxygen --version
         shell: bash

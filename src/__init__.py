@@ -1,9 +1,9 @@
 '''
 Copyright (c) 2024 MPI-M, Clara Bayley
 
------ GoodSciProjTemplate -----
+----- PerformanceTestingCLEO -----
 File: __init__.py
-Project: src_py
+Project: libs
 Created Date: Tuesday 27th February 2024
 Author: Clara Bayley (CB)
 Additional Contributors:

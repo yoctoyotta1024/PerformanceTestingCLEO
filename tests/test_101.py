@@ -1,7 +1,7 @@
 '''
 Copyright (c) 2024 MPI-M, Clara Bayley
 
------ GoodSciProjTemplate -----
+----- PerformanceTestingCLEO -----
 File: test_101.py
 Project: tests
 Created Date: Tuesday 27th February 2024

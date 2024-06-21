@@ -3,19 +3,19 @@
 Getting Started
 ===============
 
-Clone GoodSciProjTemplate's GitHub repository:
+Clone PerformanceTestingCLEO's GitHub repository:
 
 .. code-block:: console
 
-  $ git clone https://github.com/yoctoyotta1024/GoodSciProjTemplate.git
+  $ git clone https://github.com/yoctoyotta1024/PerformanceTestingCLEO.git
 
 and then create an environment with the necessary dependencies installed (using micromamba, mamba
 or conda as listed in the environment.yml):
 
 .. code-block:: console
 
-  $ micromamba env create -f environment.yml
-  $ micromamba activate scienv
+  $ micromamba env create --file environment.yml --prefix [name for your environment]
+  $ micromamba activate [name of your environment]
 
 Finally install the pre-commit hooks:
 
@@ -40,7 +40,7 @@ Necessary first steps:
 Necessary second steps:
 #######################
 
-#. Make the project name yours instead of "GoodSciProjTemplate".
+#. Make the project name yours instead of "PerformanceTestingCLEO".
 #. Make the release/version yours instead of "0.0.0".
 #. Make the citation and liscence refer to you instead of me.
 #. Write a new README.md (shorter is generally better) and include a link to your documentation in it.

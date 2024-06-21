@@ -1,7 +1,7 @@
 '''
 Copyright (c) 2024 MPI-M, Clara Bayley
 
------ GoodSciProjTemplate -----
+----- PerformanceTestingCLEO -----
 File: conf.py
 Project: source
 Created Date: Tuesday 27th February 2024
@@ -38,7 +38,7 @@ sys.path.insert(0, pathlib.Path(__file__).parents[2].resolve().as_posix())
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'GoodSciProjTemplate'
+project = 'PerformanceTestingCLEO'
 license = 'BSD 3-Clause'
 copyright = '(2024) MPI-M, Clara Bayley'
 author = 'Clara Bayley & Other Developers'
@@ -74,7 +74,7 @@ exclude_patterns = []
 
 # Integrate doxygen with sphinx via breathe
 breathe_projects = {
-    "src_cxx"          : "../build/doxygen/xml/",
+    "src"          : "../build/doxygen/xml/",
 }
 
 breathe_default_project = 'proj'

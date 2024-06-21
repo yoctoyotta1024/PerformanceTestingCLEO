@@ -8,7 +8,7 @@ George Datseris.
 ## Install
 To (locally) reproduce this project simply clone the repository:
 ```
-git clone https://github.com/yoctoyotta1024/GoodSciProjTemplate.git
+git clone https://github.com/yoctoyotta1024/PerformanceTestingCLEO.git
 ```
 and then create an environment with the necessary dependencies installed (using micromamba, mamba
 or conda as listed in the environment.yml):
@@ -23,7 +23,7 @@ GitHub repository.
 ## Documentation
 Some documentation has been set up for this project which you should be able to find hosted online
 here:
-### https://yoctoyotta1024.github.io/GoodSciProjTemplate/
+### https://yoctoyotta1024.github.io/PerformanceTestingCLEO/
 ... If not, please raise an issue on the GitHub repository.
 
 Alternatively, You can build and view the documentation locally. First build the .xml

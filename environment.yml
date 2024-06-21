@@ -1,4 +1,4 @@
-name: scienv
+name: perftestsenv
 dependencies:
     - python>=3.9
     - pytest

@@ -6,12 +6,12 @@ Contact Us!
 via GitHub:
 ###########
 
-Create a `GitHub issue <https://github.com/yoctoyotta1024/GoodSciProjTemplate/issues/new>`_
+Create a `GitHub issue <https://github.com/yoctoyotta1024/PerformanceTestingCLEO/issues/new>`_
 #####################################################################################
 
 .. _merge:
 
-Create a `GitHub merge request <https://github.com/yoctoyotta1024/GoodSciProjTemplate/compare>`_
+Create a `GitHub merge request <https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare>`_
 #########################################################################################################
 
 Main Developers

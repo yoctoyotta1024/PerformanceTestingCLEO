@@ -1,0 +1,57 @@
+/*
+ * Copyright (c) 2024 MPI-M, Clara Bayley
+ * 
+ * 
+ * ----- CLEO -----
+ * File: cog.toml
+ * Project: performance_testing_cleo
+ * Created Date: Friday 21st June 2024
+ * Author: Clara Bayley (CB)
+ * Additional Contributors:
+ * -----
+ * Last Modified: Friday 21st June 2024
+ * Modified By: CB
+ * -----
+ * License: BSD 3-Clause "New" or "Revised" License
+ * https://opensource.org/licenses/BSD-3-Clause
+ * -----
+ * File Description:
+ */
+
+
+from_latest_tag = false
+ignore_merge_commits = true
+disable_changelog = false
+disable_bump_commit = false
+generate_mono_repository_global_tag = true
+branch_whitelist = []
+skip_ci = "[skip ci]"
+skip_untracked = false
+tag_prefix = "v"
+pre_package_bump_hooks = []
+post_package_bump_hooks = []
+
+pre_bump_hooks = [
+    "echo 'bumping version from {{latest}} to {{version}}'"
+]
+
+post_bump_hooks = [
+    "git push",
+    "echo 'bump done with chore commit for notes appended to changelog'",
+]
+
+[git_hooks]
+
+[commit_types]
+
+[changelog]
+path = "CHANGELOG.md"
+template = "remote"
+remote = "github.com"
+repository = "CLEO"
+owner = "yoctoyotta1024"
+authors = [{ username = "yoctoyotta1024", signature = "Clara Bayley" }]
+
+[bump_profiles]
+
+[packages]

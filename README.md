@@ -15,7 +15,7 @@ conda env create -f environment.yml --prefix [name for your environment]
 conda activate [name of your environment]
 ```
 Finally you need to run ``pre-commit install`` but other than that everything should work out of
-the box and you can now run & have fun with the project... If not, please raise an issue on the
+the box and you can now have fun with the project... If not, please raise an issue on the
 GitHub repository.
 
 ## Documentation

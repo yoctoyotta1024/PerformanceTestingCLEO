@@ -1,4 +1,4 @@
-'''
+"""
 Copyright (c) 2024 MPI-M, Clara Bayley
 
 ----- PerformanceTestingCLEO -----
@@ -16,17 +16,17 @@ https://opensource.org/licenses/BSD-3-Clause
 -----
 File Description:
 setup for pre-commit tool
-'''
+"""
 
 
 from setuptools import setup, find_packages
 
 setup(
-    name='PerformanceTestingCLEO',
-    version='0.1.0',
+    name="PerformanceTestingCLEO",
+    version="0.1.0",
     packages=find_packages(),
     install_requires=[
-        'pytest',
-        'sphinx',
+        "pytest",
+        "sphinx",
     ],
 )

@@ -1,9 +1,7 @@
-# Template for Good Python and C++ Scientific Project
+# Performance Testing of CLEO On Levante for First Model Description Paper
 
-This code is adapted from [this](https://juliadynamics.github.io/DrWatson.jl/stable) template for
-Julia Language to make a reproducible scientific project for Python and C++ code in light of the
-guidelines from [this](https://www.youtube.com/watch?v=x3swaMSCcYk) Good Scientific Code Workshop by
-George Datseris.
+This repository has been made to document the performance tests of CLEO on Levante for CLEO's
+first model description paper.
 
 ## Install
 To (locally) reproduce this project simply clone the repository:
@@ -13,8 +11,8 @@ git clone https://github.com/yoctoyotta1024/PerformanceTestingCLEO.git
 and then create an environment with the necessary dependencies installed (using micromamba, mamba
 or conda as listed in the environment.yml):
 ```
-conda env create -f environment.yml
-conda activate scienv
+conda env create -f environment.yml --prefix [name for your environment]
+conda activate [name of your environment]
 ```
 Finally you need to run ``pre-commit install`` but other than that everything should work out of
 the box and you can now run & have fun with the project... If not, please raise an issue on the
@@ -40,7 +38,3 @@ Thank you and good luck!
 
 ## Contributors
 - Clara Bayley
-
-## Acknowledgements
-- Lukas Kluft
-- George Datseris

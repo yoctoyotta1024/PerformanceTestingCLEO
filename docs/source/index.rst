@@ -14,7 +14,7 @@ Welcome to PerformanceTestingCLEO's Documentation!
    to the on-going code development. If you have queries related to
    this or if there is anything you wish to report please please :ref:`contact us! <contact>`.
 
-This repository has been made to keep track of the performance tests of CLEO on Levante for CLEO's
+This repository has been made to document the performance tests of CLEO on Levante for CLEO's
 first model description paper.
 
 To (locally) reproduce this project, simply clone the repository. You will need to setup an

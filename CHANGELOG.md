@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v1.0.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/e4cb8d544edfe0e9e9adad6186b16e97b04752ce..v1.0.0) - 2024-06-21
+#### Features
+- CLEO can be used as external library - ([e4cb8d5](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/e4cb8d544edfe0e9e9adad6186b16e97b04752ce)) - clara.bayley
+
+- - -
+
 ## [v0.3.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/36dba4ad1ae0175447caa6f1ecc4b8b36b433270..v0.3.0) - 2024-06-21
 #### Bug Fixes
 - make kokkos and cleo includes work - ([829e4e3](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/829e4e3055e6500a812d0dac8d4e930098c97903)) - clara.bayley

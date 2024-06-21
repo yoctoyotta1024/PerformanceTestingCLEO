@@ -1,4 +1,4 @@
-name: perftestsenv
+name: perftests
 dependencies:
     - python>=3.9
     - pytest

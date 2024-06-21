@@ -1,6 +1,5 @@
 # set cmake version
 cmake_minimum_required(VERSION 3.18.0)
-# cmake_minimum_required(VERSION 3.21.1) ### if using Kokkos with nvc++ compiler on Levante
 
 project(project
   LANGUAGES CXX
@@ -32,5 +31,5 @@ add_subdirectory(${yamlcpppath})
 # print default compiler flags
 message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 
-# add directories of CLEO libray and main program
+# add directories of from src
 add_subdirectory(src)

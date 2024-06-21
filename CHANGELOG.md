@@ -2,15 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
-## [v0.2.0](https://github.com/yoctoyotta1024/CLEO/compare/5f19b9318f501442018bc321f27f02825b14ab02..v0.2.0) - 2024-06-21
+## [v0.2.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/5f19b9318f501442018bc321f27f02825b14ab02..v0.2.0) - 2024-06-21
 #### Features
-- more pre-commit and CI features - ([b0f7cc5](https://github.com/yoctoyotta1024/CLEO/commit/b0f7cc5c53e4098e7d77038cfb3b48711cf65ab6)) - clara.bayley
-- add cog config file - ([5f19b93](https://github.com/yoctoyotta1024/CLEO/commit/5f19b9318f501442018bc321f27f02825b14ab02)) - clara.bayley
+- more pre-commit and CI features - ([b0f7cc5](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/b0f7cc5c53e4098e7d77038cfb3b48711cf65ab6)) - clara.bayley
+- add cog config file - ([5f19b93](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/5f19b9318f501442018bc321f27f02825b14ab02)) - clara.bayley
 #### Miscellaneous Chores
-- formatting - ([a0dcc24](https://github.com/yoctoyotta1024/CLEO/commit/a0dcc24adaac522fe1c779f45c4477e549f7c0f6)) - clara.bayley
+- formatting - ([a0dcc24](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/a0dcc24adaac522fe1c779f45c4477e549f7c0f6)) - clara.bayley
 #### Refactoring
-- delete unwanted header - ([f9f0673](https://github.com/yoctoyotta1024/CLEO/commit/f9f06738da40495f820ee28f6961aa661aa3b28d)) - clara.bayley
-- update version - ([2fa40c4](https://github.com/yoctoyotta1024/CLEO/commit/2fa40c46ee195d774c1265ad125dcc44d993a359)) - clara.bayley
+- delete unwanted header - ([f9f0673](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/f9f06738da40495f820ee28f6961aa661aa3b28d)) - clara.bayley
+- update version - ([2fa40c4](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/2fa40c46ee195d774c1265ad125dcc44d993a359)) - clara.bayley
 
 - - -
 

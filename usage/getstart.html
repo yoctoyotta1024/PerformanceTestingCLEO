@@ -192,7 +192,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -254,7 +254,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -268,8 +268,8 @@
 </div>
 <p>and then create an environment with the necessary dependencies installed (using micromamba, mamba
 or conda as listed in the environment.yml):</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>micromamba<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>--file<span class="w"> </span>environment.yml<span class="w"> </span>--prefix<span class="w"> </span><span class="o">[</span>name<span class="w"> </span><span class="k">for</span><span class="w"> </span>your<span class="w"> </span>environment<span class="o">]</span>
-<span class="gp">$ </span>micromamba<span class="w"> </span>activate<span class="w"> </span><span class="o">[</span>name<span class="w"> </span>of<span class="w"> </span>your<span class="w"> </span>environment<span class="o">]</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>--file<span class="w"> </span>environment.yml<span class="w"> </span>--prefix<span class="w"> </span><span class="o">[</span>name<span class="w"> </span><span class="k">for</span><span class="w"> </span>your<span class="w"> </span>environment<span class="o">]</span>
+<span class="gp">$ </span>conda<span class="w"> </span>activate<span class="w"> </span><span class="o">[</span>name<span class="w"> </span>of<span class="w"> </span>your<span class="w"> </span>environment<span class="o">]</span>
 </pre></div>
 </div>
 <p>Finally install the pre-commit hooks:</p>
@@ -277,57 +277,8 @@ or conda as listed in the environment.yml):</p>
 </pre></div>
 </div>
 <p>which will be used when you try to commit something or you execute <code class="docutils literal notranslate"><span class="pre">pre-commit</span> <span class="pre">run</span></code>. You can learn
-more about the powers of pre-commit from <a class="reference external" href="https://pre-commit.com">their documentation:</a>.</p>
-<p>That’s it, you’re done! But maybe now you want to customise the project and push it to your own
-GitHub repo…</p>
-<section id="necessary-first-steps">
-<h2>Necessary first steps:<a class="headerlink" href="#necessary-first-steps" title="Link to this heading">¶</a></h2>
-<ol class="arabic simple">
-<li><p>Create an empty GitHub repository and push your new project to it.</p></li>
-<li><p>Make yourself the <code class="docutils literal notranslate"><span class="pre">github.repository_owner</span></code> who triggers GitHub’s CI to publish documentation (see <cite>.github/workflows/CI.yml</cite>).</p></li>
-<li><p>Set your documentation to deploy using the <cite>/(root)</cite> folder of your gh-pages branch (see instructions <a class="reference external" href="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site">here</a>)</p></li>
-<li><p>Checkout to a new branch using git and start customising the template…</p></li>
-</ol>
-</section>
-<section id="necessary-second-steps">
-<h2>Necessary second steps:<a class="headerlink" href="#necessary-second-steps" title="Link to this heading">¶</a></h2>
-<ol class="arabic simple">
-<li><p>Make the project name yours instead of “PerformanceTestingCLEO”.</p></li>
-<li><p>Make the release/version yours instead of “0.0.0”.</p></li>
-<li><p>Make the citation and liscence refer to you instead of me.</p></li>
-<li><p>Write a new README.md (shorter is generally better) and include a link to your documentation in it.</p></li>
-<li><p>Change the GitHub links in the .rst files to the correct ones for your GitHub repository (<em>hint</em>: you find these files in the <cite>docs</cite> directory).</p></li>
-</ol>
-</section>
-<section id="some-suggested-third-steps">
-<h2>Some suggested third steps:<a class="headerlink" href="#some-suggested-third-steps" title="Link to this heading">¶</a></h2>
-<ol class="arabic simple">
-<li><p>Change the names of the C++ and Python package names in the <cite>libs</cite> directory (maybe you also prefer to call “libs” “src”?)</p></li>
-<li><p>If you made a C++ library, set your <code class="docutils literal notranslate"><span class="pre">`INPUT`</span></code> in <cite>doxygen.dox</cite> and your <code class="docutils literal notranslate"><span class="pre">breathe_projects</span></code> and/or <code class="docutils literal notranslate"><span class="pre">default_breathe_projects</span></code> in <cite>conf.py</cite> to match the name of the new C++ library.</p></li>
-<li><p>Make a new Python or C++ module/subpackage (include docstrings and write unit tests in the <cite>tests</cite> directory!).</p></li>
-<li><p>Create an associated .rst file for your new module/subpackage (somewhere in the <cite>docs/source</cite> directory).</p></li>
-<li><p>Add the path to your new .rst file to the contents of the <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">toctree::</span></code> in <cite>index.rst</cite>.</p></li>
-<li><p>Push your changes to a branch of your GitHub repository (not main!).</p></li>
-<li><p>Create a pull request (and accept it if your tests pass) to merge your changes with the main branch of your GitHub repository.</p></li>
-<li><p>Be proud of your new code with documentation and tests.</p></li>
-</ol>
-</section>
-<section id="want-more-ideas">
-<h2>Want more ideas?!<a class="headerlink" href="#want-more-ideas" title="Link to this heading">¶</a></h2>
-<p>Have you thought about adding contributors, acknowledgements, more Python and/or
-other requirements / enviroments, more CI or pre-commit tasks, and an automatic file header
-generator? Or maybe you should ponder it all over a cup of tea and some biscuits…</p>
-</section>
-<section id="a-note-on-commiting-large-files">
-<h2>A Note on Commiting Large Files:<a class="headerlink" href="#a-note-on-commiting-large-files" title="Link to this heading">¶</a></h2>
-<p>This project does not forbid you from commiting and pushing large files such as Jupyter notebooks
-(.ipynb files) and images (e.g. .png files) to your repository. However, such actions are highly
-discouraged and usually a sign that you are doing something wrong. If you want to use Jupyter
-notebooks, consider using the <a class="reference external" href="https://jupyterbook.org/en/stable/intro.html">Jupyter Book</a>
-extension of Sphinx to store your notebooks as markdown files. At the very least, you should scrub
-notebooks before committing them because you do not want to destory the power of git diff by making
-it start comparing Jupyter notebook hashes.</p>
-</section>
+more about the powers of pre-commit from <a class="reference external" href="https://pre-commit.com">their documentation</a>.</p>
+<p>That’s it, you’re done!</p>
 </section>
 
         </article>
@@ -374,31 +325,8 @@ it start comparing Jupyter notebook hashes.</p>
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            On this page
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">Getting Started</a><ul>
-<li><a class="reference internal" href="#necessary-first-steps">Necessary first steps:</a></li>
-<li><a class="reference internal" href="#necessary-second-steps">Necessary second steps:</a></li>
-<li><a class="reference internal" href="#some-suggested-third-steps">Some suggested third steps:</a></li>
-<li><a class="reference internal" href="#want-more-ideas">Want more ideas?!</a></li>
-<li><a class="reference internal" href="#a-note-on-commiting-large-files">A Note on Commiting Large Files:</a></li>
-</ul>
-</li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>

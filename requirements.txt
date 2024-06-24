@@ -10,4 +10,4 @@ scipy
 matplotlib
 xarray
 pre-commit
-pyyaml
+ruamel.yaml

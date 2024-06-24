@@ -45,9 +45,9 @@ params['sharepath'] = path2build+'/share'
 params['grid_filename'] = params['sharepath']+'/dimlessGBxboundaries_colls0D.dat'
 params['binpath'] =  path2build+'/bin_'+nstr
 params['initsupers_filename'] = params['sharepath']+'/dimlessSDsinit_colls0D_'+nstr+'.dat'
-params['setup_filename'] = params['binpath']+'/setup_colls0D'+nstr+'.txt'
-params['stats_filename'] = params['binpath']+'/stats_colls0D'+nstr+'.txt'
-params['zarrbasedir'] =  params['binpath']+'/sol_colls0D'+nstr+'.zarr'
+params['setup_filename'] = params['binpath']+'/setup_colls0D_'+nstr+'.txt'
+params['stats_filename'] = params['binpath']+'/stats_colls0D_'+nstr+'.txt'
+params['zarrbasedir'] =  params['binpath']+'/sol_colls0D_'+nstr+'.zarr'
 
 if path2CLEO == path2build:
     raise ValueError("build directory cannot be CLEO")

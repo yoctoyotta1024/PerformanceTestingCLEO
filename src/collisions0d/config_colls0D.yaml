@@ -1,0 +1,50 @@
+# ----- CLEO -----
+# File: shima2009_config.yaml
+# Project: config
+# Created Date: Wednesday 17th April 2024
+# Author: Clara Bayley (CB)
+# Additional Contributors:
+# -----
+# Last Modified: Friday 14th June 2024
+# Modified By: CB
+# -----
+# License: BSD 3-Clause "New" or "Revised" License
+# https://opensource.org/licenses/BSD-3-Clause
+# -----
+# Copyright (c) 2023 MPI-M, Clara Bayley
+# -----
+# File Description:
+# Configuration file for 0D box model of collisions using CLEO.
+# Note: The inital superdroplets data read from file "initsupers_filename" can be made with
+# CLEO's pySD module (see Python script "scripts/collisions0d/initconds.py" for usage) and likewise
+# for "grid_filename".
+
+### SDM Runtime Parameters ###
+domain:
+  nspacedims: 0                                                 # no. of spatial dimensions to model
+  ngbxs: 1                                                      # total number of Gbxs
+  maxnsupers: 128                                               # maximum number of SDs
+
+timesteps:
+  CONDTSTEP: 3000                                               # time between SD condensation [s]
+  COLLTSTEP: 1                                                  # time between SD collision [s]
+  MOTIONTSTEP: 300                                              # time between SDM motion [s]
+  COUPLTSTEP: 3600                                              # time between dynamic couplings [s]
+  OBSTSTEP: 300                                                 # time between SDM observations [s]
+  T_END: 3600                                                   # time span of integration from 0s to T_END [s]
+
+### Initialisation Parameters ###
+inputfiles:
+  constants_filename: ./build/_deps/cleo-src/libs/cleoconstants.hpp # name of file for values of physical constants
+  grid_filename: ./share/dimlessGBxboundaries_colls0D.dat           # binary filename for initialisation of GBxs / GbxMaps
+
+initsupers:
+  type: frombinary                                              # type of initialisation of super-droplets
+  initsupers_filename: ./build/share/dimlessSDsinit_colls0D.dat # binary filename for initialisation of SDs
+
+### Output Parameters ###
+outputdata:
+  setup_filename: ./bin/setup_colls0D.txt                     # .txt filename to copy configuration to
+  stats_filename: ./bin/stats_colls0D.txt                     # .txt file to output runtime statistics to
+  zarrbasedir: ./bin/sol_colls0D.zarr                         # zarr store base directory
+  maxchunk: 2500000                                           # maximum no. of elements in chunks of zarr store array

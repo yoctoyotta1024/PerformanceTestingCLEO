@@ -1,5 +1,5 @@
 # ----- CLEO -----
-# File: shima2009_config.yaml
+# File: config_colls0D.yaml
 # Project: config
 # Created Date: Wednesday 17th April 2024
 # Author: Clara Bayley (CB)
@@ -23,37 +23,37 @@
 domain:
   nspacedims: 0                                                 # no. of spatial dimensions to model
   ngbxs: 1                                                      # total number of Gbxs
-  maxnsupers: 128                                               # maximum number of SDs
+  maxnsupers: X                                                 # maximum number of SDs
 
 timesteps:
-  CONDTSTEP: 3000                                               # time between SD condensation [s]
+  CONDTSTEP: 1                                                  # time between SD condensation [s]
   COLLTSTEP: 1                                                  # time between SD collision [s]
-  MOTIONTSTEP: 300                                              # time between SDM motion [s]
+  MOTIONTSTEP: 5                                                # time between SDM motion [s]
   COUPLTSTEP: 3600                                              # time between dynamic couplings [s]
   OBSTSTEP: 300                                                 # time between SDM observations [s]
   T_END: 3600                                                   # time span of integration from 0s to T_END [s]
 
 ### Initialisation Parameters ###
 inputfiles:
-  constants_filename: /home/m/m300950/performance_testing_cleo/build/_deps/cleo-src/libs/cleoconstants.hpp # name of file for values of physical constants
-  grid_filename: /home/m/m300950/performance_testing_cleo/build/share/dimlessGBxboundaries_colls0D.dat           # binary filename for initialisation of GBxs / GbxMaps
+  constants_filename: XXX                                       # name of file for values of physical constants
+  grid_filename: XXX                                            # binary filename for initialisation of GBxs / GbxMaps
 
 initsupers:
   type: frombinary                                              # type of initialisation of super-droplets
-  initsupers_filename: /home/m/m300950/performance_testing_cleo/build/share/dimlessSDsinit_colls0D.dat # binary filename for initialisation of SDs
+  initsupers_filename: XXX                                      # binary filename for initialisation of SDs
 
 ### Output Parameters ###
 outputdata:
-  setup_filename: /home/m/m300950/performance_testing_cleo/bin/setup_colls0D.txt                     # .txt filename to copy configuration to
-  stats_filename: /home/m/m300950/performance_testing_cleo/bin/stats_colls0D.txt                     # .txt file to output runtime statistics to
-  zarrbasedir: /home/m/m300950/performance_testing_cleo/bin/sol_colls0D.zarr                         # zarr store base directory
-  maxchunk: 2500000                                           # maximum no. of elements in chunks of zarr store array
+  setup_filename: XXX                                           # .txt filename to copy configuration to
+  stats_filename: XXX                                           # .txt file to output runtime statistics to
+  zarrbasedir: XXX                                              # zarr store base directory
+  maxchunk: 2500000                                             # maximum no. of elements in chunks of zarr store array
 
 ### Initial Conditions Parameters for Python Script ###
 python_initconds:
   paths:
-    binpath: /home/m/m300950/performance_testing_cleo/build/bin/
-    sharepath: /home/m/m300950/performance_testing_cleo/build/share/
+    binpath: XXX
+    sharepath: XXX
   grid:
     zgrid: [0, 100, 100]                                      # [max, min, spacing] of gridbox boundaries in z direction
     xgrid: [0, 100, 100]                                      # [max, min, spacing] of gridbox boundaries in x direction

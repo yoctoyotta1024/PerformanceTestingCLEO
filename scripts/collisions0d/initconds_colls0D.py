@@ -3,8 +3,8 @@ Copyright (c) 2024 MPI-M, Clara Bayley
 
 
 -----  PerformanceTestingCLEO -----
-File: initconds.py
-Project: scripts
+File: initconds_colls0D.py
+Project: collisions0d
 Created Date: Monday 24th June 2024
 Author: Clara Bayley (CB)
 Additional Contributors:
@@ -22,12 +22,12 @@ with volume exponential distribution as in Shima et al. 2009.
 
 import os
 import sys
-import numpy as np
 from pathlib import Path
+import yaml
 
 path2CLEO = sys.argv[1]
 path2build = sys.argv[2]
-configfile = sys.argv[3]
+config_filename = sys.argv[3]
 
 sys.path.append(path2CLEO)  # for imports from pySD package
 from pySD.initsuperdropsbinary_src import rgens, probdists, attrsgen
@@ -36,38 +36,101 @@ from pySD.initsuperdropsbinary_src import read_initsuperdrops as rsupers
 from pySD.gbxboundariesbinary_src import read_gbxboundaries as rgrid
 from pySD.gbxboundariesbinary_src import create_gbxboundaries as cgrid
 
+config = yaml.safe_load(open(config_filename))
+pyconfig = config["python_initconds"]
+
+
+### ---------------------------------------------------------------- ###
+### -------------- INPUT FILES' GENERATION FUNCTIONS --------------- ###
+### ---------------------------------------------------------------- ###
+### ----- write gridbox boundaries binary ----- ###
+def generate_gridbox_boundaries(
+    grid_filename, zgrid, xgrid, ygrid, constants_filename, savefigpath, isfigures
+):
+    cgrid.write_gridboxboundaries_binary(
+        grid_filename, zgrid, xgrid, ygrid, constants_filename
+    )
+    rgrid.print_domain_info(constants_filename, grid_filename)
+    ### show (and save) plots of binary file data
+    if isfigures[0]:
+        rgrid.plot_gridboxboundaries(
+            constants_filename, grid_filename, savefigpath, isfigures[1]
+        )
+
+
+### ----- write initial superdroplets binary ----- ###
+def generate_initial_superdroplet_conditions(
+    initattrsgen,
+    initsupers_filename,
+    config_filename,
+    constants_filename,
+    grid_filename,
+    nsupers,
+    numconc,
+    savefigpath,
+    isfigures,
+):
+    csupers.write_initsuperdrops_binary(
+        initsupers_filename,
+        initattrsgen,
+        config_filename,
+        constants_filename,
+        grid_filename,
+        nsupers,
+        numconc,
+    )
+    rsupers.print_initSDs_infos(
+        initsupers_filename, config_filename, constants_filename, grid_filename
+    )
+
+    ### show (and save) plots of binary file data
+    if isfigures[0]:
+        rsupers.plot_initGBxs_distribs(
+            config_filename,
+            constants_filename,
+            initsupers_filename,
+            grid_filename,
+            savefigpath,
+            isfigures[1],
+            "all",
+            savelabel="",
+        )
+
+
+### ---------------------------------------------------------------- ###
+### ---------------------------------------------------------------- ###
+
 ### ---------------------------------------------------------------- ###
 ### ----------------------- INPUT PARAMETERS ----------------------- ###
 ### ---------------------------------------------------------------- ###
 ### --- essential paths and filenames --- ###
 # path and filenames for creating initial SD conditions
-constsfile = path2CLEO + "/libs/cleoconstants.hpp"
-binpath = path2build + "/bin/"
-sharepath = path2build + "/share/"
-initSDsfile = sharepath + "breakup_dimlessSDsinit.dat"
-gridfile = sharepath + "breakup_dimlessGBxboundaries.dat"
+constants_filename = config["inputfiles"]["constants_filename"]
+binpath = pyconfig["paths"]["binpath"]
+sharepath = pyconfig["paths"]["sharepath"]
+initsupers_filename = config["initsupers"]["initsupers_filename"]
+grid_filename = config["inputfiles"]["grid_filename"]
 
 # booleans for [making, saving] initialisation figures
 isfigures = [True, True]
-savefigpath = path2build + "/bin/"  # directory for saving figures
+savefigpath = binpath  # directory for saving figures
 
 ### --- settings for 0-D Model gridbox boundaries --- ###
-zgrid = np.asarray([0, 100])
-xgrid = np.asarray([0, 100])
-ygrid = np.asarray([0, 100])
+zgrid = pyconfig["grid"]["zgrid"]
+xgrid = pyconfig["grid"]["xgrid"]
+ygrid = pyconfig["grid"]["ygrid"]
 
 ### --- settings for initial superdroplets --- ###
 # settings for superdroplet coordinates
-nsupers = 8192
+nsupers = config["domain"]["maxnsupers"]
 
 # settings for superdroplet attributes
-dryradius = 1e-16  # all SDs have negligible solute [m]
-
+dryradius = pyconfig["supers"]["dryradius"]
 
 # radius distirbution from exponential in droplet volume for setup 1
-rspan = [1e-7, 9e-5]  # max and min range of radii to sample [m]
-volexpr0 = 30.531e-6  # peak of volume exponential distribution [m]
-numconc = 2 ** (23)  # total no. conc of real droplets [m^-3]
+rspan = pyconfig["supers"]["rspan"]
+volexpr0 = pyconfig["supers"]["volexpr0"]
+numconc = pyconfig["supers"]["numconc"]
 
 # attribute generators
 radiigen = rgens.SampleLog10RadiiGen(rspan)  # radii are sampled from rspan [m]
@@ -83,7 +146,7 @@ initattrsgen = attrsgen.AttrsGenerator(
 ### ---------------------------------------------------------------- ###
 
 ### ---------------------------------------------------------------- ###
-### -------------- INPUT FILES' GENERATION FUNCTIONS --------------- ###
+### -------------------- INPUT FILES GENERATION -------------------- ###
 ### ---------------------------------------------------------------- ###
 ### --- ensure build, share and bin directories exist --- ###
 if path2CLEO == path2build:
@@ -96,66 +159,18 @@ else:
         Path(savefigpath).mkdir(exist_ok=True)
 
 ### --- delete any existing initial conditions --- ###
-os.system("rm " + gridfile)
-os.system("rm " + initSDsfile)
+os.system("rm " + grid_filename)
+os.system("rm " + initsupers_filename)
 
-
-### ----- write gridbox boundaries binary ----- ###
-def generate_gridbox_boundaries(
-    gridfile, zgrid, xgrid, ygrid, constsfile, savefigpath, isfigures
-):
-    cgrid.write_gridboxboundaries_binary(gridfile, zgrid, xgrid, ygrid, constsfile)
-    rgrid.print_domain_info(constsfile, gridfile)
-    ### show (and save) plots of binary file data
-    if isfigures[0]:
-        rgrid.plot_gridboxboundaries(constsfile, gridfile, savefigpath, isfigures[1])
-
-
-### ----- write initial superdroplets binary ----- ###
-def generate_initial_superdroplet_conditions(
-    initattrsgen,
-    initSDsfile,
-    configfile,
-    constsfile,
-    gridfile,
-    nsupers,
-    numconc,
-    savefigpath,
-    isfigures,
-):
-    csupers.write_initsuperdrops_binary(
-        initSDsfile, initattrsgen, configfile, constsfile, gridfile, nsupers, numconc
-    )
-    rsupers.print_initSDs_infos(initSDsfile, configfile, constsfile, gridfile)
-
-    ### show (and save) plots of binary file data
-    if isfigures[0]:
-        rsupers.plot_initGBxs_distribs(
-            configfile,
-            constsfile,
-            initSDsfile,
-            gridfile,
-            savefigpath,
-            isfigures[1],
-            "all",
-            savelabel="",
-        )
-
-
-### ---------------------------------------------------------------- ###
-### ---------------------------------------------------------------- ###
-
-### ---------------------------------------------------------------- ###
-### -------------------- INPUT FILES GENERATION -------------------- ###
-### ---------------------------------------------------------------- ###
 generate_gridbox_boundaries(
-    gridfile, zgrid, xgrid, ygrid, constsfile, savefigpath, isfigures
+    grid_filename, zgrid, xgrid, ygrid, constants_filename, savefigpath, isfigures
 )
 generate_initial_superdroplet_conditions(
     initattrsgen,
-    configfile,
-    constsfile,
-    gridfile,
+    initsupers_filename,
+    config_filename,
+    constants_filename,
+    grid_filename,
     nsupers,
     numconc,
     savefigpath,

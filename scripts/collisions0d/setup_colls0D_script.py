@@ -35,13 +35,30 @@ from collisions0d import initconds_colls0D
 from pySD import editconfigfile
 
 ### ----- create temporary config file for simulation ----- ###
-# Copy config to temporary file
+# Copy config to temporary file and edit specific parameters
 params = {
   'maxnsupers': 8192,
 }
-config_filename = Path(path2build) / "tmp" / "config_colls0D.txt"
+nstr = str(params['maxnsupers'])
+params['constants_filename'] = path2build+'/_deps/cleo-src/libs/cleoconstants.hpp'
+params['sharepath'] = path2build+'/share'
+params['grid_filename'] = params['sharepath']+'/dimlessGBxboundaries_colls0D.dat'
+params['binpath'] =  path2build+'/bin_'+nstr
+params['initsupers_filename'] = params['sharepath']+'/dimlessSDsinit_colls0D_'+nstr+'.dat'
+params['setup_filename'] = params['binpath']+'/setup_colls0D'+nstr+'.txt'
+params['stats_filename'] = params['binpath']+'/stats_colls0D'+nstr+'.txt'
+params['zarrbasedir'] =  params['binpath']+'/sol_colls0D'+nstr+'.zarr'
+
+if path2CLEO == path2build:
+    raise ValueError("build directory cannot be CLEO")
+else:
+    path2tmp = Path(path2build) / "tmp"
+    Path(path2build).mkdir(exist_ok=True)
+    path2tmp.mkdir(exist_ok=True)
+
+config_filename = path2tmp / "config_colls0D.yaml"
 shutil.copy(Path(src_config_filename), config_filename)
 editconfigfile.edit_config_params(config_filename, params)
 
-# ### ----- write initial gridbox boundaries and superdroplets binary files ----- ###
-# initconds_colls0D.main(path2CLEO, path2build, config_filename)
+### ----- write initial gridbox boundaries and superdroplets binary files ----- ###
+initconds_colls0D.main(path2CLEO, path2build, config_filename)

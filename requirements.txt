@@ -12,3 +12,4 @@ scipy
 matplotlib
 xarray
 pre-commit
+pyyaml

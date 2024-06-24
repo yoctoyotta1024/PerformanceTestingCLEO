@@ -3,7 +3,7 @@ Copyright (c) 2024 MPI-M, Clara Bayley
 
 ----- PerformanceTestingCLEO -----
 File: __init__.py
-Project: libs
+Project: collisions0d
 Created Date: Tuesday 27th February 2024
 Author: Clara Bayley (CB)
 Additional Contributors:

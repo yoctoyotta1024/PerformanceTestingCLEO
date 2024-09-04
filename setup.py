@@ -18,7 +18,6 @@ File Description:
 setup for pre-commit tool
 """
 
-
 from setuptools import setup, find_packages
 
 setup(

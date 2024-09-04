@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v1.0.3](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/22e0ec25e59055ead4a47748c63dfb30cd955665..v1.0.3) - 2024-09-04
+#### Bug Fixes
+- fix sphinx dependencies after sphinx version 8 - ([9973733](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/9973733cb6d7d56f375ca64f9d301ffcc3074865)) - clara.bayley
+- Security vulnerability - ([22e0ec2](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/22e0ec25e59055ead4a47748c63dfb30cd955665)) - clara.bayley
+#### Miscellaneous Chores
+- formatting - ([a81363e](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/a81363e626c9052dc7bf357d25c0ac897407e5e1)) - clara.bayley
+#### Refactoring
+- improve pre-commit - ([1035262](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/10352621c36563ad146569ab2a8b183ed91820ab)) - clara.bayley
+
+- - -
+
 ## [v1.0.2](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/a3d50d3693c05d0469371cd223b142aad5db64e6..v1.0.2) - 2024-09-04
 #### Bug Fixes
 - fix sphinx dependencies after sphinx version 8 - ([a3d50d3](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/a3d50d3693c05d0469371cd223b142aad5db64e6)) - clara.bayley

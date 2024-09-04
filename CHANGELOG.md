@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v1.0.2](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/a3d50d3693c05d0469371cd223b142aad5db64e6..v1.0.2) - 2024-09-04
+#### Bug Fixes
+- fix sphinx dependencies after sphinx version 8 - ([a3d50d3](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/a3d50d3693c05d0469371cd223b142aad5db64e6)) - clara.bayley
+
+- - -
+
 ## [v1.0.1](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/v0.4.0..v1.0.1) - 2024-06-21
 #### Bug Fixes
 - testing tags - ([52bc67e](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/52bc67ea86fc4dd08e8c3417322d4494dc1cc0de)) - clara.bayley

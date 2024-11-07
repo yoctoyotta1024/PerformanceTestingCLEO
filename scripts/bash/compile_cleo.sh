@@ -8,7 +8,7 @@
 #SBATCH --time=00:30:00
 #SBATCH --mail-user=clara.bayley@mpimet.mpg.de
 #SBATCH --mail-type=FAIL
-#SBATCH --account=mh1126
+#SBATCH --account=bm1183
 #SBATCH --output=./compileexec_out.%j.out
 #SBATCH --error=./compileexec_err.%j.out
 
@@ -24,7 +24,7 @@ executables="$3"  # get from command line argument
 
 spack load cmake@3.23.1%gcc
 module load gcc/11.2.0-gcc-11.2.0
-source activate /work/mh1126/m300950/condaenvs/perftests
+source activate /work/bm1183/m300950/mambaenvs/perftests
 
 if [ "${buildtype}" != "serial" ] && [ "${buildtype}" != "openmp" ] && [ "${buildtype}" != "cuda" ];
 then

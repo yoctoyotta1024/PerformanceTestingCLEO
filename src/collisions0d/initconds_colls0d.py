@@ -3,7 +3,7 @@ Copyright (c) 2024 MPI-M, Clara Bayley
 
 
 -----  PerformanceTestingCLEO -----
-File: initconds_colls0D.py
+File: initconds_colls0d.py
 Project: collisions0d
 Created Date: Monday 24th June 2024
 Author: Clara Bayley (CB)

@@ -11,8 +11,8 @@ message("PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
 set(CLEOLIBS gridboxes initialise observers runcleo superdrops zarr)
 
 # create primary executable
-set(exec colls0D)
-add_executable(${exec} EXCLUDE_FROM_ALL "main_colls0D.cpp")
+set(exec colls0d)
+add_executable(${exec} EXCLUDE_FROM_ALL "main_colls0d.cpp")
 
 # Add directories and link libraries to target
 target_link_libraries(${exec} PRIVATE cartesiandomain "${CLEOLIBS}")

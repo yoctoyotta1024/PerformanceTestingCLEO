@@ -9,8 +9,8 @@ Clone PerformanceTestingCLEO's GitHub repository:
 
   $ git clone https://github.com/yoctoyotta1024/PerformanceTestingCLEO.git
 
-and then create an environment with the necessary dependencies installed (using micromamba, mamba
-or conda as listed in the environment.yml):
+and then create an environment with the necessary dependencies installed (using micromamba, or
+conda as listed in the environment.yml):
 
 .. code-block:: console
 

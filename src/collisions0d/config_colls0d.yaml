@@ -19,6 +19,21 @@
 # CLEO's pySD module (see Python script "scripts/collisions0d/initconds.py" for usage) and likewise
 # for "grid_filename".
 
+### Initial Conditions Parameters for Python Script ###
+python_initconds:
+  paths:
+    binpath: XXX
+    sharepath: XXX
+  grid:
+    zgrid: [0, 100, 100]                                      # [max, min, spacing] of gridbox boundaries in z direction
+    xgrid: [0, 100, 100]                                      # [max, min, spacing] of gridbox boundaries in x direction
+    ygrid: [0, 100, 100]                                      # [max, min, spacing] of gridbox boundaries in y direction
+  supers:
+    dryradius: 1.0e-16                                          # all SDs have negligible solute [m]
+    rspan: [1.0e-7, 9.0e-5]  # max and min range of radii to sample [m]
+    volexpr0: 30.531e-6  # peak of volume exponential distribution [m]
+    numconc: 8388608  # = 2^23 = total no. conc of real droplets [m^-3]
+
 ### SDM Runtime Parameters ###
 domain:
   nspacedims: 0                                                 # no. of spatial dimensions to model
@@ -48,18 +63,3 @@ outputdata:
   stats_filename: XXX                                           # .txt file to output runtime statistics to
   zarrbasedir: XXX                                              # zarr store base directory
   maxchunk: 2500000                                             # maximum no. of elements in chunks of zarr store array
-
-### Initial Conditions Parameters for Python Script ###
-python_initconds:
-  paths:
-    binpath: XXX
-    sharepath: XXX
-  grid:
-    zgrid: [0, 100, 100]                                      # [max, min, spacing] of gridbox boundaries in z direction
-    xgrid: [0, 100, 100]                                      # [max, min, spacing] of gridbox boundaries in x direction
-    ygrid: [0, 100, 100]                                      # [max, min, spacing] of gridbox boundaries in y direction
-  supers:
-    dryradius: 1.0e-16                                          # all SDs have negligible solute [m]
-    rspan: [1.0e-7, 9.0e-5]  # max and min range of radii to sample [m]
-    volexpr0: 30.531e-6  # peak of volume exponential distribution [m]
-    numconc: 8388608  # = 2^23 = total no. conc of real droplets [m^-3]

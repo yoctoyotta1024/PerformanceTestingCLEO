@@ -21,80 +21,18 @@ with volume exponential distribution as in Shima et al. 2009.
 """
 
 import sys
+from pathlib import Path
 
 
-def main(path2CLEO, path2build, config_filename):
-    import os
-    from pathlib import Path
+def main(path2CLEO, config_filename, isfigures=[False, False]):
     import yaml
 
     sys.path.append(path2CLEO)  # for imports from pySD package
     from pySD.initsuperdropsbinary_src import rgens, probdists, attrsgen
-    from pySD.initsuperdropsbinary_src import create_initsuperdrops as csupers
-    from pySD.initsuperdropsbinary_src import read_initsuperdrops as rsupers
-    from pySD.gbxboundariesbinary_src import read_gbxboundaries as rgrid
-    from pySD.gbxboundariesbinary_src import create_gbxboundaries as cgrid
+    from pySD import geninitconds as gic
 
     config = yaml.safe_load(open(config_filename))
     pyconfig = config["python_initconds"]
-
-    ### ---------------------------------------------------------------- ###
-    ### -------------- INPUT FILES' GENERATION FUNCTIONS --------------- ###
-    ### ---------------------------------------------------------------- ###
-    ### ----- write gridbox boundaries binary ----- ###
-    def generate_gridbox_boundaries(
-        grid_filename, zgrid, xgrid, ygrid, constants_filename, savefigpath, isfigures
-    ):
-        cgrid.write_gridboxboundaries_binary(
-            grid_filename, zgrid, xgrid, ygrid, constants_filename
-        )
-        rgrid.print_domain_info(constants_filename, grid_filename)
-        ### show (and save) plots of binary file data
-        if isfigures[0]:
-            rgrid.plot_gridboxboundaries(
-                constants_filename, grid_filename, savefigpath, isfigures[1]
-            )
-
-    ### ----- write initial superdroplets binary ----- ###
-    def generate_initial_superdroplet_conditions(
-        initattrsgen,
-        initsupers_filename,
-        config_filename,
-        constants_filename,
-        grid_filename,
-        nsupers,
-        numconc,
-        savefigpath,
-        isfigures,
-    ):
-        csupers.write_initsuperdrops_binary(
-            initsupers_filename,
-            initattrsgen,
-            config_filename,
-            constants_filename,
-            grid_filename,
-            nsupers,
-            numconc,
-        )
-        rsupers.print_initSDs_infos(
-            initsupers_filename, config_filename, constants_filename, grid_filename
-        )
-
-        ### show (and save) plots of binary file data
-        if isfigures[0]:
-            rsupers.plot_initGBxs_distribs(
-                config_filename,
-                constants_filename,
-                initsupers_filename,
-                grid_filename,
-                savefigpath,
-                isfigures[1],
-                "all",
-                savelabel="",
-            )
-
-    ### ---------------------------------------------------------------- ###
-    ### ---------------------------------------------------------------- ###
 
     ### ---------------------------------------------------------------- ###
     ### ----------------------- INPUT PARAMETERS ----------------------- ###
@@ -102,14 +40,9 @@ def main(path2CLEO, path2build, config_filename):
     ### --- essential paths and filenames --- ###
     # path and filenames for creating initial SD conditions
     constants_filename = config["inputfiles"]["constants_filename"]
-    binpath = Path(pyconfig["paths"]["binpath"])
-    sharepath = Path(pyconfig["paths"]["sharepath"])
     initsupers_filename = config["initsupers"]["initsupers_filename"]
     grid_filename = config["inputfiles"]["grid_filename"]
-
-    # booleans for [making, saving] initialisation figures
-    isfigures = [True, True]
-    savefigpath = binpath  # directory for saving figures
+    savefigpath = Path(pyconfig["paths"]["binpath"])
 
     ### --- settings for 0-D Model gridbox boundaries --- ###
     zgrid = pyconfig["grid"]["zgrid"]
@@ -144,24 +77,16 @@ def main(path2CLEO, path2build, config_filename):
     ### ---------------------------------------------------------------- ###
     ### -------------------- INPUT FILES GENERATION -------------------- ###
     ### ---------------------------------------------------------------- ###
-    ### --- ensure build, share and bin directories exist --- ###
-    if path2CLEO == path2build:
-        raise ValueError("build directory cannot be CLEO")
-    else:
-        Path(path2build).mkdir(exist_ok=True)
-        Path(sharepath).mkdir(exist_ok=True)
-        Path(binpath).mkdir(exist_ok=True)
-        if isfigures[1]:
-            Path(savefigpath).mkdir(exist_ok=True)
-
-    ### --- delete any existing initial conditions --- ###
-    os.system("rm " + grid_filename)
-    os.system("rm " + initsupers_filename)
-
-    generate_gridbox_boundaries(
-        grid_filename, zgrid, xgrid, ygrid, constants_filename, savefigpath, isfigures
+    gic.generate_gridbox_boundaries(
+        grid_filename,
+        zgrid,
+        xgrid,
+        ygrid,
+        constants_filename,
+        isfigures=isfigures,
+        savefigpath=savefigpath,
     )
-    generate_initial_superdroplet_conditions(
+    gic.generate_initial_superdroplet_conditions(
         initattrsgen,
         initsupers_filename,
         config_filename,
@@ -169,16 +94,18 @@ def main(path2CLEO, path2build, config_filename):
         grid_filename,
         nsupers,
         numconc,
-        savefigpath,
-        isfigures,
+        isfigures=isfigures,
+        savefigpath=savefigpath,
+        gbxs2plt="all",
+        savelabel=f"_{nsupers}",
     )
     ### ---------------------------------------------------------------- ###
     ### ---------------------------------------------------------------- ###
 
 
 if __name__ == "__main__":
-    path2CLEO = sys.argv[1]
-    path2build = sys.argv[2]
-    config_filename = sys.argv[3]
+    path2CLEO = Path(sys.argv[1])  # must be absolute
+    config_filename = Path(sys.argv[2])  # must be absolute
+    isfigures = [sys.argv[3], sys.argv[4]]
 
-    main(path2CLEO, path2build, config_filename)
+    main(path2CLEO, config_filename, isfigures=isfigures)

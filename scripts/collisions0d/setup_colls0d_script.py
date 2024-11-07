@@ -1,7 +1,6 @@
 """
 Copyright (c) 2024 MPI-M, Clara Bayley
 
-
 -----  PerformanceTestingCLEO -----
 File: initconds_colls0d.py
 Project: collisions0d
@@ -25,42 +24,52 @@ import shutil
 from pathlib import Path
 
 path2src = Path(__file__).resolve().parent.parent.parent / "src"
-path2CLEO = sys.argv[1]
-path2build = sys.argv[2]
-src_config_filename = sys.argv[3]
+path2CLEO = Path(sys.argv[1])  # must be absolute path
+path2build = Path(sys.argv[2])  # must be absolute path
 
-sys.path.append(path2CLEO)  # for imports for editing a config file
+sys.path.append(str(path2CLEO))  # for imports for editing a config file
 sys.path.append(str(path2src))  # for imports for input files generation
 from collisions0d import initconds_colls0d
 from pySD import editconfigfile
 
-### ----- create temporary config file for simulation ----- ###
-# Copy config to temporary file and edit specific parameters
+### ----- create temporary config file for simulation(s) ----- ###
+src_config_filename = path2src / "collisions0d" / "config_colls0d.yaml"
+isfigures = [True, True]
+nsupers_runs = [8, 64, 1024, 8192]
+sharepath = path2build / "share" / "colls0d"
+binpath = path2build / "bin" / "colls0d"
+tmppath = path2build / "tmp" / "colls0d"
 params = {
-    "maxnsupers": 8192,
+    "constants_filename": str(
+        path2build / "_deps" / "cleo-src" / "libs" / "cleoconstants.hpp"
+    ),
+    "sharepath": str(sharepath),
+    "binpath": str(binpath),
+    "grid_filename": str(sharepath / "dimlessGBxboundaries.dat"),
 }
-nstr = str(params["maxnsupers"])
-params["constants_filename"] = path2build + "/_deps/cleo-src/libs/cleoconstants.hpp"
-params["sharepath"] = path2build + "/share"
-params["grid_filename"] = params["sharepath"] + "/dimlessGBxboundaries_colls0d.dat"
-params["binpath"] = path2build + "/bin_" + nstr
-params["initsupers_filename"] = (
-    params["sharepath"] + "/dimlessSDsinit_colls0d_" + nstr + ".dat"
-)
-params["setup_filename"] = params["binpath"] + "/setup_colls0d_" + nstr + ".txt"
-params["stats_filename"] = params["binpath"] + "/stats_colls0d_" + nstr + ".txt"
-params["zarrbasedir"] = params["binpath"] + "/sol_colls0d_" + nstr + ".zarr"
 
+### --- ensure build, share and bin directories exist --- ###
 if path2CLEO == path2build:
     raise ValueError("build directory cannot be CLEO")
 else:
-    path2tmp = Path(path2build) / "tmp"
-    Path(path2build).mkdir(exist_ok=True)
-    path2tmp.mkdir(exist_ok=True)
+    path2build.mkdir(exist_ok=True)
+    sharepath.mkdir(exist_ok=True, parents=True)
+    binpath.mkdir(exist_ok=True, parents=True)
+    tmppath.mkdir(exist_ok=True, parents=True)
 
-config_filename = path2tmp / "config_colls0d.yaml"
-shutil.copy(Path(src_config_filename), config_filename)
-editconfigfile.edit_config_params(config_filename, params)
+for nsupers in nsupers_runs:
+    ### ----- Copy config to temporary file and edit specific parameters ----- ###
+    params["maxnsupers"] = nsupers
+    params["initsupers_filename"] = str(sharepath / f"dimlessSDsinit_{nsupers}.dat")
+    params["setup_filename"] = str(binpath / f"setup_{nsupers}.txt")
+    params["stats_filename"] = str(binpath / f"stats_{nsupers}.txt")
+    params["zarrbasedir"] = str(binpath / f"sol_{nsupers}.zarr")
 
-### ----- write initial gridbox boundaries and superdroplets binary files ----- ###
-initconds_colls0d.main(path2CLEO, path2build, config_filename)
+    config_filename = tmppath / f"config_{nsupers}.yaml"
+    shutil.copy(Path(src_config_filename), config_filename)
+    editconfigfile.edit_config_params(config_filename, params)
+
+    ### ----- write initial gridbox boundaries and superdroplets binary files ----- ###
+    shutil.rmtree(params["grid_filename"], ignore_errors=True)
+    shutil.rmtree(params["initsupers_filename"], ignore_errors=True)
+    initconds_colls0d.main(path2CLEO, config_filename, isfigures)

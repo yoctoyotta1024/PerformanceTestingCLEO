@@ -22,6 +22,7 @@ with volume exponential distribution as in Shima et al. 2009.
 
 import sys
 
+
 def main(path2CLEO, path2build, config_filename):
     import os
     from pathlib import Path
@@ -53,7 +54,6 @@ def main(path2CLEO, path2build, config_filename):
             rgrid.plot_gridboxboundaries(
                 constants_filename, grid_filename, savefigpath, isfigures[1]
             )
-
 
     ### ----- write initial superdroplets binary ----- ###
     def generate_initial_superdroplet_conditions(
@@ -92,6 +92,7 @@ def main(path2CLEO, path2build, config_filename):
                 "all",
                 savelabel="",
             )
+
     ### ---------------------------------------------------------------- ###
     ### ---------------------------------------------------------------- ###
 
@@ -101,8 +102,8 @@ def main(path2CLEO, path2build, config_filename):
     ### --- essential paths and filenames --- ###
     # path and filenames for creating initial SD conditions
     constants_filename = config["inputfiles"]["constants_filename"]
-    binpath = pyconfig["paths"]["binpath"]
-    sharepath = pyconfig["paths"]["sharepath"]
+    binpath = Path(pyconfig["paths"]["binpath"])
+    sharepath = Path(pyconfig["paths"]["sharepath"])
     initsupers_filename = config["initsupers"]["initsupers_filename"]
     grid_filename = config["inputfiles"]["grid_filename"]
 
@@ -173,6 +174,7 @@ def main(path2CLEO, path2build, config_filename):
     )
     ### ---------------------------------------------------------------- ###
     ### ---------------------------------------------------------------- ###
+
 
 if __name__ == "__main__":
     path2CLEO = sys.argv[1]

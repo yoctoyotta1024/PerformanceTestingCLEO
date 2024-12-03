@@ -17,6 +17,7 @@ https://opensource.org/licenses/BSD-3-Clause
 File Description:
 Script calls src module to generate input files for CLEO 0-D box model
 with volume exponential distribution as in Shima et al. 2009.
+for a given build for nruns of nsupers superdroplets
 """
 
 import sys

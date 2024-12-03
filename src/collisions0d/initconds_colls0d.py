@@ -42,7 +42,7 @@ def main(path2CLEO, config_filename, isfigures=[False, False]):
     constants_filename = config["inputfiles"]["constants_filename"]
     initsupers_filename = config["initsupers"]["initsupers_filename"]
     grid_filename = config["inputfiles"]["grid_filename"]
-    savefigpath = Path(pyconfig["paths"]["binpath"])
+    savefigpath = Path(pyconfig["paths"]["savefigpath"])
 
     ### --- settings for 0-D Model gridbox boundaries --- ###
     zgrid = pyconfig["grid"]["zgrid"]

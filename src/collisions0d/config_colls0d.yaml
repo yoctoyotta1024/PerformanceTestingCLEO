@@ -22,7 +22,7 @@
 ### Initial Conditions Parameters for Python Script ###
 python_initconds:
   paths:
-    binpath: XXX
+    savefigpath: XXX
     sharepath: XXX
   grid:
     zgrid: [0, 100, 100]                                      # [max, min, spacing] of gridbox boundaries in z direction

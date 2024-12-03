@@ -10,17 +10,18 @@ Example: Collisions0d Performance Test in Serial
 ------------------------------------------------
 You can build and compile this example from the root of your performance_testing_cleo directory first
 by building and compiling the exectuabel for a build of your choice (serial, openmp or gpu).
-E.g. for a serial build:
+
+E.g. For a serial build;
+1) Build and compile:
 .. code-block:: console
 
-  $ mkdir ./build ./build/serial
-  $ ./scripts/bash/build_serial.sh ./src ./build/serial
-  $ ./scripts/bash/compile_cleo.sh serial ./build/serial colls0d
+  $ mkdir ./builds
+  $ ./scripts/bash/build_serial.sh ./src ./builds/serial
+  $ ./scripts/bash/compile_cleo.sh serial ./builds/serial colls0d
 
-Then setup and run the example via:
+2) Setup and run the example via:
 .. code-block:: console
 
   $ mamba activate perftests
-  $ python scripts/collisions0d/setup_colls0d_script.py /home/m/m300950/CLEO /home/m/m300950/performance_testing_cleo/build
-
-(note you will need to change the path to `constants_filename` if you do not build in serial beforehand)
+  $ python scripts/collisions0d/setup_colls0d_script.py /home/m/m300950/CLEO /home/m/m300950/performance_testing_cleo/builds serial
+  $ ./builds/serial/collisions0d/colls0d ./builds/serial/tmp/colls0d/config_8_0.yaml

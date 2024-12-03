@@ -17,19 +17,20 @@
 ### --------------- have already built CLEO in "path2build" ---------------- ###
 ### -----------------------  directory using cmake  ------------------------ ###
 ### ------------------------------------------------------------------------ ###
+module purge
+spack unload --all
 
 buildtype=$1      # get from command line argument
 path2build=$2     # get from command line argument
 executables="$3"  # get from command line argument
 
-spack load cmake@3.23.1%gcc
-module load gcc/11.2.0-gcc-11.2.0
-source activate /work/bm1183/m300950/mambaenvs/perftests
-
 if [ "${buildtype}" != "serial" ] && [ "${buildtype}" != "openmp" ] && [ "${buildtype}" != "cuda" ];
 then
   echo "please specify the build type as 'serial', 'openmp' or 'cuda'"
 else
+  module load gcc/11.2.0-gcc-11.2.0 openmpi/4.1.2-gcc-11.2.0 # use gcc mpi wrappers
+  spack load cmake@3.23.1%gcc
+
   # load nvhpc compilers if compiling cuda build
   if [[ "${buildtype}" == "cuda" ]]
   then

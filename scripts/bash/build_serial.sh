@@ -16,10 +16,12 @@
 ### --------- and optionally your environment, path to src and the -------- ###
 ### ----------------------- desired build directory  ----------------------- ###
 ### ------------------------------------------------------------------------ ###
-module load gcc/11.2.0-gcc-11.2.0
+module purge
+spack unload --all
+module load gcc/11.2.0-gcc-11.2.0 openmpi/4.1.2-gcc-11.2.0
 spack load cmake@3.23.1%gcc
-gxx="/sw/spack-levante/gcc-11.2.0-bcn7mb/bin/g++"
-gcc="/sw/spack-levante/gcc-11.2.0-bcn7mb/bin/gcc"
+gxx="/sw/spack-levante/openmpi-4.1.2-mnmady/bin/mpic++"
+gcc="/sw/spack-levante/openmpi-4.1.2-mnmady/bin/mpicc"
 
 path2src=$1    # required
 path2build=$2   # required

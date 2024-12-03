@@ -23,6 +23,7 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "zarr/dataset.hpp"
 #include "cartesiandomain/cartesianmaps.hpp"
 #include "cartesiandomain/cartesianmotion.hpp"
 #include "cartesiandomain/createcartesianmaps.hpp"
@@ -48,7 +49,6 @@
 #include "superdrops/collisions/longhydroprob.hpp"
 #include "superdrops/microphysicalprocess.hpp"
 #include "superdrops/motion.hpp"
-#include "zarr/dataset.hpp"
 #include "zarr/fsstore.hpp"
 
 inline InitialConditions auto create_initconds(const Config &config) {
@@ -130,25 +130,36 @@ int main(int argc, char *argv[]) {
 
   Kokkos::Timer kokkostimer;
 
-  /* Read input parameters from configuration file(s) */
-  const std::filesystem::path config_filename(argv[1]);
-  const Config config(config_filename);
-  const Timesteps tsteps(config.get_timesteps());
+  MPI_Init(&argc, &argv);
 
-  /* Create Xarray dataset with Zarr backend for writing data to a store */
-  auto store = FSStore(config.get_zarrbasedir());
-  auto dataset = Dataset(store);
-
-  /* Create coupldyn solver and coupling between coupldyn and SDM */
-  const CoupledDynamics auto coupldyn = NullDynamics(tsteps.get_couplstep());
-  const CouplingComms<NullDynamics> auto comms = NullDynComms{};
-
-  /* Initial conditions for CLEO run */
-  const InitialConditions auto initconds = create_initconds(config);
+  int comm_size;
+  MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
+  if (comm_size > 1) {
+    std::cout << "ERROR: The current example is not prepared"
+              << " to be run with more than one MPI process" << std::endl;
+    MPI_Abort(MPI_COMM_WORLD, 1);
+  }
 
   /* Initialise Kokkos parallel environment */
   Kokkos::initialize(argc, argv);
   {
+    /* Read input parameters from configuration file(s) */
+    const std::filesystem::path config_filename(argv[1]);
+    const Config config(config_filename);
+    const Timesteps tsteps(config.get_timesteps());
+
+    /* Create Xarray dataset with Zarr backend for writing data to a store */
+    auto store = FSStore(config.get_zarrbasedir());
+    auto dataset = Dataset(store);
+
+    /* Create coupldyn solver and coupling between coupldyn and SDM */
+    const CoupledDynamics auto coupldyn = NullDynamics(tsteps.get_couplstep());
+    const CouplingComms<CartesianMaps, NullDynamics> auto comms =
+        NullDynComms{};
+
+    /* Initial conditions for CLEO run */
+    const InitialConditions auto initconds = create_initconds(config);
+
     /* CLEO Super-Droplet Model (excluding coupled dynamics solver) */
     const SDMMethods sdm(create_sdm(config, tsteps, dataset));
 
@@ -157,6 +168,8 @@ int main(int argc, char *argv[]) {
     runcleo(initconds, tsteps.get_t_end());
   }
   Kokkos::finalize();
+
+  MPI_Finalize();
 
   const auto ttot = double{kokkostimer.seconds()};
   std::cout << "-----\n Total Program Duration: " << ttot << "s \n-----\n";

@@ -9,8 +9,8 @@
 #SBATCH --mail-user=clara.bayley@mpimet.mpg.de
 #SBATCH --mail-type=FAIL
 #SBATCH --account=bm1183
-#SBATCH --output=/home/m/m300950/performance_testing_cleo/run_cleo_out.%j.out
-#SBATCH --error=/home/m/m300950/performance_testing_cleo/run_cleo_err.%j.out
+#SBATCH --output=./run_cleo_out.%j.out
+#SBATCH --error=./run_cleo_err.%j.out
 
 ### ------------------------------------------------------------------------ ###
 ### -------------- PLEASE NOTE: this script assumes you have --------------- ###

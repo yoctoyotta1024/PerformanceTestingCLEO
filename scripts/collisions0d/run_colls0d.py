@@ -2,7 +2,7 @@
 Copyright (c) 2024 MPI-M, Clara Bayley
 
 -----  PerformanceTestingCLEO -----
-File: initconds_colls0d.py
+File: run_colls0d.py
 Project: collisions0d
 Created Date: Monday 24th June 2024
 Author: Clara Bayley (CB)
@@ -19,6 +19,7 @@ Script calls subprocess to run multiple runs with nsupers superdroplets
 using the coll0d executable for a given build.
 """
 
+import os
 import sys
 from pathlib import Path
 import subprocess
@@ -29,13 +30,21 @@ buildtype = sys.argv[2]  # "serial", "openmp" or "gpu"
 executable = path2builds / buildtype / "collisions0d" / "colls0d"
 nsupers_runs = {
     8: 2,
-    # 64: 1,
-    # 1024: 1,
-    # 8192: 1,
+    64: 1,
 }
 
 for nsupers in nsupers_runs.keys():
     for nrun in range(nsupers_runs[nsupers]):
+        binpath_run = (
+            path2builds
+            / buildtype
+            / "bin"
+            / "colls0d"
+            / Path(f"nsupers{nsupers}")
+            / Path(f"nrun{nrun}")
+        )
+        os.chdir(binpath_run)
+
         config_filename = (
             path2builds
             / buildtype
@@ -44,6 +53,8 @@ for nsupers in nsupers_runs.keys():
             / Path(f"config_{nsupers}_{nrun}.yaml")
         )
         cmd = ["sbatch", str(bash_script), str(executable), str(config_filename)]
+
+        print(Path.cwd())
         print(" ".join(cmd))
         subprocess.run(cmd)
         print("\n")

@@ -2,7 +2,7 @@
 Copyright (c) 2024 MPI-M, Clara Bayley
 
 -----  PerformanceTestingCLEO -----
-File: initconds_colls0d.py
+File: setup_colls0d.py
 Project: collisions0d
 Created Date: Monday 24th June 2024
 Author: Clara Bayley (CB)
@@ -67,15 +67,18 @@ else:
 for nsupers in nsupers_runs.keys():
     ### ----- Copy config to temporary file and edit specific parameters ----- ###
     for nrun in range(nsupers_runs[nsupers]):
+        config_filename = tmppath / f"config_{nsupers}_{nrun}.yaml"
+        binpath_run = binpath / Path(f"nsupers{nsupers}") / Path(f"nrun{nrun}")
+        binpath_run.mkdir(exist_ok=True, parents=True)
+
         params["maxnsupers"] = nsupers
         params["initsupers_filename"] = str(
             sharepath / f"dimlessSDsinit_{nsupers}_{nrun}.dat"
         )
-        params["setup_filename"] = str(binpath / f"setup_{nsupers}_{nrun}.txt")
-        params["stats_filename"] = str(binpath / f"stats_{nsupers}_{nrun}.txt")
-        params["zarrbasedir"] = str(binpath / f"sol_{nsupers}_{nrun}.zarr")
+        params["setup_filename"] = str(binpath_run / "setup.txt")
+        params["stats_filename"] = str(binpath_run / "stats.txt")
+        params["zarrbasedir"] = str(binpath_run / "sol.zarr")
 
-        config_filename = tmppath / f"config_{nsupers}_{nrun}.yaml"
         shutil.copy(Path(src_config_filename), config_filename)
         editconfigfile.edit_config_params(config_filename, params)
 

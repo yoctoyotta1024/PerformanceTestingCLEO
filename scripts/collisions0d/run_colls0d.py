@@ -24,14 +24,28 @@ import sys
 from pathlib import Path
 import subprocess
 
+path2src = (
+    Path(__file__).resolve().parent.parent.parent / "src" / "profilers"
+)  # for profilers module
 bash_script = Path(__file__).resolve().parent.parent / "bash" / "run_cleo.sh"
 path2builds = Path(sys.argv[1])  # must be absolute path
 buildtype = sys.argv[2]  # "serial", "openmp" or "gpu"
+profiler = sys.argv[3]
 executable = path2builds / buildtype / "collisions0d" / "colls0d"
 nsupers_runs = {
     8: 2,
     64: 1,
 }
+
+sys.path.append(str(path2src))  # for imports for profilers
+if profiler == "kerneltimer":
+    from use_kp_profilers import KpKernelTimer
+
+    profiler = KpKernelTimer()  # TODO(CB): update with spacetiemstack too
+elif profiler == "spacetimestack":
+    from use_kp_profilers import KpSpaceTimeStack
+
+    profiler = KpSpaceTimeStack()  # TODO(CB): update with spacetiemstack too
 
 for nsupers in nsupers_runs.keys():
     for nrun in range(nsupers_runs[nsupers]):
@@ -58,3 +72,4 @@ for nsupers in nsupers_runs.keys():
         print(" ".join(cmd))
         subprocess.run(cmd)
         print("\n")
+        profiler.postprocess()

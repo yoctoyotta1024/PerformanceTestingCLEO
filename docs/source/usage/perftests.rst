@@ -31,11 +31,11 @@ Then you could perform one normal run with e.g.
 Or e.g. run the example with the Kokkos kernel timer performance tool:
 .. code-block:: console
 
-  $ export KOKKOS_TOOLS_LIBS=/work/bm1183/m300950/kokkos_tools_lib/lib64/libkp_kernel_timer.so
-  $ python scripts/collisions0d/run_colls0d.py /home/m/m300950/performance_testing_cleo/builds/ serial
+  $ python scripts/collisions0d/run_colls0d.py /home/m/m300950/performance_testing_cleo/builds/ serial kerneltimer
 
 Or e.g. run the example with the Kokkos kernel timer performance tool:
 .. code-block:: console
 
-  $ export KOKKOS_TOOLS_LIBS=/work/bm1183/m300950/kokkos_tools_lib/lib64/libkp_space_time_stack.so
-  $ python scripts/collisions0d/run_colls0d.py /home/m/m300950/performance_testing_cleo/builds/ serial
+  $ python scripts/collisions0d/run_colls0d.py /home/m/m300950/performance_testing_cleo/builds/ serial spacetimestack
+
+# TODO(CB): update with correct way to use profilers

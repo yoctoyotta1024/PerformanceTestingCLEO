@@ -3,7 +3,7 @@ Copyright (c) 2024 MPI-M, Clara Bayley
 
 -----  PerformanceTestingCLEO -----
 File: read_kp_profilers.py
-Project: postprocess
+Project: profilers
 Created Date: Monday 24th June 2024
 Author: Clara Bayley (CB)
 Additional Contributors:
@@ -15,7 +15,7 @@ License: BSD 3-Clause "New" or "Revised" License
 https://opensource.org/licenses/BSD-3-Clause
 -----
 File Description:
-Functions to post-process output of Kokkos profiles to convert it into zarr datasets
+Functions to post-process output of Kokkos profilers to convert it into zarr datasets
 """
 
 import xarray as xr

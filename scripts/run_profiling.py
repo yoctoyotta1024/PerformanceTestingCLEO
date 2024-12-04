@@ -2,8 +2,8 @@
 Copyright (c) 2024 MPI-M, Clara Bayley
 
 -----  PerformanceTestingCLEO -----
-File: run_colls0d.py
-Project: collisions0d
+File: run_profiling.py
+Project: scripts
 Created Date: Monday 24th June 2024
 Author: Clara Bayley (CB)
 Additional Contributors:
@@ -16,7 +16,7 @@ https://opensource.org/licenses/BSD-3-Clause
 -----
 File Description:
 Script calls subprocess to run multiple runs with nsupers superdroplets
-using the coll0d executable for a given build.
+using an executable for a given build.
 """
 
 import os
@@ -24,6 +24,9 @@ import sys
 from pathlib import Path
 import subprocess
 
+executable_paths = {
+    "colls0d": Path("collisions0d") / "colls0d",
+}
 path2src = (
     Path(__file__).resolve().parent.parent / "src" / "profilers"
 )  # for profilers module
@@ -32,7 +35,7 @@ path2builds = Path(sys.argv[1])  # must be absolute path
 buildtype = sys.argv[2]  # "serial", "openmp" or "gpu"
 executable = sys.argv[3]
 profiler = sys.argv[4]
-executable = path2builds / buildtype / "collisions0d" / "colls0d"
+executable_path = path2builds / buildtype / executable_paths[executable]
 nsupers_runs = {
     8: 2,
     64: 1,
@@ -54,7 +57,7 @@ for nsupers in nsupers_runs.keys():
             path2builds
             / buildtype
             / "bin"
-            / "colls0d"
+            / executable
             / Path(f"nsupers{nsupers}")
             / Path(f"nrun{nrun}")
         )
@@ -64,10 +67,10 @@ for nsupers in nsupers_runs.keys():
             path2builds
             / buildtype
             / "tmp"
-            / "colls0d"
+            / executable
             / Path(f"config_{nsupers}_{nrun}.yaml")
         )
-        cmd = ["sbatch", str(bash_script), str(executable), str(config_filename)]
+        cmd = ["sbatch", str(bash_script), str(executable_path), str(config_filename)]
 
         print(Path.cwd())
         print(" ".join(cmd))

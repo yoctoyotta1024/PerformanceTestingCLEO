@@ -2,8 +2,8 @@
 Copyright (c) 2024 MPI-M, Clara Bayley
 
 -----  PerformanceTestingCLEO -----
-File: postproc_colls0d.py
-Project: collisions0d
+File: postproc_profiling.py
+Project: scripts
 Created Date: Monday 24th June 2024
 Author: Clara Bayley (CB)
 Additional Contributors:
@@ -15,8 +15,8 @@ License: BSD 3-Clause "New" or "Revised" License
 https://opensource.org/licenses/BSD-3-Clause
 -----
 File Description:
-Script converts output .dat and .txt files from multiple runs with nsupers superdroplets
-using the coll0d into profilers zarr directories.
+Script converts output .dat and .txt files from multiple runs of an executable with
+nsupers superdroplets into profilers zarr directories.
 """
 
 import sys
@@ -51,7 +51,7 @@ for nsupers in nsupers_runs.keys():
             path2builds
             / buildtype
             / "bin"
-            / "colls0d"
+            / executable
             / Path(f"nsupers{nsupers}")
             / Path(f"nrun{nrun}")
         )

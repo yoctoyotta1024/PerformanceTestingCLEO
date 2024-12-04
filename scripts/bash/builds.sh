@@ -22,21 +22,16 @@ for buildtype in "${buildtypes[@]}"; do
     ### --------------------- build source ------------------- ###
     if [ "${buildtype}" != "serial" ] && [ "${buildtype}" != "openmp" ] && [ "${buildtype}" != "cuda" ];
     then
-      echo "'${buildtype}' not valid build type. Please specify 'serial', 'openmp' or 'cuda'"
+        echo "'${buildtype}' not valid build type. Please specify 'serial', 'openmp' or 'cuda'"
     fi
     if [ "${buildtype}" == "serial" ] || [ "${buildtype}" == "openmp" ] || [ "${buildtype}" == "cuda" ];
     then
-      buildbash=${path2buildbash}/build_${buildtype}.sh
-      path2build=${path2builds}/${buildtype}
-      echo "build type: ${buildtype}"
-      echo "path to src: ${path2src}"
-      echo "path to build directories: ${path2build}"
-      echo "${buildbash} ${path2src} ${path2build}"
-      ${buildbash} ${path2src} ${path2build} ${enableyac} ${yacyaxtroot}
+        buildbash=${path2buildbash}/build_${buildtype}.sh
+        path2build=${path2builds}/${buildtype}
+        echo "build type: ${buildtype}"
+        echo "path to src: ${path2src}"
+        echo "path to build directories: ${path2build}"
+        echo "${buildbash} ${path2src} ${path2build}"
+        ${buildbash} ${path2src} ${path2build} ${enableyac} ${yacyaxtroot}
     fi
 done
-
-# else
-#
-
-#

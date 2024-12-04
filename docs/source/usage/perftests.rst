@@ -32,10 +32,12 @@ Or e.g. run the example with the Kokkos kernel timer performance tool:
 .. code-block:: console
 
   $ python scripts/collisions0d/run_colls0d.py /home/m/m300950/performance_testing_cleo/builds/ serial kerneltimer
+  $ python scripts/collisions0d/postproc_colls0d.py /home/m/m300950/performance_testing_cleo/builds/ serial kerneltimer
 
 Or e.g. run the example with the Kokkos kernel timer performance tool:
 .. code-block:: console
 
   $ python scripts/collisions0d/run_colls0d.py /home/m/m300950/performance_testing_cleo/builds/ serial spacetimestack
+  $ python scripts/collisions0d/postproc_colls0d.py /home/m/m300950/performance_testing_cleo/builds/ serial spacetimestack
 
 # TODO(CB): update with correct way to use profilers

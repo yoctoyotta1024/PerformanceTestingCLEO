@@ -31,13 +31,37 @@ class KpKernelTimer:
     ):
         import os
 
+        self.kokkos_tools_lib = kokkos_tools_lib
+        self.kp_reader = self.kokkos_tools_lib / ".." / "bin" / "kp_reader"
+
         os.environ["KOKKOS_TOOLS_LIBS"] = str(
-            kokkos_tools_lib / "libkp_kernel_timer.so"
+            self.kokkos_tools_lib / "libkp_kernel_timer.so"
         )
         print("Using Kokkos Profiling Tool", os.environ["KOKKOS_TOOLS_LIBS"])
+        print("Using Kokkos Tool Reader", self.kp_reader)
 
-    def postprocess(self):
-        print("now convert to zarr WIP")  # TODO(CB): finish
+    def postprocess(self, filespath: Optional[Path] = None):
+        import glob
+        import subprocess
+        import os
+        from pathlib import Path
+
+        # Add kokkos_tools_lib to LD_LIBRARY_PATH
+        ld_lib_path = os.environ.get("LD_LIBRARY_PATH", "")
+        os.environ["LD_LIBRARY_PATH"] = f"{self.kokkos_tools_lib}:{ld_lib_path}"
+
+        if filespath is None:
+            filespath = Path.cwd()
+
+        # Use glob to find all .dat files in the specified directory
+        datfiles = glob.glob(os.path.join(filespath, "*.dat"))
+
+        # Print the list of .dat files
+        for filename in datfiles:
+            txt_filename = str(Path(filename).with_suffix(".txt"))
+            cmd = [str(self.kp_reader), filename]
+            with open(txt_filename, "w") as wfile:
+                subprocess.run(cmd, stdout=wfile, stderr=subprocess.STDOUT)
 
 
 class KpSpaceTimeStack:
@@ -49,13 +73,25 @@ class KpSpaceTimeStack:
     ):
         import os
 
+        self.kokkos_tools_lib = kokkos_tools_lib
+
         os.environ["KOKKOS_TOOLS_LIBS"] = str(
-            kokkos_tools_lib / "libkp_space_time_stack.so"
+            self.kokkos_tools_lib / "libkp_space_time_stack.so"
         )
         print("Using Kokkos Profiling Tool", os.environ["KOKKOS_TOOLS_LIBS"])
 
-    def postprocess(self):
-        print("now convert to zarr WIP")  # TODO(CB): finish
+    def postprocess(self, filespath: Optional[Path] = None):
+        import glob
+        import os
+
+        if filespath is None:
+            filespath = Path.cwd()
+
+        # Use glob to find all .dat files in the specified directory
+        datfiles = glob.glob(os.path.join(filespath, "*out.*.out"))
+
+        for filename in datfiles:
+            print(f"Space Time Stack profiling found in {filename}")
 
 
-# TODO(CB): likewise for memory profiler
+# TODO fill-in zarr conversions

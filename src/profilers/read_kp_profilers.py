@@ -18,8 +18,6 @@ File Description:
 Functions to post-process output of Kokkos profilers to convert it into zarr datasets
 """
 
-import xarray as xr
-
 
 def file_to_lines(filename):
     with open(filename, "r") as file:
@@ -49,12 +47,16 @@ def sections_from_lines(lines, seperator):
 
 
 def extract_between_lines(lines, start_line, end_line):
+    if start_line not in lines or end_line not in lines:
+        return []
     start = lines.index(start_line) + 1
     end = lines.index(end_line)
     return lines[start:end]
 
 
 def kernel_timers_dataset(name, section):
+    import xarray as xr
+
     def decode_kernel_timer(data):
         return {
             k: (
@@ -99,6 +101,8 @@ def kernel_timers_dataset(name, section):
 
 
 def kernel_timers_summary_dataset(name, section):
+    import xarray as xr
+
     data = []
     for line in section[1:-1]:
         data.append(float(line.split()[-2]))
@@ -146,6 +150,8 @@ def kp_kernel_timer_datasets(sections):
 
 
 def space_time_stack_allocations_dataset(name, section):
+    import xarray as xr
+
     def decode_allocations(data):
         alloc_val = ":".join([s.split()[0][:-1] for s in section[2:]])
         alloc_name = ":".join([s.split()[-1] for s in section[2:]])
@@ -175,6 +181,8 @@ def space_time_stack_allocations_dataset(name, section):
 
 
 def combine_space_time_stack_allocations_dataset(datasets):
+    import xarray as xr
+
     dataset = xr.concat(datasets, dim="spaces")
     dataset["spaces"] = [ds.name for ds in datasets]
     dataset.attrs["name"] = "Memory Space Allocations"
@@ -182,6 +190,8 @@ def combine_space_time_stack_allocations_dataset(datasets):
 
 
 def space_time_stack_highwaterconsumption_dataset(section):
+    import xarray as xr
+
     ds = xr.Dataset(
         {
             "host_high_water_memory_consumption": (
@@ -215,20 +225,34 @@ def kp_space_time_stack_datasets(sections):
 
 
 def convert_kp_kernel_timer_to_dataset(name, filename):
+    import xarray as xr
+    from pathlib import Path
+
     seperator = "---------------------------------------"
     sections = sections_from_lines(file_to_lines(filename), seperator)
     datasets = kp_kernel_timer_datasets(sections)
     useful_ds = xr.merge([datasets[0], datasets[2]])  # Regions and Summary
     useful_ds.attrs["name"] = name
+    useful_ds.attrs["original_file"] = str(Path(filename).name)
     return useful_ds
 
 
 def convert_kp_space_time_stack_to_dataset(name, filename):
+    import xarray as xr
+    from pathlib import Path
+
     seperator = "==================="
     start_line = "BEGIN KOKKOS PROFILING REPORT:\n"
     end_line = "END KOKKOS PROFILING REPORT.\n"
     lines = extract_between_lines(file_to_lines(filename), start_line, end_line)
-    datasets = kp_space_time_stack_datasets(sections_from_lines(lines, seperator))
-    useful_ds = xr.merge([datasets[0], datasets[1]])  # Allocations and High Water Mark
-    useful_ds.attrs["name"] = name
-    return useful_ds
+    if lines:
+        datasets = kp_space_time_stack_datasets(sections_from_lines(lines, seperator))
+        useful_ds = xr.merge(
+            [datasets[0], datasets[1]]
+        )  # Allocations and High Water Mark
+        useful_ds.attrs["name"] = name
+        useful_ds.attrs["original_file"] = str(Path(filename).name)
+        return useful_ds
+    else:
+        print(f"Warning: no KP Space Time Stack data found in {Path(filename).name}")
+        return None

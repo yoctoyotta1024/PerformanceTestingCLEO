@@ -56,4 +56,4 @@ for nsupers in nsupers_runs.keys():
             / Path(f"nrun{nrun}")
         )
 
-        profiler.postprocess(filespath=binpath_run)
+        profiler.postprocess(filespath=binpath_run, to_dataset=True)

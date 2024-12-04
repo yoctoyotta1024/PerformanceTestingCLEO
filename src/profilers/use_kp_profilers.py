@@ -20,6 +20,7 @@ classes to use Kokkos profilers in run scripts
 
 from pathlib import Path
 from typing import Optional
+import read_kp_profilers
 
 
 class KpKernelTimer:
@@ -40,7 +41,9 @@ class KpKernelTimer:
         print("Using Kokkos Profiling Tool", os.environ["KOKKOS_TOOLS_LIBS"])
         print("Using Kokkos Tool Reader", self.kp_reader)
 
-    def postprocess(self, filespath: Optional[Path] = None):
+    def postprocess(
+        self, filespath: Optional[Path] = None, to_dataset: Optional[bool] = False
+    ):
         import glob
         import subprocess
         import os
@@ -62,6 +65,15 @@ class KpKernelTimer:
             cmd = [str(self.kp_reader), filename]
             with open(txt_filename, "w") as wfile:
                 subprocess.run(cmd, stdout=wfile, stderr=subprocess.STDOUT)
+            if to_dataset:
+                name = "KP Kernel Timer File DS"
+                ds = read_kp_profilers.convert_kp_kernel_timer_to_dataset(
+                    name, txt_filename
+                )
+                zarr_filename = str(Path(filename).name).replace(".", "p")
+                zarr_filename = f"/kp_kernel_timer_{zarr_filename}.zarr"
+                zarr_filename = str(Path(filename).parent) + zarr_filename
+                ds.to_zarr(Path(zarr_filename))
 
 
 class KpSpaceTimeStack:
@@ -80,7 +92,9 @@ class KpSpaceTimeStack:
         )
         print("Using Kokkos Profiling Tool", os.environ["KOKKOS_TOOLS_LIBS"])
 
-    def postprocess(self, filespath: Optional[Path] = None):
+    def postprocess(
+        self, filespath: Optional[Path] = None, to_dataset: Optional[bool] = False
+    ):
         import glob
         import os
 
@@ -91,7 +105,13 @@ class KpSpaceTimeStack:
         datfiles = glob.glob(os.path.join(filespath, "*out.*.out"))
 
         for filename in datfiles:
-            print(f"Space Time Stack profiling found in {filename}")
-
-
-# TODO fill-in zarr conversions
+            if to_dataset:
+                name = "KP Space Time Stack File DS"
+                ds = read_kp_profilers.convert_kp_space_time_stack_to_dataset(
+                    name, filename
+                )
+                if ds is not None:
+                    zarr_filename = str(Path(filename).name).replace(".", "p")
+                    zarr_filename = f"/kp_space_time_stack_{zarr_filename}.zarr"
+                    zarr_filename = str(Path(filename).parent) + zarr_filename
+                    ds.to_zarr(Path(zarr_filename))

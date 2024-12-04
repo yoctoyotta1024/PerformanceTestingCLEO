@@ -12,3 +12,4 @@ matplotlib
 xarray
 pre-commit
 ruamel.yaml
+zarr

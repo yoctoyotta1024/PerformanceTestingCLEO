@@ -27,7 +27,7 @@ from pathlib import Path
 path2src = Path(__file__).resolve().parent.parent.parent / "src"
 path2CLEO = Path(sys.argv[1])  # must be absolute path
 path2builds = Path(sys.argv[2])  # must be absolute path
-buildtype = sys.argv[3]  # "serial", "openmp" or "gpu"
+buildtype = sys.argv[3]  # "serial", "openmp" or "cuda"
 
 sys.path.append(str(path2CLEO))  # for imports for editing a config file
 sys.path.append(str(path2src))  # for imports for input files generation

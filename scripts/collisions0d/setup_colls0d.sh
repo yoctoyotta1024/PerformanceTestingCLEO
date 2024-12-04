@@ -21,7 +21,7 @@ spack unload --all
 path2CLEO=${1:-/home/m/m300950/CLEO}
 path2src=${2:-/home/m/m300950/performance_testing_cleo}       # performance_testing_cleo root dir
 path2builds=${3:-${path2src}/builds}                          # builds in path2builds/[build_type]
-buildtype=${4:-serial}                                        # "serial", "openmp" or "gpu"
+buildtype=${4:-serial}                                        # "serial", "openmp" or "cuda"
 python=${5:-/work/bm1183/m300950/bin/envs/perftests/bin/python}
 
 ### ----------------- run profiling --------------- ###

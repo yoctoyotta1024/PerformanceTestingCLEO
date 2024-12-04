@@ -32,7 +32,7 @@ path2src = (
 )  # for profilers module
 bash_script = Path(__file__).resolve().parent / "bash" / "run_cleo.sh"
 path2builds = Path(sys.argv[1])  # must be absolute path
-buildtype = sys.argv[2]  # "serial", "openmp" or "gpu"
+buildtype = sys.argv[2]  # "serial", "openmp" or "cuda"
 executable = sys.argv[3]
 profiler = sys.argv[4]
 executable_path = path2builds / buildtype / executable_paths[executable]

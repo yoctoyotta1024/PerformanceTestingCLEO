@@ -9,7 +9,7 @@ in a build directory of your choice.
 Example: Collisions0d Performance Test in Serial
 ------------------------------------------------
 You can build and compile this example from the root of your performance_testing_cleo directory first
-by building and compiling the exectuabel for a build of your choice (serial, openmp or gpu).
+by building and compiling the exectuabel for a build of your choice (serial, openmp or cuda).
 
 E.g. For a serial build;
 1) Build and compile:

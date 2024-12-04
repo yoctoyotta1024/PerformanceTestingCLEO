@@ -26,7 +26,7 @@ path2src = (
     Path(__file__).resolve().parent.parent / "src" / "profilers"
 )  # for profilers module
 path2builds = Path(sys.argv[1])  # must be absolute path
-buildtype = sys.argv[2]  # "serial", "openmp" or "gpu"
+buildtype = sys.argv[2]  # "serial", "openmp" or "cuda"
 executable = sys.argv[3]
 profiler = sys.argv[4]
 nsupers_runs = {

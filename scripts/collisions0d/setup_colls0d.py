@@ -69,7 +69,6 @@ for nsupers in nsupers_runs.keys():
     for nrun in range(nsupers_runs[nsupers]):
         config_filename = tmppath / f"config_{nsupers}_{nrun}.yaml"
         binpath_run = binpath / Path(f"nsupers{nsupers}") / Path(f"nrun{nrun}")
-        binpath_run.mkdir(exist_ok=True, parents=True)
 
         params["maxnsupers"] = nsupers
         params["initsupers_filename"] = str(

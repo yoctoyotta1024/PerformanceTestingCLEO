@@ -61,6 +61,7 @@ for nsupers in nsupers_runs.keys():
             / Path(f"nsupers{nsupers}")
             / Path(f"nrun{nrun}")
         )
+        binpath_run.mkdir(exist_ok=True, parents=True)
         os.chdir(binpath_run)
 
         config_filename = (

@@ -25,12 +25,13 @@ from pathlib import Path
 import subprocess
 
 path2src = (
-    Path(__file__).resolve().parent.parent.parent / "src" / "profilers"
+    Path(__file__).resolve().parent.parent / "src" / "profilers"
 )  # for profilers module
-bash_script = Path(__file__).resolve().parent.parent / "bash" / "run_cleo.sh"
+bash_script = Path(__file__).resolve().parent / "bash" / "run_cleo.sh"
 path2builds = Path(sys.argv[1])  # must be absolute path
 buildtype = sys.argv[2]  # "serial", "openmp" or "gpu"
-profiler = sys.argv[3]
+executable = sys.argv[3]
+profiler = sys.argv[4]
 executable = path2builds / buildtype / "collisions0d" / "colls0d"
 nsupers_runs = {
     8: 2,

@@ -13,7 +13,7 @@
 
 ### ------------------------------------------------------------------------ ###
 ### ------- You MUST edit these lines to set your default compiler(s) ------ ###
-### --------- and optionally your environment, path to CLEO and the -------- ###
+### --------- and optionally your environment, path to source and the -------- ###
 ### ----------------------- desired build directory  ----------------------- ###
 ### ------------------------------------------------------------------------ ###
 module purge
@@ -58,7 +58,7 @@ kokkosdevice=""
 yacflags="-DENABLE_YAC_COUPLING=OFF"
 ### ---------------------------------------------------- ###
 
-### ---------------- build CLEO with cmake ------------- ###
+### ---------------- build source with cmake ------------- ###
 echo "CXX_COMPILER=${CXX} CC_COMPILER=${CC}"
 echo "CLEO_DIR: ${path2CLEO}"
 echo "BUILD_DIR: ${path2build}"

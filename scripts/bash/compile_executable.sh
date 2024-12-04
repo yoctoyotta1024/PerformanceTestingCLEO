@@ -20,9 +20,9 @@
 module purge
 spack unload --all
 
+path2builds=$1     # get from command line argument
+executable=$2      # get from command line argument
 buildtype=$1      # get from command line argument
-path2build=$2     # get from command line argument
-executables="$3"  # get from command line argument
 
 if [ "${buildtype}" != "serial" ] && [ "${buildtype}" != "openmp" ] && [ "${buildtype}" != "cuda" ];
 then

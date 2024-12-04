@@ -60,7 +60,7 @@ yacflags="-DENABLE_YAC_COUPLING=OFF"
 
 ### ---------------- build source with cmake ------------- ###
 echo "CXX_COMPILER=${CXX} CC_COMPILER=${CC}"
-echo "CLEO_DIR: ${path2CLEO}"
+echo "SRC_DIR: ${path2src}"
 echo "BUILD_DIR: ${path2build}"
 echo "KOKKOS_FLAGS: ${kokkosflags}"
 echo "KOKKOS_DEVICE_PARALLELISM: ${kokkosdevice}"
@@ -71,7 +71,7 @@ cmake -DCMAKE_CXX_COMPILER=${CXX} \
     -DCMAKE_C_COMPILER=${CC} \
     -DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS}" \
     -DCMAKE_MODULE_PATH=${yacmodule} \
-    -S ${path2CLEO} -B ${path2build} \
+    -S ${path2src} -B ${path2build} \
     ${kokkosflags} ${kokkosdevice} ${kokkoshost} \
     ${yacflags}
 

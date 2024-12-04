@@ -22,8 +22,11 @@ E.g. For a serial build;
 2) Setup the example:
 .. code-block:: console
 
-  $ mamba activate perftests
-  $ python scripts/collisions0d/setup_colls0d.py /home/m/m300950/CLEO /home/m/m300950/performance_testing_cleo/builds serial
+  $ ./scripts/collisions0d/setup_colls0d.sh \
+    /home/m/m300950/CLEO \
+    /home/m/m300950/performance_testing_cleo \
+    /home/m/m300950/performance_testing_cleo/builds \
+    serial
 
 Then you could perform one normal run with e.g.
 ``./builds/serial/collisions0d/colls0d ./builds/serial/tmp/colls0d/config_8_0.yaml``

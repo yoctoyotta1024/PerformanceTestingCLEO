@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=setup_colls0d
-#SBATCH --partition=cpu
+#SBATCH --partition=compute
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=8
 #SBATCH --mem=30G

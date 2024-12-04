@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=run_profiling
-#SBATCH --partition=cpu
+#SBATCH --partition=compute
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=8
 #SBATCH --mem=30G
@@ -20,7 +20,7 @@ spack unload --all
 
 path2src=${1:-/home/m/m300950/performance_testing_cleo}       # performance_testing_cleo root dir
 path2builds=${2:-${path2src}/builds}                          # builds in path2builds/[build_type]
-executable=${3:-colls0d}
+executable=${3:-collisions0d/colls0d}
 buildtype=${4:-serial}                                        # "serial", "openmp" or "gpu"
 profiler=${5:-kerneltimer}                                    # "kerneltimer" or "spacetimestack"
 python=${6:-/work/bm1183/m300950/bin/envs/perftests/bin/python}

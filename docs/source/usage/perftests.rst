@@ -16,8 +16,8 @@ E.g. For a serial build;
 .. code-block:: console
 
   $ mkdir ./builds
-  $ ./scripts/bash/build_builds.sh ./src ./builds serial openmp cuda
-  $ ./scripts/bash/compile_executable.sh ./builds/ colls0d serial openmp cuda
+  $ ./scripts/bash/builds.sh ./src ./builds serial openmp cuda
+  $ ./scripts/bash/compiles.sh ./builds/ colls0d serial openmp cuda
 
 2) Setup the example:
 .. code-block:: console

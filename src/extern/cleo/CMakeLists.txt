@@ -8,9 +8,9 @@ include(FetchContent)
 FetchContent_Declare(
   cleo
   # GIT_REPOSITORY https://github.com/yoctoyotta1024/CLEO
-  # GIT_TAG v0.28.4
-  URL https://github.com/yoctoyotta1024/CLEO/archive/refs/tags/v0.28.4.zip
+  # GIT_TAG v0.29.0
+  URL https://github.com/yoctoyotta1024/CLEO/archive/refs/tags/v0.29.0.zip
 )
 FetchContent_MakeAvailable(cleo)
 
-message(STATUS "CLEO v0.28.4 installation in: ${CLEO_BINARY_DIR}")
+message(STATUS "CLEO v0.29.0 installation in: ${CLEO_BINARY_DIR}")

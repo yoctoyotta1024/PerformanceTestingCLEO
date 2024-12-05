@@ -18,15 +18,21 @@
 module purge
 spack unload --all
 
-path2src=${1:-/home/m/m300950/performance_testing_cleo}       # performance_testing_cleo root dir
-path2builds=${2:-${path2src}/builds}                          # builds in path2builds/[build_type]
-executable=${3:-collisions0d/colls0d}
-buildtype=${4:-serial}                                        # "serial", "openmp" or "cuda"
+python=${1:-/work/bm1183/m300950/bin/envs/perftests/bin/python}
+path2src=${2:-/home/m/m300950/performance_testing_cleo}       # performance_testing_cleo root dir
+path2builds=${3:-${path2src}/builds}                          # builds in path2builds/[build_type]
+executable=${4:-collisions0d/colls0d}
 profiler=${5:-kerneltimer}                                    # "kerneltimer" or "spacetimestack"
-python=${6:-/work/bm1183/m300950/bin/envs/perftests/bin/python}
+buildtypes=("${@:6}")                                         # "serial", "openmp" and/or "cuda"
+
+if [ "${#buildtypes[@]}" -eq 0 ]; then
+  buildtypes=("cuda" "openmp" "serial")
+fi
 
 ### ----------------- run profiling --------------- ###
-runcmd="${python} ${path2src}/scripts/run_profiling.py ${path2builds} ${buildtype} ${executable} ${profiler}"
-echo ${runcmd}
-${runcmd}
+for buildtype in "${buildtypes[@]}"; do
+  runcmd="${python} ${path2src}/scripts/run_profiling.py ${path2builds} ${buildtype} ${executable} ${profiler}"
+  echo ${runcmd}
+  ${runcmd}
+done
 ### ---------------------------------------------------- ###

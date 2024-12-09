@@ -38,7 +38,7 @@ jobs:
         run: |
           cd docs && make html
       - name: Archive build artifacts (i.e. documentation)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: html-docs
           path: docs/build/html/

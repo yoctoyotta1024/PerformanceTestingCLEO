@@ -107,7 +107,7 @@ inline Observer auto create_observer(const Config &config,
   const Observer auto obssd =
       create_superdrops_observer(obsstep, dataset, maxchunk);
 
-  return obssd >> obs1 >> obs0;
+  return obssd >> obs1 >> obs0;  // TODO(CB): no observers
 }
 
 template <typename Store>

@@ -22,29 +22,156 @@ type into mean over nruns for each build in one "grand" dataset.
 import os
 import sys
 import glob
+import xarray as xr
 from pathlib import Path
 
 path2builds = Path(sys.argv[1])  # must be absolute path
 buildtype = sys.argv[2]
 executable = sys.argv[3]
 profiler = sys.argv[4]
+do_write_runs_datasets = False
 nsupers_runs = {
     8: 2,
     64: 1,
 }
 
-grand_ds = []
-for nsupers in nsupers_runs.keys():
-    for nrun in range(nsupers_runs[nsupers]):
-        filespath = (
-            path2builds
-            / buildtype
-            / "bin"
-            / executable
-            / f"nsupers{nsupers}"
-            / f"nrun{nrun}"
+
+# ---------------- function definitions ---------------- #
+def find_dataset(filespath: Path, profiler: str) -> str | None:
+    """returns name of zarr dataset in filespath for a given profiler if found, else returns None."""
+    filenames = glob.glob(os.path.join(filespath, f"kp_{profiler}_*.zarr"))
+    if filenames == []:
+        msg = f"Warning: no {profiler} zarr dataset found in {filespath}"
+        print(msg)
+        return None
+    else:
+        if len(filenames) > 1:
+            msg = f"Warning: only 1 of {profiler} zarr datasets found in {filespath} is being used"
+            print(msg)
+        return filenames[0]
+
+
+def concat_datasets(ds: list[xr.Dataset], dim: str, original_files: str) -> xr.Dataset:
+    if ds == []:
+        msg = f"Warning: No members for grand dataset from {original_files}"
+        print(msg)
+        return None
+    return xr.concat(ds, dim=dim)
+
+
+def ensemble_over_runs_dataset(
+    runs_ds: list[xr.Dataset],
+    profiler: str,
+    original_files: str,
+    buildtype: str,
+    nsupers: int,
+) -> xr.Dataset | None:
+    """concatenates datasets in runs_ds over new dimension "nruns"
+    and adds new attributes to resulting dataset. Idea being to create a
+    single dataset for an ensemble of runs of an executable for nsupers and
+    a certain buildtype"""
+    runs_ds = concat_datasets(runs_ds, "nrun", original_files)
+    if runs_ds is None:
+        return None
+    runs_ds.attrs["name"] = f"KP {profiler} DS for ensemble of runs"
+    del runs_ds.attrs["original_file"]
+    runs_ds.attrs["original_files"] = original_files
+    runs_ds.attrs["buildtype"] = buildtype
+    runs_ds.attrs["nsupers"] = nsupers
+
+    return runs_ds
+
+
+def statistics_of_ensemble_over_runs_dataset(runs_ds: xr.Dataset) -> xr.Dataset:
+    """returns dataset which averages over runs dimension e.g. takes mean,
+    standard deviation, and lower/upper quartiles of ensemble of runs"""
+    mean = runs_ds.mean(dim="nrun")
+    std = runs_ds.std(dim="nrun")
+    lq = runs_ds.quantile(0.25, dim="nrun").drop_vars("quantile")
+    uq = runs_ds.quantile(0.75, dim="nrun").drop_vars("quantile")
+
+    stats = [mean, std, lq, uq]
+    stats_names = ["mean", "std", "lower_quartile", "upper_quartile"]
+    stats_ds = xr.concat(stats, dim="statistic")
+    stats_ds.coords["statistic"] = stats_names
+
+    return stats_ds
+
+
+def ensemble_over_nsupers_grand_dataset(
+    grand_ds: list[xr.Dataset],
+    nsupers_coord: list[int],
+    profiler: str,
+    original_files: str,
+    buildtype: str,
+) -> xr.Dataset | None:
+    """concatenates datasets in grand_ds over new dimension "nsupers"
+    and adds new attributes to resulting dataset. Idea being to create a
+    single dataset for an ensemble of statics over runs with nsupers for
+    a certain executable and buildtype"""
+    grand_ds = concat_datasets(grand_ds, "nsupers", original_files)
+    if grand_ds is None:
+        return None
+    grand_ds.coords["nsupers"] = nsupers_coord
+    grand_ds.attrs["name"] = f"KP {profiler} grand DS"
+    grand_ds.attrs["original_files"] = original_files
+    grand_ds.attrs["buildtype"] = buildtype
+
+    return grand_ds
+
+
+# ------------------------------------------------------ #
+
+# --------- write ensemble of runs datasets ------------ #
+if do_write_runs_datasets:
+    for nsupers in nsupers_runs.keys():
+        runs_ds = []
+        for nrun in range(nsupers_runs[nsupers]):
+            filespath = (
+                path2builds
+                / buildtype
+                / "bin"
+                / executable
+                / f"nsupers{nsupers}"
+                / f"nrun{nrun}"
+            )
+            filename = find_dataset(filespath, profiler)
+            if filename is not None:
+                runs_ds.append(xr.open_zarr(filename))
+        og_filenames = str(filespath.parent / "nrun*" / f"kp_{profiler}_*.zarr")
+        runs_ds = ensemble_over_runs_dataset(
+            runs_ds, profiler, og_filenames, buildtype, nsupers
         )
-        filenames = glob.glob(os.path.join(filespath, f"kp_{profiler}_*.zarr"))
-        for filename in filenames:
-            print(filename)
-        # ds = xr.open_zarr(filename)
+        if runs_ds is not None:
+            filename = filespath.parent / f"kp_{profiler}_ensemble.zarr"
+            runs_ds.to_zarr(filename)
+# ------------------------------------------------------ #
+
+# -------- write ensemble of nsupers datasets ---------- #
+grand_ds = []
+nsupers_coord = []
+for nsupers in nsupers_runs.keys():
+    filename = (
+        path2builds
+        / buildtype
+        / "bin"
+        / executable
+        / f"nsupers{nsupers}"
+        / f"kp_{profiler}_ensemble.zarr"
+    )
+    try:
+        runs_ds = xr.open_dataset(filename)
+        stats_ds = statistics_of_ensemble_over_runs_dataset(runs_ds)
+        nsupers_coord.append(nsupers)
+        grand_ds.append(stats_ds)
+    except FileNotFoundError:
+        msg = f"Warning: No data found for nsupers={nsupers} member of {filename.parent.parent} grand dataset"
+        print(msg)
+og_filenames = str(filename.parent.parent / "nsupers*" / filename.name)
+grand_ds = ensemble_over_nsupers_grand_dataset(
+    grand_ds, nsupers_coord, profiler, og_filenames, buildtype
+)
+if grand_ds is not None:
+    filename = filename.parent.parent / f"kp_{profiler}.zarr"
+    grand_ds.to_zarr(filename)
+# ------------------------------------------------------ #

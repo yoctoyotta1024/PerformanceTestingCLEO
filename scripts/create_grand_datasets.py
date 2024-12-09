@@ -160,7 +160,7 @@ for nsupers in nsupers_runs.keys():
         / f"kp_{profiler}_ensemble.zarr"
     )
     try:
-        runs_ds = xr.open_dataset(filename)
+        runs_ds = xr.open_zarr(filename)
         stats_ds = statistics_of_ensemble_over_runs_dataset(runs_ds)
         nsupers_coord.append(nsupers)
         grand_ds.append(stats_ds)

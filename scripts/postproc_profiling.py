@@ -57,3 +57,4 @@ for nsupers in nsupers_runs.keys():
         )
 
         profiler.postprocess(filespath=binpath_run, to_dataset=True)
+        print(f"postproccesing complete for nsupers={nsupers}, nrun={nrun}")

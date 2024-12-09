@@ -27,10 +27,16 @@ import subprocess
 executable_paths = {
     "colls0d": Path("collisions0d") / "colls0d",
 }
+
 path2src = (
     Path(__file__).resolve().parent.parent / "src" / "profilers"
 )  # for profilers module
+sys.path.append(str(path2src))  # for imports for profilers
+kokkos_tools_lib = Path("/work/bm1183/m300950/kokkos_tools_lib/lib64/")
+from use_kp_profilers import get_profiler
+
 bash_script = Path(__file__).resolve().parent / "bash" / "run_cleo.sh"
+
 path2builds = Path(sys.argv[1])  # must be absolute path
 buildtype = sys.argv[2]  # "serial", "openmp" or "cuda"
 executable = sys.argv[3]
@@ -47,15 +53,7 @@ nsupers_runs = {
     524288: 2,
 }
 
-sys.path.append(str(path2src))  # for imports for profilers
-if profiler == "kerneltimer":
-    from use_kp_profilers import KpKernelTimer
-
-    profiler = KpKernelTimer()
-elif profiler == "spacetimestack":
-    from use_kp_profilers import KpSpaceTimeStack
-
-    profiler = KpSpaceTimeStack()
+profiler = get_profiler(profiler, kokkos_tools_lib=kokkos_tools_lib)
 
 for nsupers in nsupers_runs.keys():
     for nrun in range(nsupers_runs[nsupers]):
@@ -77,7 +75,6 @@ for nsupers in nsupers_runs.keys():
             / executable
             / Path(f"config_{nsupers}_{nrun}.yaml")
         )
-        print(Path.cwd())
         cmd = [
             str(bash_script),
             str(executable_path),

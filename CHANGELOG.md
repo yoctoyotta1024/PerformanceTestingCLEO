@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v1.2.1](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/6ea29ce3dc8ce6d9d4da0f37d443a800b99139c1..v1.2.1) - 2024-12-09
+#### Bug Fixes
+- update artifacts in ci version - ([6ea29ce](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/6ea29ce3dc8ce6d9d4da0f37d443a800b99139c1)) - clara.bayley
+
+- - -
+
 ## [v1.2.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/d4cf28e7bb9cb0354f97b15b8951b957b16f2b7a..v1.2.0) - 2024-12-09
 #### Bug Fixes
 - only pass numeric values to grand dataset - ([abd88de](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/abd88dea561ae094fec838bd6dbaf0215d321b24)) - clara.bayley

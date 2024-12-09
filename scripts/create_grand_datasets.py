@@ -92,8 +92,8 @@ def statistics_of_ensemble_over_runs_dataset(runs_ds: xr.Dataset) -> xr.Dataset:
     standard deviation, and lower/upper quartiles of ensemble of runs"""
     mean = runs_ds.mean(dim="nrun")
     std = runs_ds.std(dim="nrun")
-    lq = runs_ds.quantile(0.25, dim="nrun").drop_vars("quantile")
-    uq = runs_ds.quantile(0.75, dim="nrun").drop_vars("quantile")
+    lq = runs_ds.quantile(0.25, dim="nrun", numeric_only=True).drop_vars("quantile")
+    uq = runs_ds.quantile(0.75, dim="nrun", numeric_only=True).drop_vars("quantile")
 
     stats = [mean, std, lq, uq]
     stats_names = ["mean", "std", "lower_quartile", "upper_quartile"]
@@ -121,7 +121,8 @@ def ensemble_over_nsupers_grand_dataset(
     grand_ds.attrs["name"] = f"KP {profiler} grand DS"
     grand_ds.attrs["original_files"] = original_files
     grand_ds.attrs["buildtype"] = buildtype
-
+    msg = "grand dataset from original_files created. Note non-float variables have been dropped"
+    print(msg)
     return grand_ds
 
 

@@ -39,9 +39,12 @@ src_config_filename = path2src / "collisions0d" / "config_colls0d.yaml"
 isfigures = [True, True]
 nsupers_runs = {
     8: 10,
-    64: 5,
-    1024: 3,
-    8192: 2,
+    64: 10,
+    1024: 5,
+    8192: 5,
+    16384: 2,
+    131072: 2,
+    524288: 2,
 }
 savefigpath = path2builds / "bin" / "colls0d"
 sharepath = path2builds / "share" / "colls0d"

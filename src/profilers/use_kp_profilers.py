@@ -23,6 +23,32 @@ from typing import Optional
 import read_kp_profilers
 
 
+def get_profiler(
+    profiler: str,
+    kokkos_tools_lib: Optional[Path] = Path(
+        "/work/bm1183/m300950/kokkos_tools_lib/lib64/"
+    ),
+):
+    if profiler == "none":
+        return NullKpProfiler()
+    elif profiler == "kerneltimer":
+        return KpKernelTimer(kokkos_tools_lib)
+    elif profiler == "spacetimestack":
+        return KpSpaceTimeStack(kokkos_tools_lib)
+    else:
+        raise ValueError(f"{profiler} not a valid option. Please provide correct name.")
+
+
+class NullKpProfiler:
+    def __init__(self):
+        print("Using No Kokkos Profiling Tool")
+
+    def postprocess(
+        self, filespath: Optional[Path] = None, to_dataset: Optional[bool] = False
+    ):
+        return None
+
+
 class KpKernelTimer:
     def __init__(
         self,

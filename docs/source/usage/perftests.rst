@@ -15,9 +15,9 @@ E.g. For a serial build;
 1) Build and compile:
 .. code-block:: console
 
-  $ mkdir ./builds
-  $ ./scripts/bash/builds.sh ./src ./builds serial openmp cuda
-  $ ./scripts/bash/compiles.sh ./builds/ colls0d serial openmp cuda
+  $ mkdir /work/bm1183/m300950/performance_testing_cleo/builds
+  $ ./scripts/bash/builds.sh ./src /work/bm1183/m300950/performance_testing_cleo/builds serial openmp cuda
+  $ ./scripts/bash/compiles.sh /work/bm1183/m300950/performance_testing_cleo/builds colls0d serial openmp cuda
 
 2) Setup the example:
 .. code-block:: console
@@ -26,7 +26,7 @@ E.g. For a serial build;
     /work/bm1183/m300950/bin/envs/perftests/bin/python \
     /home/m/m300950/CLEO \
     /home/m/m300950/performance_testing_cleo \
-    /home/m/m300950/performance_testing_cleo/builds \
+    /work/bm1183/m300950/performance_testing_cleo/builds \
     serial openmp cuda
 
 Then you could perform one normal run with e.g.
@@ -38,14 +38,15 @@ Or e.g. run the example with the Kokkos kernel timer performance tool:
   $ ./scripts/bash/run_profiling.sh \
     /work/bm1183/m300950/bin/envs/perftests/bin/python \
     /home/m/m300950/performance_testing_cleo \
-    /home/m/m300950/performance_testing_cleo/builds \
+    /work/bm1183/m300950/performance_testing_cleo/builds \
     colls0d \
     kerneltimer \
+    sbatch \
     serial openmp cuda
   $ ./scripts/bash/postproc_profiling.sh \
     /work/bm1183/m300950/bin/envs/perftests/bin/python \
     /home/m/m300950/performance_testing_cleo \
-    /home/m/m300950/performance_testing_cleo/builds \
+    /work/bm1183/m300950/performance_testing_cleo/builds \
     colls0d \
     kerneltimer \
     serial openmp cuda
@@ -56,14 +57,15 @@ Or e.g. run the example with the Kokkos kernel timer performance tool:
   $ ./scripts/bash/run_profiling.sh \
     /work/bm1183/m300950/bin/envs/perftests/bin/python \
     /home/m/m300950/performance_testing_cleo \
-    /home/m/m300950/performance_testing_cleo/builds \
+    /work/bm1183/m300950/performance_testing_cleo/builds \
     colls0d \
     spacetimestack \
+    sbatch \
     serial openmp cuda
   $ ./scripts/bash/postproc_profiling.sh \
     /work/bm1183/m300950/bin/envs/perftests/bin/python \
     /home/m/m300950/performance_testing_cleo \
-    /home/m/m300950/performance_testing_cleo/builds \
+    /work/bm1183/m300950/performance_testing_cleo/builds \
     colls0d \
     spacetimestack \
     serial openmp cuda
@@ -74,14 +76,14 @@ Then concatenate runs into single dataset for each build e.g. using helper scrip
   $ ./scripts/bash/create_grand_datasets.sh \
     /work/bm1183/m300950/bin/envs/perftests/bin/python \
     /home/m/m300950/performance_testing_cleo \
-    /home/m/m300950/performance_testing_cleo/builds \
+    /work/bm1183/m300950/performance_testing_cleo/builds \
     colls0d \
     kerneltimer \
     serial openmp cuda
   $ ./scripts/bash/create_grand_datasets.sh \
     /work/bm1183/m300950/bin/envs/perftests/bin/python \
     /home/m/m300950/performance_testing_cleo \
-    /home/m/m300950/performance_testing_cleo/builds \
+    /work/bm1183/m300950/performance_testing_cleo/builds \
     colls0d \
     spacetimestack \
     serial openmp cuda

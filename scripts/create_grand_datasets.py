@@ -29,10 +29,15 @@ path2builds = Path(sys.argv[1])  # must be absolute path
 buildtype = sys.argv[2]
 executable = sys.argv[3]
 profiler = sys.argv[4]
-do_write_runs_datasets = False
+do_write_runs_datasets = True
 nsupers_runs = {
-    8: 2,
-    64: 1,
+    8: 10,
+    64: 10,
+    1024: 5,
+    8192: 5,
+    16384: 2,
+    131072: 2,
+    524288: 2,
 }
 
 
@@ -87,8 +92,8 @@ def statistics_of_ensemble_over_runs_dataset(runs_ds: xr.Dataset) -> xr.Dataset:
     standard deviation, and lower/upper quartiles of ensemble of runs"""
     mean = runs_ds.mean(dim="nrun")
     std = runs_ds.std(dim="nrun")
-    lq = runs_ds.quantile(0.25, dim="nrun").drop_vars("quantile")
-    uq = runs_ds.quantile(0.75, dim="nrun").drop_vars("quantile")
+    lq = runs_ds.quantile(0.25, dim="nrun", numeric_only=True).drop_vars("quantile")
+    uq = runs_ds.quantile(0.75, dim="nrun", numeric_only=True).drop_vars("quantile")
 
     stats = [mean, std, lq, uq]
     stats_names = ["mean", "std", "lower_quartile", "upper_quartile"]
@@ -116,7 +121,8 @@ def ensemble_over_nsupers_grand_dataset(
     grand_ds.attrs["name"] = f"KP {profiler} grand DS"
     grand_ds.attrs["original_files"] = original_files
     grand_ds.attrs["buildtype"] = buildtype
-
+    msg = "grand dataset from original_files created. Note non-float variables have been dropped"
+    print(msg)
     return grand_ds
 
 
@@ -160,7 +166,7 @@ for nsupers in nsupers_runs.keys():
         / f"kp_{profiler}_ensemble.zarr"
     )
     try:
-        runs_ds = xr.open_dataset(filename)
+        runs_ds = xr.open_zarr(filename)
         stats_ds = statistics_of_ensemble_over_runs_dataset(runs_ds)
         nsupers_coord.append(nsupers)
         grand_ds.append(stats_ds)

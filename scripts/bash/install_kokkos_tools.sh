@@ -17,7 +17,6 @@
 ### STEP 1) ```git clone git@github.com:kokkos/kokkos-tools.git```
 ### in current working directory
 ### ------------------------------------------------------- ###
-# TODO(CB): fix best practise for loading modules/spack/environment
 module purge
 spack unload --all
 

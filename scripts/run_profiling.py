@@ -35,10 +35,16 @@ path2builds = Path(sys.argv[1])  # must be absolute path
 buildtype = sys.argv[2]  # "serial", "openmp" or "cuda"
 executable = sys.argv[3]
 profiler = sys.argv[4]
+sbatch = sys.argv[5]
 executable_path = path2builds / buildtype / executable_paths[executable]
 nsupers_runs = {
-    8: 2,
-    64: 1,
+    8: 10,
+    64: 10,
+    1024: 5,
+    8192: 5,
+    16384: 2,
+    131072: 2,
+    524288: 2,
 }
 
 sys.path.append(str(path2src))  # for imports for profilers
@@ -71,9 +77,23 @@ for nsupers in nsupers_runs.keys():
             / executable
             / Path(f"config_{nsupers}_{nrun}.yaml")
         )
-        cmd = ["sbatch", str(bash_script), str(executable_path), str(config_filename)]
-
+        cmd = [
+            str(bash_script),
+            str(executable_path),
+            str(config_filename),
+        ]
         print(Path.cwd())
+        if sbatch == "sbatch":
+            cmd.insert(0, "sbatch")
+            subprocess.run(cmd)
+        else:
+            out = (
+                binpath_run / "run_cleo_out.terminalpipe.out"
+            )  # see similarity to SBATCH --output in run_cleo.sh
+            err = (
+                binpath_run / "run_cleo_err.terminalpipe.out"
+            )  # see similarity to SBATCH --error in run_cleo.sh
+            with open(out, "w") as outfile, open(err, "w") as errfile:
+                subprocess.run(cmd, stdout=outfile, stderr=errfile)
         print(" ".join(cmd))
-        subprocess.run(cmd)
         print("\n")

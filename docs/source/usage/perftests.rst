@@ -41,6 +41,7 @@ Or e.g. run the example with the Kokkos kernel timer performance tool:
     /home/m/m300950/performance_testing_cleo/builds \
     colls0d \
     kerneltimer \
+    sbatch \
     serial openmp cuda
   $ ./scripts/bash/postproc_profiling.sh \
     /work/bm1183/m300950/bin/envs/perftests/bin/python \
@@ -59,6 +60,7 @@ Or e.g. run the example with the Kokkos kernel timer performance tool:
     /home/m/m300950/performance_testing_cleo/builds \
     colls0d \
     spacetimestack \
+    sbatch \
     serial openmp cuda
   $ ./scripts/bash/postproc_profiling.sh \
     /work/bm1183/m300950/bin/envs/perftests/bin/python \

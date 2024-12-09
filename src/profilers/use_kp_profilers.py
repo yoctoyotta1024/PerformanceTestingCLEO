@@ -71,7 +71,7 @@ class KpKernelTimer:
                     name, txt_filename
                 )
                 zarr_filename = str(Path(filename).name).replace(".", "p")
-                zarr_filename = f"/kp_kernel_timer_{zarr_filename}.zarr"
+                zarr_filename = f"/kp_kerneltimer_{zarr_filename}.zarr"
                 zarr_filename = str(Path(filename).parent) + zarr_filename
                 ds.to_zarr(Path(zarr_filename))
 
@@ -112,6 +112,6 @@ class KpSpaceTimeStack:
                 )
                 if ds is not None:
                     zarr_filename = str(Path(filename).name).replace(".", "p")
-                    zarr_filename = f"/kp_space_time_stack_{zarr_filename}.zarr"
+                    zarr_filename = f"/kp_spacetimestack_{zarr_filename}.zarr"
                     zarr_filename = str(Path(filename).parent) + zarr_filename
                     ds.to_zarr(Path(zarr_filename))

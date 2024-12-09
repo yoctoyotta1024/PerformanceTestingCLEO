@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Contributing" href="contributing.html" /><link rel="prev" title="Our Docs" href="ourdocs.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Our Docs" href="ourdocs.html" /><link rel="prev" title="Getting Started" href="getstart.html" />
 
-    <!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
-        <title>Our Tests - PerformanceTestingCLEO 1.0.0 documentation</title>
+    <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>Running the Performance Tests - PerformanceTestingCLEO 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -201,8 +201,8 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="getstart.html">Getting Started</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Running the Performance Tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ourdocs.html">Our Docs</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Our Tests</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/yoctoyotta1024/PerformanceTestingCLEO.git">GitHub Repo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact Us!</a></li>
@@ -227,7 +227,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="../_sources/usage/ourtests.rst.txt" title="View this page">
+  <a class="muted-link" href="../_sources/usage/perftests.rst.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -247,31 +247,62 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="our-tests">
-<h1>Our Tests<a class="headerlink" href="#our-tests" title="Link to this heading">¶</a></h1>
-<p>This project uses pytest for executing the Python tests in the <cite>./tests</cite> directory. These tests are
-included in the CI.yml and can be used to test both Python and C++ code.</p>
-<section id="testing-python-code">
-<span id="python-test"></span><h2>Testing Python Code<a class="headerlink" href="#testing-python-code" title="Link to this heading">¶</a></h2>
-<p>Easily done with pytest!</p>
-<p>Simply import the code you want to test (e.g. module, function, class etc.)
-within a script called <code class="docutils literal notranslate"><span class="pre">./tests/test_[name].py</span></code> with a “name” of your choosing in the <cite>./tests</cite>
-directory.</p>
-<p>Then run pytest on the entire tests directory or on your test. For example, <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">./tests</span></code> would test
-every test in the <cite>./tests</cite> directory, whereas <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">test_[name].py</span></code> runs just your test.</p>
-</section>
-<section id="testing-c-code">
-<h2>Testing C++ Code<a class="headerlink" href="#testing-c-code" title="Link to this heading">¶</a></h2>
-<p>For testing C++ code, we first make a Python module out of it using pybind11, e.g. via</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cmake<span class="w"> </span>-S<span class="w"> </span>./<span class="w"> </span>-B<span class="w"> </span>./build
-<span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make
-</pre></div>
-</div>
-<p>which fetches and uses pybind11 (see CMakeLists.txt) to make a Python module out of the C++ code -
-provided you have first written appropriate bindings(!). The Python module is then tested using
-pytest just <a class="reference internal" href="#python-test"><span class="std std-ref">like an ordinary python module</span></a>.</p>
-<p>You can find out more about pybind11 by visiting
-<a class="reference external" href="https://github.com/pybind/pybind11/">their repository</a></p>
+          <section id="running-the-performance-tests">
+<span id="perftests"></span><h1>Running the Performance Tests<a class="headerlink" href="#running-the-performance-tests" title="Link to this heading">¶</a></h1>
+<p>Having cloned the repository, start by building, compiling and running a test
+in a build directory of your choice.</p>
+<section id="example-collisions0d-performance-test-in-serial">
+<h2>Example: Collisions0d Performance Test in Serial<a class="headerlink" href="#example-collisions0d-performance-test-in-serial" title="Link to this heading">¶</a></h2>
+<p>You can build and compile this example from the root of your performance_testing_cleo directory first
+by building and compiling the exectuabel for a build of your choice (serial, openmp or cuda).</p>
+<p>E.g. For a serial build;
+1) Build and compile:
+.. code-block:: console</p>
+<blockquote>
+<div><p>$ mkdir /work/bm1183/m300950/performance_testing_cleo/builds
+$ ./scripts/bash/builds.sh ./src /work/bm1183/m300950/performance_testing_cleo/builds serial openmp cuda
+$ ./scripts/bash/compiles.sh /work/bm1183/m300950/performance_testing_cleo/builds colls0d serial openmp cuda</p>
+</div></blockquote>
+<p>2) Setup the example:
+.. code-block:: console</p>
+<blockquote>
+<div><dl class="simple">
+<dt>$ ./scripts/collisions0d/setup_colls0d.sh </dt><dd><p>/work/bm1183/m300950/bin/envs/perftests/bin/python /home/m/m300950/CLEO /home/m/m300950/performance_testing_cleo /work/bm1183/m300950/performance_testing_cleo/builds serial openmp cuda</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>Then you could perform one normal run with e.g.
+<code class="docutils literal notranslate"><span class="pre">./builds/serial/collisions0d/colls0d</span> <span class="pre">./builds/serial/tmp/colls0d/config_8_0.yaml</span></code></p>
+<p>Or e.g. run the example with the Kokkos kernel timer performance tool:
+.. code-block:: console</p>
+<blockquote>
+<div><dl class="simple">
+<dt>$ ./scripts/bash/run_profiling.sh </dt><dd><p>/work/bm1183/m300950/bin/envs/perftests/bin/python /home/m/m300950/performance_testing_cleo /work/bm1183/m300950/performance_testing_cleo/builds colls0d kerneltimer sbatch serial openmp cuda</p>
+</dd>
+<dt>$ ./scripts/bash/postproc_profiling.sh </dt><dd><p>/work/bm1183/m300950/bin/envs/perftests/bin/python /home/m/m300950/performance_testing_cleo /work/bm1183/m300950/performance_testing_cleo/builds colls0d kerneltimer serial openmp cuda</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>Or e.g. run the example with the Kokkos kernel timer performance tool:
+.. code-block:: console</p>
+<blockquote>
+<div><dl class="simple">
+<dt>$ ./scripts/bash/run_profiling.sh </dt><dd><p>/work/bm1183/m300950/bin/envs/perftests/bin/python /home/m/m300950/performance_testing_cleo /work/bm1183/m300950/performance_testing_cleo/builds colls0d spacetimestack sbatch serial openmp cuda</p>
+</dd>
+<dt>$ ./scripts/bash/postproc_profiling.sh </dt><dd><p>/work/bm1183/m300950/bin/envs/perftests/bin/python /home/m/m300950/performance_testing_cleo /work/bm1183/m300950/performance_testing_cleo/builds colls0d spacetimestack serial openmp cuda</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>Then concatenate runs into single dataset for each build e.g. using helper script
+.. code-block:: console</p>
+<blockquote>
+<div><dl class="simple">
+<dt>$ ./scripts/bash/create_grand_datasets.sh </dt><dd><p>/work/bm1183/m300950/bin/envs/perftests/bin/python /home/m/m300950/performance_testing_cleo /work/bm1183/m300950/performance_testing_cleo/builds colls0d kerneltimer serial openmp cuda</p>
+</dd>
+<dt>$ ./scripts/bash/create_grand_datasets.sh </dt><dd><p>/work/bm1183/m300950/bin/envs/perftests/bin/python /home/m/m300950/performance_testing_cleo /work/bm1183/m300950/performance_testing_cleo/builds colls0d spacetimestack serial openmp cuda</p>
+</dd>
+</dl>
+</div></blockquote>
 </section>
 </section>
 
@@ -280,23 +311,23 @@ pytest just <a class="reference internal" href="#python-test"><span class="std s
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="contributing.html">
+          <a class="next-page" href="ourdocs.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Contributing</div>
+                <div class="title">Our Docs</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="ourdocs.html">
+          <a class="prev-page" href="getstart.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Our Docs</div>
+                <div class="title">Getting Started</div>
                 
               </div>
             </a>
@@ -310,7 +341,7 @@ pytest just <a class="reference internal" href="#python-test"><span class="std s
             
             <a href="https://github.com/pradyunsg/furo">Furo</a>
             <div class="last-updated">
-              Last updated on 04 September 2024</div>
+              Last updated on 09 December 2024</div>
           </div>
           <div class="right-details">
             
@@ -331,9 +362,8 @@ pytest just <a class="reference internal" href="#python-test"><span class="std s
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Our Tests</a><ul>
-<li><a class="reference internal" href="#testing-python-code">Testing Python Code</a></li>
-<li><a class="reference internal" href="#testing-c-code">Testing C++ Code</a></li>
+<li><a class="reference internal" href="#">Running the Performance Tests</a><ul>
+<li><a class="reference internal" href="#example-collisions0d-performance-test-in-serial">Example: Collisions0d Performance Test in Serial</a></li>
 </ul>
 </li>
 </ul>
@@ -346,7 +376,7 @@ pytest just <a class="reference internal" href="#python-test"><span class="std s
     </aside>
   </div>
 </div><script src="../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>

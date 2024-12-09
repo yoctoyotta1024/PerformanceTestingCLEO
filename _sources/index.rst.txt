@@ -30,8 +30,8 @@ Contents
    :maxdepth: 1
 
    usage/getstart
+   usage/perftests
    usage/ourdocs
-   usage/ourtests
 
    GitHub Repo <https://github.com/yoctoyotta1024/PerformanceTestingCLEO.git>
    usage/contributing

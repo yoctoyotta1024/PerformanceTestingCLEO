@@ -19,6 +19,7 @@ Script calls subprocess to run multiple runs with nsupers superdroplets
 using an executable for a given build.
 """
 
+import argparse
 import os
 import sys
 from pathlib import Path
@@ -37,11 +38,22 @@ from use_kp_profilers import get_profiler
 
 bash_script = Path(__file__).resolve().parent / "bash" / "run_cleo.sh"
 
-path2builds = Path(sys.argv[1])  # must be absolute path
-buildtype = sys.argv[2]  # "serial", "openmp" or "cuda"
-executable = sys.argv[3]
-profiler = sys.argv[4]
-sbatch = sys.argv[5]
+parser = argparse.ArgumentParser()
+parser.add_argument("path2builds", type=Path, help="Absolute path to builds")
+parser.add_argument("buildtype", type=str, help="Type of build: serial, openmp or cuda")
+parser.add_argument("executable", type=str, help="Executable name, e.g. colls0d")
+parser.add_argument("profiler", type=str, help="KP name: kerneltimer or spacetimestack")
+parser.add_argument(
+    "sbatch", type=str, help="=='sbatch', else execute on current terminal"
+)
+args = parser.parse_args()
+
+path2builds = args.path2builds
+buildtype = args.buildtype
+executable = args.executable
+profiler = args.profiler
+sbatch = args.sbatch
+
 executable_path = path2builds / buildtype / executable_paths[executable]
 nsupers_runs = {
     8: 10,

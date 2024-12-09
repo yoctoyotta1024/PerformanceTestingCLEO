@@ -20,6 +20,7 @@ Script generates input files for CLEO 0-D box model
 with volume exponential distribution as in Shima et al. 2009.
 """
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -106,8 +107,15 @@ def main(path2CLEO, config_filename, isfigures=[False, False]):
 
 
 if __name__ == "__main__":
-    path2CLEO = Path(sys.argv[1])  # must be absolute
-    config_filename = Path(sys.argv[2])  # must be absolute
-    isfigures = [sys.argv[3], sys.argv[4]]
+    parser = argparse.ArgumentParser()
+    parser.add_argument("path2CLEO", type=Path, help="Absolute path to CLEO (for pySD)")
+    parser.add_argument("config_filename", type=Path, help="Absolute path to config")
+    parser.add_argument("is_plotfigs", type=bool, help="True then make figures")
+    parser.add_argument("is_savefigs", type=bool, help="True then save figures")
+    args = parser.parse_args()
+
+    path2CLEO = args.path2CLEO
+    config_filename = args.config_filename
+    isfigures = [args.is_pltfigs, args.is_savefigs]
 
     main(path2CLEO, config_filename, isfigures=isfigures)

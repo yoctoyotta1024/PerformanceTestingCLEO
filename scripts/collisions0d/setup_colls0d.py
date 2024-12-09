@@ -20,14 +20,21 @@ with volume exponential distribution as in Shima et al. 2009.
 for a given build for nruns of nsupers superdroplets
 """
 
+import argparse
 import sys
 import shutil
 from pathlib import Path
 
+parser = argparse.ArgumentParser()
+parser.add_argument("path2CLEO", type=Path, help="Absolute path to CLEO (for pySD)")
+parser.add_argument("path2builds", type=Path, help="Absolute path to builds")
+parser.add_argument("buildtype", type=str, help="Type of build: serial, openmp or cuda")
+args = parser.parse_args()
+
 path2src = Path(__file__).resolve().parent.parent.parent / "src"
-path2CLEO = Path(sys.argv[1])  # must be absolute path
-path2builds = Path(sys.argv[2])  # must be absolute path
-buildtype = sys.argv[3]  # "serial", "openmp" or "cuda"
+path2CLEO = args.path2CLEO
+path2builds = args.path2builds
+buildtype = args.buildtype
 
 sys.path.append(str(path2CLEO))  # for imports for editing a config file
 sys.path.append(str(path2src))  # for imports for input files generation

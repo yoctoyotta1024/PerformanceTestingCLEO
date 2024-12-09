@@ -19,16 +19,23 @@ Script converts multiple zarr xarray datasets for nsupers and nruns of each buil
 type into mean over nruns for each build in one "grand" dataset.
 """
 
+import argparse
 import os
-import sys
 import glob
 import xarray as xr
 from pathlib import Path
 
-path2builds = Path(sys.argv[1])  # must be absolute path
-buildtype = sys.argv[2]
-executable = sys.argv[3]
-profiler = sys.argv[4]
+parser = argparse.ArgumentParser()
+parser.add_argument("path2builds", type=Path, help="Absolute path to builds")
+parser.add_argument("buildtype", type=str, help="Type of build: serial, openmp or cuda")
+parser.add_argument("executable", type=str, help="Executable name, e.g. colls0d")
+parser.add_argument("profiler", type=str, help="KP name: kerneltimer or spacetimestack")
+args = parser.parse_args()
+
+path2builds = args.path2builds
+buildtype = args.buildtype
+executable = args.executable
+profiler = args.profiler
 do_write_runs_datasets = True
 nsupers_runs = {
     8: 10,

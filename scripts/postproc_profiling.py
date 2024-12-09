@@ -20,6 +20,7 @@ nsupers superdroplets into profilers zarr directories.
 """
 
 import sys
+import argparse
 from pathlib import Path
 
 path2src = (
@@ -29,10 +30,18 @@ sys.path.append(str(path2src))  # for imports for profilers
 kokkos_tools_lib = Path("/work/bm1183/m300950/kokkos_tools_lib/lib64/")
 from use_kp_profilers import get_profiler
 
-path2builds = Path(sys.argv[1])  # must be absolute path
-buildtype = sys.argv[2]  # "serial", "openmp" or "cuda"
-executable = sys.argv[3]
-profiler = sys.argv[4]
+parser = argparse.ArgumentParser()
+parser.add_argument("path2builds", type=Path, help="Absolute path to builds")
+parser.add_argument("buildtype", type=str, help="Type of build: serial, openmp or cuda")
+parser.add_argument("executable", type=str, help="Executable name, e.g. colls0d")
+parser.add_argument("profiler", type=str, help="KP name: kerneltimer or spacetimestack")
+args = parser.parse_args()
+
+path2builds = args.path2builds
+buildtype = args.buildtype
+executable = args.executable
+profiler = args.profiler
+
 nsupers_runs = {
     8: 10,
     64: 10,

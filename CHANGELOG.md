@@ -2,6 +2,23 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v1.2.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/d4cf28e7bb9cb0354f97b15b8951b957b16f2b7a..v1.2.0) - 2024-12-09
+#### Bug Fixes
+- only pass numeric values to grand dataset - ([abd88de](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/abd88dea561ae094fec838bd6dbaf0215d321b24)) - clara.bayley
+- open zarr dataset with correct call - ([d4cf28e](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/d4cf28e7bb9cb0354f97b15b8951b957b16f2b7a)) - clara.bayley
+#### Documentation
+- change path2build in example - ([06b88f9](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/06b88f9d61f359fb7fb7f59ebe31a12ef74c77df)) - clara.bayley
+#### Features
+- option to have null profiler and set kokkos_tools_lib path explicitly - ([abbe08e](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/abbe08e5c4f47a7d212a8ca0d05be1dc6da537dc)) - clara.bayley
+#### Miscellaneous Chores
+- add todo - ([eebf42e](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/eebf42e14e1be721b1b1a23b3042093b1959e65e)) - clara.bayley
+#### Refactoring
+- add print statement - ([288b867](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/288b867bf1243e89fd161cbbb377faf28ff011bc)) - clara.bayley
+- adapt setup for first profiling tests - ([44f804b](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/44f804bdd8ce8c3406d00d090dba2c3c1c5dcbec)) - clara.bayley
+- add boolean option not to sbatch - ([82a7f08](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/82a7f08383c9d1e718f792ef323cd703ffa5b011)) - clara.bayley
+
+- - -
+
 ## [v1.1.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/cf068be0d34056dbd8000e5364456a3d40731be2..v1.1.0) - 2024-12-09
 #### Bug Fixes
 - typos - ([3dab33a](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/3dab33ab9af40bd655f6323df852f62292f782d9)) - clara.bayley

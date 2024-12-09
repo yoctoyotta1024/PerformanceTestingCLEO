@@ -1,12 +1,15 @@
 ##### Folders to ignore - files may be too large, too many, etc. #####
 build
+builds
 bin
+*.dat
 
 ##### Documentation Build Artifacts #####
 docs/source/_autosummary
 docs/build/
 
 ##### Jupyter Notebook #####
+*.ipynb
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
 

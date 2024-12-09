@@ -9,8 +9,8 @@ Clone PerformanceTestingCLEO's GitHub repository:
 
   $ git clone https://github.com/yoctoyotta1024/PerformanceTestingCLEO.git
 
-and then create an environment with the necessary dependencies installed (using micromamba, mamba
-or conda as listed in the environment.yml):
+and then create an environment with the necessary dependencies installed (using micromamba, or
+conda as listed in the environment.yml):
 
 .. code-block:: console
 
@@ -26,4 +26,12 @@ Finally install the pre-commit hooks:
 which will be used when you try to commit something or you execute ``pre-commit run``. You can learn
 more about the powers of pre-commit from `their documentation <https://pre-commit.com>`_.
 
-That's it, you're done! Now maybe you want to compile and run one of the setups in ``src/``
+For now, CLEO's python packages are not readily installable and so you will have to clone the CLEO
+repository to somewhere in your filesystem:
+.. code-block:: console
+
+  $ git clone https://github.com/yoctoyotta1024/CLEO.git
+
+
+That's it, you're done! Now maybe you want to compile and run one of the setups in ``src/``.
+See :ref:`running the performance tests<perftests>` for more instructions.

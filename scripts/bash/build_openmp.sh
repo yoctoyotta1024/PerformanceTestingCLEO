@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=serialbuild
+#SBATCH --job-name=openmpbuild
 #SBATCH --partition=compute
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=128
@@ -8,12 +8,12 @@
 #SBATCH --mail-user=clara.bayley@mpimet.mpg.de
 #SBATCH --mail-type=FAIL
 #SBATCH --account=bm1183
-#SBATCH --output=./build/bin/serialbuild_out.%j.out
-#SBATCH --error=./build/bin/serialbuild_err.%j.out
+#SBATCH --output=./build/bin/openmpbuild_out.%j.out
+#SBATCH --error=./build/bin/openmpbuild_err.%j.out
 
 ### ------------------------------------------------------------------------ ###
 ### ------- You MUST edit these lines to set your default compiler(s) ------ ###
-### --------- and optionally your environment, path to src and the -------- ###
+### --------- and optionally your environment, path to source and the -------- ###
 ### ----------------------- desired build directory  ----------------------- ###
 ### ------------------------------------------------------------------------ ###
 module purge
@@ -37,16 +37,18 @@ path2build=$2   # required
 CC=${gcc}               # C
 CXX=${gxx}              # C++
 
-# CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -pedantic -g -gdwarf-4 -O0 -mpc64"      # correctness and debugging (note -gdwarf-4 not possible for nvc++)
-CMAKE_CXX_FLAGS="-Werror -Wall -pedantic -O3"                                    # performance
+## for correctness and debugging (note -gdwarf-4 not possible for nvc++) use:
+# CMAKE_CXX_FLAGS="-Werror -Wno-unused-parameter -Wall -Wextra -pedantic -g -gdwarf-4 -O0 -mpc64"
+# for performance use:
+CMAKE_CXX_FLAGS="-Werror -Wall -pedantic -O3"
 ### ---------------------------------------------------- ###
 
 ### ------------ choose Kokkos configuration ----------- ###
 # flags for serial kokkos
-kokkosflags="-DKokkos_ARCH_NATIVE=ON -DKokkos_ENABLE_SERIAL=ON" # serial kokkos
+kokkosflags="-DKokkos_ARCH_NATIVE=ON -DKokkos_ARCH_AMPERE80=ON -DKokkos_ENABLE_SERIAL=ON"
 
 # flags for host parallelism (e.g. using OpenMP)
-kokkoshost=""
+kokkoshost="-DKokkos_ENABLE_OPENMP=ON"
 
 # flags for device parallelism (e.g. on gpus)
 kokkosdevice=""
@@ -56,10 +58,10 @@ kokkosdevice=""
 yacflags="-DENABLE_YAC_COUPLING=OFF"
 ### ---------------------------------------------------- ###
 
-### ---------------- build CLEO with cmake ------------- ###
+### ---------------- build source with cmake ------------- ###
 echo "CXX_COMPILER=${CXX} CC_COMPILER=${CC}"
-echo "SRC DIR: ${path2src}"
-echo "BUILD DIR: ${path2build}"
+echo "SRC_DIR: ${path2src}"
+echo "BUILD_DIR: ${path2build}"
 echo "KOKKOS_FLAGS: ${kokkosflags}"
 echo "KOKKOS_DEVICE_PARALLELISM: ${kokkosdevice}"
 echo "KOKKOS_HOST_PARALLELISM: ${kokkoshost}"

@@ -8,8 +8,8 @@ To (locally) reproduce this project simply clone the repository:
 ```
 git clone https://github.com/yoctoyotta1024/PerformanceTestingCLEO.git
 ```
-and then create an environment with the necessary dependencies installed (using micromamba, mamba
-or conda as listed in the environment.yml):
+and then create an environment with the necessary dependencies installed (using micromamba, or
+conda as listed in the environment.yml):
 ```
 conda env create -f environment.yml --prefix [name for your environment]
 conda activate [name of your environment]

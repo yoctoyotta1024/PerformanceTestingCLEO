@@ -3,12 +3,12 @@ Copyright (c) 2024 MPI-M, Clara Bayley
 
 ----- PerformanceTestingCLEO -----
 File: __init__.py
-Project: tests
-Created Date: Tuesday 27th February 2024
+Project: collisions0d
+Created Date: Thursday 5th December 2024
 Author: Clara Bayley (CB)
 Additional Contributors:
 -----
-Last Modified: Tuesday 27th February 2024
+Last Modified: Thursday 5th December 2024
 Modified By: CB
 -----
 License: BSD 3-Clause "New" or "Revised" License

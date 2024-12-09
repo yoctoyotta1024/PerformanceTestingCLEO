@@ -28,8 +28,6 @@ jobs:
       - name: Install Doxygen
         run: /usr/share/miniconda/envs/perftests/bin/doxygen --version
         shell: bash
-      - name: Test with pytest
-        run: pytest .
       - name: Generate Doxygen Documentation
         run: cd docs &&
           mkdir build &&

@@ -9,7 +9,7 @@ FetchContent_Declare(
   cleo
   # GIT_REPOSITORY https://github.com/yoctoyotta1024/CLEO
   # GIT_TAG v0.29.0
-  URL https://github.com/yoctoyotta1024/CLEO/archive/refs/tags/v0.29.0.zip
+  URL https://github.com/yoctoyotta1024/CLEO/archive/refs/tags/v0.29.0.zip # TODO(CB): update version > 0.29.2
 )
 FetchContent_MakeAvailable(cleo)
 

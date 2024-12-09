@@ -29,10 +29,15 @@ path2builds = Path(sys.argv[1])  # must be absolute path
 buildtype = sys.argv[2]
 executable = sys.argv[3]
 profiler = sys.argv[4]
-do_write_runs_datasets = False
+do_write_runs_datasets = True
 nsupers_runs = {
-    8: 2,
-    64: 1,
+    8: 10,
+    64: 10,
+    1024: 5,
+    8192: 5,
+    16384: 2,
+    131072: 2,
+    524288: 2,
 }
 
 

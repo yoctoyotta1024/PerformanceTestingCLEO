@@ -51,11 +51,11 @@ sys.path.append(str(path2src))  # for imports for profilers
 if profiler == "kerneltimer":
     from use_kp_profilers import KpKernelTimer
 
-    profiler = KpKernelTimer()  # TODO(CB): update with spacetiemstack too
+    profiler = KpKernelTimer()
 elif profiler == "spacetimestack":
     from use_kp_profilers import KpSpaceTimeStack
 
-    profiler = KpSpaceTimeStack()  # TODO(CB): update with spacetiemstack too
+    profiler = KpSpaceTimeStack()
 
 for nsupers in nsupers_runs.keys():
     for nrun in range(nsupers_runs[nsupers]):
@@ -77,6 +77,7 @@ for nsupers in nsupers_runs.keys():
             / executable
             / Path(f"config_{nsupers}_{nrun}.yaml")
         )
+        print(Path.cwd())
         cmd = [
             str(bash_script),
             str(executable_path),

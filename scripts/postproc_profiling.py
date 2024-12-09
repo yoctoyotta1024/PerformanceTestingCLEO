@@ -30,8 +30,13 @@ buildtype = sys.argv[2]  # "serial", "openmp" or "cuda"
 executable = sys.argv[3]
 profiler = sys.argv[4]
 nsupers_runs = {
-    8: 2,
-    64: 1,
+    8: 10,
+    64: 10,
+    1024: 5,
+    8192: 5,
+    16384: 2,
+    131072: 2,
+    524288: 2,
 }
 
 sys.path.append(str(path2src))  # for imports for profilers

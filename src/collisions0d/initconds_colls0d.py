@@ -56,8 +56,9 @@ def main(path2CLEO, config_filename, isfigures=[False, False]):
     # settings for superdroplet attributes
     dryradius = pyconfig["supers"]["dryradius"]
 
-    # radius distirbution from exponential in droplet volume for setup 1
+    # radius distirbution from exponential in droplet volume for setup
     rspan = pyconfig["supers"]["rspan"]
+    xi_min = pyconfig["supers"]["xi_min"]
     volexpr0 = pyconfig["supers"]["volexpr0"]
     numconc = pyconfig["supers"]["numconc"]
 
@@ -65,6 +66,7 @@ def main(path2CLEO, config_filename, isfigures=[False, False]):
     radiigen = rgens.SampleLog10RadiiGen(rspan)  # radii are sampled from rspan [m]
     dryradiigen = rgens.MonoAttrGen(dryradius)
     xiprobdist = probdists.VolExponential(volexpr0, rspan)
+    xiprobdist = probdists.MinXiDistrib(xiprobdist, xi_min)
     coord3gen = None  # do not generate superdroplet coords
     coord1gen = None
     coord2gen = None

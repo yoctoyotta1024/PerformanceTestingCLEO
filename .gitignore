@@ -3,6 +3,7 @@ build
 builds
 bin
 *.dat
+*.png
 
 ##### Documentation Build Artifacts #####
 docs/source/_autosummary

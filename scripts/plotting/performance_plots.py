@@ -406,5 +406,3 @@ datasets_mem = {
 fig, axs = plot_simple_memory_scaling(datasets_mem)
 savename = savedir / "memory_consumption.png"
 savefig(savename)
-
-# %%

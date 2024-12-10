@@ -37,13 +37,13 @@ path2build=$2   # required
 CC=${gcc}               # C
 CXX=${gxx}              # C++
 
-# CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -pedantic -g -gdwarf-4 -O0 -mpc64"      # correctness and debugging (note -gdwarf-4 not possible for nvc++)
-CMAKE_CXX_FLAGS="-Werror -Wall -pedantic -O3"                                    # performance
+# CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -pedantic -Wno-unused-parameter -g -gdwarf-4 -O0" # correctness and debugging
+CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -pedantic -Wno-unused-parameter -O3 -fma"           # performance
 ### ---------------------------------------------------- ###
 
 ### ------------ choose Kokkos configuration ----------- ###
 # flags for serial kokkos
-kokkosflags="-DKokkos_ARCH_NATIVE=ON -DKokkos_ENABLE_SERIAL=ON" # serial kokkos
+kokkosflags="-DKokkos_ARCH_ZEN3=ON -DKokkos_ENABLE_SERIAL=ON" # serial kokkos
 
 # flags for host parallelism (e.g. using OpenMP)
 kokkoshost="-DKokkos_ENABLE_THREADS=ON"

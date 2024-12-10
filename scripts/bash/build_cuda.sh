@@ -38,10 +38,8 @@ path2build=$2   # required
 CC=${gcc}               # C
 CXX=${gxx}              # C++
 
-## for correctness and debugging (note -gdwarf-4 not possible for nvc++) use:
-# CMAKE_CXX_FLAGS="-Werror -Wno-unused-parameter -Wall -Wextra -pedantic -g -gdwarf-4 -O0 -mpc64"
-# for performance use:
-CMAKE_CXX_FLAGS="-Werror -Wall -pedantic -O3"
+# CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -pedantic -Wno-unused-parameter -g -gdwarf-4 -O0" # correctness and debugging (note -gdwarf-4 not possible for nvc++)
+CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -pedantic -Wno-unused-parameter -O3 -fma"           # performance
 ### ---------------------------------------------------- ###
 
 ### --------------- choose CUDA compiler --------------- ###
@@ -58,7 +56,7 @@ NVCC_WRAPPER_DEFAULT_COMPILER=${gxx}
 
 ### ------------ choose Kokkos configuration ----------- ###
 # flags for serial kokkos
-kokkosflags="-DKokkos_ARCH_NATIVE=ON -DKokkos_ARCH_AMPERE80=ON -DKokkos_ENABLE_SERIAL=ON"
+kokkosflags="-DKokkos_ARCH_ZEN3=ON -DKokkos_ARCH_AMPERE80=ON -DKokkos_ENABLE_SERIAL=ON"
 
 # flags for host parallelism (e.g. using OpenMP)
 kokkoshost="-DKokkos_ENABLE_OPENMP=ON"

@@ -91,6 +91,7 @@ for nsupers in nsupers_runs.keys():
         )
         cmd = [
             str(bash_script),
+            buildtype,
             str(executable_path),
             str(config_filename),
         ]

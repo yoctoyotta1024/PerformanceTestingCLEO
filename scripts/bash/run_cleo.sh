@@ -20,13 +20,15 @@
 module purge
 spack unload --all
 
-executable=$1   # get from command line argument
-configfile=$2   # get from command line argument
+buildtype=$1
+executable=$2   # get from command line argument
+configfile=$3   # get from command line argument
 
-if [[ "${executable}" == "" ||
+if [[ "${buildtype}" == "" ||
+      "${executable}" == "" ||
       "${configfile}" == "" ]]
 then
-  echo "Bad inputs, please check your executable and config file name"
+  echo "Bad inputs, please check your buildtype, executable and config file name"
 else
   ### ----------------- run executable --------------- ###
   export OMPI_MCA_osc="ucx"
@@ -37,9 +39,9 @@ else
   export OMPI_MCA_io="romio321"          # basic optimisation of I/O
   export UCX_TLS="shm,rc_mlx5,rc_x,self" # for jobs using LESS than 150 nodes
 
-  # export OMP_PROC_BIND=spread # TODO(CB): check if wanted
-  # export OMP_PLACES=threads # TODO(CB): check if wanted
-  export KMP_AFFINITY="granularity=fine,scatter"
+  export OMP_PROC_BIND=spread # (!) will be overriden by KMP_AFFINITY
+  export OMP_PLACES=threads # (!) will be overriden by KMP_AFFINITY
+  export KMP_AFFINITY="granularity=fine,scatter" # (similar to OMP_PROC_BIND=spread)
   export KMP_LIBRARY="turnaround"
 
   if [[ "${buildtype}" == "cuda" ]]

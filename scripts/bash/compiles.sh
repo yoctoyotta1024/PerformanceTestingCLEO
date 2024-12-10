@@ -32,8 +32,9 @@ for buildtype in "${buildtypes[@]}"; do
     if [ "${buildtype}" == "serial" ] || [ "${buildtype}" == "openmp" ] || [ "${buildtype}" == "cuda" ] || [ "${buildtype}" == "threads" ];
     then
         ### ------------------- load packages ------------------ ###
-        module load gcc/11.2.0-gcc-11.2.0 openmpi/4.1.2-gcc-11.2.0 # use gcc mpi wrappers
-        spack load cmake@3.23.1%gcc
+        module load intel-oneapi-compilers/2023.2.1-gcc-11.2.0
+        spack load openmpi@4.1.5%oneapi
+        spack load cmake@3.23.1%oneapi
         # load nvhpc compilers if compiling cuda build
         if [[ "${buildtype}" == "cuda" ]]
         then

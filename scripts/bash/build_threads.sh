@@ -18,10 +18,11 @@
 ### ------------------------------------------------------------------------ ###
 module purge
 spack unload --all
-module load gcc/11.2.0-gcc-11.2.0 openmpi/4.1.2-gcc-11.2.0 nvhpc/23.9-gcc-11.2.0
-spack load cmake@3.23.1%gcc
-gxx="/sw/spack-levante/openmpi-4.1.2-mnmady/bin/mpic++"
-gcc="/sw/spack-levante/openmpi-4.1.2-mnmady/bin/mpicc"
+module load intel-oneapi-compilers/2023.2.1-gcc-11.2.0
+spack load openmpi@4.1.5%oneapi
+spack load cmake@3.23.1%oneapi
+gxx="/sw/spack-levante/openmpi-4.1.6-ux3zoj/bin/mpic++"
+gcc="/sw/spack-levante/openmpi-4.1.6-ux3zoj/bin/mpicc"
 
 path2src=$1    # required
 path2build=$2   # required

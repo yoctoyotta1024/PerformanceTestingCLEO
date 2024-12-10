@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v1.3.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/ba1a544b20aadc9d69721125e318e271c9d5db00..v1.3.0) - 2024-12-10
+#### Documentation
+- fix formatting of code blocks and numbering - ([605abc4](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/605abc47ff56221127706bb2fa73801afc474f4f)) - clara.bayley
+#### Features
+- new script for plotting performance results - ([f09c958](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/f09c9586c335c20740f81f7ca1c69177ae3ef2fc)) - clara.bayley
+#### Refactoring
+- update gitignore - ([dc1b514](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/dc1b5146eba84cffa26e193c22e93ba6ea5d6912)) - clara.bayley
+- replace with argsparse - ([ba1a544](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/ba1a544b20aadc9d69721125e318e271c9d5db00)) - clara.bayley
+
+- - -
+
 ## [v1.2.1](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/6ea29ce3dc8ce6d9d4da0f37d443a800b99139c1..v1.2.1) - 2024-12-09
 #### Bug Fixes
 - update artifacts in ci version - ([6ea29ce](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/6ea29ce3dc8ce6d9d4da0f37d443a800b99139c1)) - clara.bayley

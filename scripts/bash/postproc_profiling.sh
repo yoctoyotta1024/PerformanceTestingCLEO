@@ -23,10 +23,10 @@ path2src=${2:-/home/m/m300950/performance_testing_cleo}       # performance_test
 path2builds=${3:-${path2src}/builds}                          # builds in path2builds/[build_type]
 executable=${4:-colls0d}
 profiler=${5:-kerneltimer}                                    # "kerneltimer" or "spacetimestack"
-buildtypes=("${@:6}")                                         # "serial", "openmp" and/or "cuda"
+buildtypes=("${@:6}")                                         # "serial", "openmp" , "cuda" and/or "threads"
 
 if [ "${#buildtypes[@]}" -eq 0 ]; then
-  buildtypes=("cuda" "openmp" "serial")
+  buildtypes=("cuda" "openmp" "serial" "threads")
 fi
 
 ### ----------------- run profiling --------------- ###

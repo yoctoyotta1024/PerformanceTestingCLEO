@@ -25,11 +25,11 @@ executable=$2      # get from command line argument
 buildtypes=("${@:3}")      # get from command line argument
 
 for buildtype in "${buildtypes[@]}"; do
-    if [ "${buildtype}" != "serial" ] && [ "${buildtype}" != "openmp" ] && [ "${buildtype}" != "cuda" ];
+    if [ "${buildtype}" != "serial" ] && [ "${buildtype}" != "openmp" ] && [ "${buildtype}" != "cuda" ] && [ "${buildtype}" != "threads" ];
     then
-        echo "'${buildtype}' not valid build type. Please specify 'serial', 'openmp' or 'cuda'"
+        echo "'${buildtype}' not valid build type. Please specify 'serial', 'openmp', 'cuda' or 'threads'"
     fi
-    if [ "${buildtype}" == "serial" ] || [ "${buildtype}" == "openmp" ] || [ "${buildtype}" == "cuda" ];
+    if [ "${buildtype}" == "serial" ] || [ "${buildtype}" == "openmp" ] || [ "${buildtype}" == "cuda" ] || [ "${buildtype}" == "threads" ];
     then
         ### ------------------- load packages ------------------ ###
         module load gcc/11.2.0-gcc-11.2.0 openmpi/4.1.2-gcc-11.2.0 # use gcc mpi wrappers

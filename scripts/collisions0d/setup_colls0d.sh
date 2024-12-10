@@ -22,10 +22,10 @@ python=${1:-/work/bm1183/m300950/bin/envs/perftests/bin/python}
 path2CLEO=${2:-/home/m/m300950/CLEO}
 path2src=${3:-/home/m/m300950/performance_testing_cleo}       # performance_testing_cleo root dir
 path2builds=${4:-${path2src}/builds}                          # builds in path2builds/[build_type]
-buildtypes=("${@:5}")                                         # "serial", "openmp" and/or "cuda"
+buildtypes=("${@:5}")                                         # "serial", "openmp" , "cuda" and/or "threads"
 
 if [ "${#buildtypes[@]}" -eq 0 ]; then
-  buildtypes=("cuda" "openmp" "serial")
+  buildtypes=("cuda" "openmp" "serial" "threads")
 fi
 
 ### ----------------- run profiling --------------- ###

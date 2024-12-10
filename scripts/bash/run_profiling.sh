@@ -24,10 +24,10 @@ path2builds=${3:-${path2src}/builds}                          # builds in path2b
 executable=${4:-collisions0d/colls0d}
 profiler=${5:-kerneltimer}                                    # "kerneltimer" or "spacetimestack"
 sbatch=${6:-sbatch}                                           # "sbatch" or otherwise false
-buildtypes=("${@:7}")                                         # "serial", "openmp" and/or "cuda"
+buildtypes=("${@:7}")                                         # "serial", "openmp" , "cuda" and/or "threads"
 
 if [ "${#buildtypes[@]}" -eq 0 ]; then
-  buildtypes=("cuda" "openmp" "serial")
+  buildtypes=("cuda" "openmp" "serial" "threads")
 fi
 
 ### ----------------- run profiling --------------- ###

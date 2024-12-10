@@ -28,7 +28,9 @@ from pathlib import Path
 parser = argparse.ArgumentParser()
 parser.add_argument("path2CLEO", type=Path, help="Absolute path to CLEO (for pySD)")
 parser.add_argument("path2builds", type=Path, help="Absolute path to builds")
-parser.add_argument("buildtype", type=str, help="Type of build: serial, openmp or cuda")
+parser.add_argument(
+    "buildtype", type=str, help="Type of build: serial, openmp, cuda or threads"
+)
 args = parser.parse_args()
 
 path2src = Path(__file__).resolve().parent.parent.parent / "src"

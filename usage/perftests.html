@@ -256,53 +256,90 @@ in a build directory of your choice.</p>
 <p>You can build and compile this example from the root of your performance_testing_cleo directory first
 by building and compiling the exectuabel for a build of your choice (serial, openmp or cuda).</p>
 <p>E.g. For a serial build;
-1) Build and compile:
-.. code-block:: console</p>
+#. Build and compile:</p>
 <blockquote>
-<div><p>$ mkdir /work/bm1183/m300950/performance_testing_cleo/builds
-$ ./scripts/bash/builds.sh ./src /work/bm1183/m300950/performance_testing_cleo/builds serial openmp cuda
-$ ./scripts/bash/compiles.sh /work/bm1183/m300950/performance_testing_cleo/builds colls0d serial openmp cuda</p>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mkdir<span class="w"> </span>/work/bm1183/m300950/performance_testing_cleo/builds
+<span class="gp">$ </span>./scripts/bash/builds.sh<span class="w"> </span>./src<span class="w"> </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda
+<span class="gp">$ </span>./scripts/bash/compiles.sh<span class="w"> </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span>colls0d<span class="w"> </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda
+</pre></div>
+</div>
 </div></blockquote>
-<p>2) Setup the example:
-.. code-block:: console</p>
-<blockquote>
-<div><dl class="simple">
-<dt>$ ./scripts/collisions0d/setup_colls0d.sh </dt><dd><p>/work/bm1183/m300950/bin/envs/perftests/bin/python /home/m/m300950/CLEO /home/m/m300950/performance_testing_cleo /work/bm1183/m300950/performance_testing_cleo/builds serial openmp cuda</p>
-</dd>
-</dl>
-</div></blockquote>
-<p>Then you could perform one normal run with e.g.
+<ol class="arabic">
+<li><p>Setup the example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/collisions0d/setup_colls0d.sh<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/work/bm1183/m300950/bin/envs/perftests/bin/python<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/home/m/m300950/CLEO<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/home/m/m300950/performance_testing_cleo<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda
+</pre></div>
+</div>
+</li>
+</ol>
+<p>#. a) Then you could perform one normal run with e.g.
 <code class="docutils literal notranslate"><span class="pre">./builds/serial/collisions0d/colls0d</span> <span class="pre">./builds/serial/tmp/colls0d/config_8_0.yaml</span></code></p>
-<p>Or e.g. run the example with the Kokkos kernel timer performance tool:
-.. code-block:: console</p>
-<blockquote>
-<div><dl class="simple">
-<dt>$ ./scripts/bash/run_profiling.sh </dt><dd><p>/work/bm1183/m300950/bin/envs/perftests/bin/python /home/m/m300950/performance_testing_cleo /work/bm1183/m300950/performance_testing_cleo/builds colls0d kerneltimer sbatch serial openmp cuda</p>
-</dd>
-<dt>$ ./scripts/bash/postproc_profiling.sh </dt><dd><p>/work/bm1183/m300950/bin/envs/perftests/bin/python /home/m/m300950/performance_testing_cleo /work/bm1183/m300950/performance_testing_cleo/builds colls0d kerneltimer serial openmp cuda</p>
-</dd>
-</dl>
-</div></blockquote>
-<p>Or e.g. run the example with the Kokkos kernel timer performance tool:
-.. code-block:: console</p>
-<blockquote>
-<div><dl class="simple">
-<dt>$ ./scripts/bash/run_profiling.sh </dt><dd><p>/work/bm1183/m300950/bin/envs/perftests/bin/python /home/m/m300950/performance_testing_cleo /work/bm1183/m300950/performance_testing_cleo/builds colls0d spacetimestack sbatch serial openmp cuda</p>
-</dd>
-<dt>$ ./scripts/bash/postproc_profiling.sh </dt><dd><p>/work/bm1183/m300950/bin/envs/perftests/bin/python /home/m/m300950/performance_testing_cleo /work/bm1183/m300950/performance_testing_cleo/builds colls0d spacetimestack serial openmp cuda</p>
-</dd>
-</dl>
-</div></blockquote>
-<p>Then concatenate runs into single dataset for each build e.g. using helper script
-.. code-block:: console</p>
-<blockquote>
-<div><dl class="simple">
-<dt>$ ./scripts/bash/create_grand_datasets.sh </dt><dd><p>/work/bm1183/m300950/bin/envs/perftests/bin/python /home/m/m300950/performance_testing_cleo /work/bm1183/m300950/performance_testing_cleo/builds colls0d kerneltimer serial openmp cuda</p>
-</dd>
-<dt>$ ./scripts/bash/create_grand_datasets.sh </dt><dd><p>/work/bm1183/m300950/bin/envs/perftests/bin/python /home/m/m300950/performance_testing_cleo /work/bm1183/m300950/performance_testing_cleo/builds colls0d spacetimestack serial openmp cuda</p>
-</dd>
-</dl>
-</div></blockquote>
+<ol class="arabic">
+<li><ol class="loweralpha simple" start="2">
+<li><p>Or e.g. run the example with the Kokkos kernel timer performance tool:</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/bash/run_profiling.sh<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/work/bm1183/m300950/bin/envs/perftests/bin/python<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/home/m/m300950/performance_testing_cleo<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>colls0d<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>kerneltimer<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>sbatch<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda
+<span class="gp">$ </span>./scripts/bash/postproc_profiling.sh<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/work/bm1183/m300950/bin/envs/perftests/bin/python<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/home/m/m300950/performance_testing_cleo<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>colls0d<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>kerneltimer<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda
+</pre></div>
+</div>
+</li>
+<li><ol class="loweralpha simple" start="3">
+<li><p>Or e.g. run the example with the Kokkos kernel timer performance tool:</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/bash/run_profiling.sh<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/work/bm1183/m300950/bin/envs/perftests/bin/python<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/home/m/m300950/performance_testing_cleo<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>colls0d<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>spacetimestack<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>sbatch<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda
+<span class="gp">$ </span>./scripts/bash/postproc_profiling.sh<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/work/bm1183/m300950/bin/envs/perftests/bin/python<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/home/m/m300950/performance_testing_cleo<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>colls0d<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>spacetimestack<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda
+</pre></div>
+</div>
+</li>
+<li><p>Then concatenate runs into single dataset for each build e.g. using helper script</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/bash/create_grand_datasets.sh<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/work/bm1183/m300950/bin/envs/perftests/bin/python<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/home/m/m300950/performance_testing_cleo<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>colls0d<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>kerneltimer<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda
+<span class="gp">$ </span>./scripts/bash/create_grand_datasets.sh<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/work/bm1183/m300950/bin/envs/perftests/bin/python<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/home/m/m300950/performance_testing_cleo<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>colls0d<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>spacetimestack<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda
+</pre></div>
+</div>
+</li>
+</ol>
 </section>
 </section>
 
@@ -341,7 +378,7 @@ $ ./scripts/bash/compiles.sh /work/bm1183/m300950/performance_testing_cleo/build
             
             <a href="https://github.com/pradyunsg/furo">Furo</a>
             <div class="last-updated">
-              Last updated on 09 December 2024</div>
+              Last updated on 10 December 2024</div>
           </div>
           <div class="right-details">
             

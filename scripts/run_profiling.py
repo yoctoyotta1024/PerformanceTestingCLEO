@@ -61,13 +61,13 @@ else:
 
 executable_path = path2builds / buildtype / executable_paths[executable]
 nsupers_runs = {
-    8: 10,
-    64: 10,
+    8: 5,
+    64: 5,
     1024: 5,
     8192: 5,
     16384: 2,
     131072: 2,
-    524288: 2,
+    262144: 2,
 }
 
 profiler = get_profiler(profiler, kokkos_tools_lib=kokkos_tools_lib)

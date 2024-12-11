@@ -47,13 +47,16 @@ from pySD import editconfigfile
 src_config_filename = path2src / "collisions0d" / "config_colls0d.yaml"
 isfigures = [True, True]
 nsupers_runs = {
-    8: 10,
-    64: 10,
+    8: 5,
+    64: 5,
     1024: 5,
     8192: 5,
     16384: 2,
     131072: 2,
-    524288: 2,
+    262144: 2,
+    524288: 1,
+    1048576: 1,
+    4194304: 1,
 }
 savefigpath = path2builds / "bin" / "colls0d"
 sharepath = path2builds / "share" / "colls0d"

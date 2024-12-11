@@ -25,13 +25,13 @@ python_initconds:
     savefigpath: XXX
     sharepath: XXX
   grid:
-    zgrid: [0, 100, 100]                                      # [max, min, spacing] of gridbox boundaries in z direction
-    xgrid: [0, 100, 100]                                      # [max, min, spacing] of gridbox boundaries in x direction
-    ygrid: [0, 100, 100]                                      # [max, min, spacing] of gridbox boundaries in y direction
+    zgrid: [0, 5000, 5000]                                      # [max, min, spacing] of gridbox boundaries in z direction
+    xgrid: [0, 5000, 5000]                                      # [max, min, spacing] of gridbox boundaries in x direction
+    ygrid: [0, 5000, 5000]                                      # [max, min, spacing] of gridbox boundaries in y direction
   supers:
     dryradius: 1.0e-16                                        # all SDs have negligible solute [m]
-    rspan: [1.0e-7, 9.0e-5]                                   # max and min range of radii to sample [m]
-    xi_min: 1                                                 # minimum value of initial multiplicities
+    rspan: [1.0e-6, 5.0e-5]                                   # max and min range of radii to sample [m]
+    xi_min: 10                                                # minimum value of initial multiplicities
     volexpr0: 30.531e-6                                       # peak of volume exponential distribution [m]
     numconc: 8388608                                          # = 2^23 = total no. conc of real droplets [m^-3]
 

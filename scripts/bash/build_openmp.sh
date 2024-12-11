@@ -74,5 +74,6 @@ cmake -DCMAKE_CXX_COMPILER=${CXX} \
     -S ${path2src} -B ${path2build} \
     ${kokkosflags} ${kokkosdevice} ${kokkoshost} \
     ${yacflags}
+make -C ${path2build} -j 128
 
 ### ---------------------------------------------------- ###

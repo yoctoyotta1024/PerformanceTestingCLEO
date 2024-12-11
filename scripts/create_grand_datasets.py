@@ -130,7 +130,10 @@ def ensemble_over_nsupers_grand_dataset(
     grand_ds.attrs["name"] = f"KP {profiler} grand DS"
     grand_ds.attrs["original_files"] = original_files
     grand_ds.attrs["buildtype"] = buildtype
-    msg = "grand dataset from original_files created. Note non-float variables have been dropped"
+    msg = (
+        "grand dataset from original_files created. "
+        + "Note attributes and non-float variables have been dropped"
+    )
     print(msg)
     return grand_ds
 

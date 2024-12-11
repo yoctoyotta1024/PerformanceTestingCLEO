@@ -5,7 +5,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=256
 #SBATCH --mem=940M
-#SBATCH --time=00:30:00
+#SBATCH --time=00:60:00
 #SBATCH --mail-user=clara.bayley@mpimet.mpg.de
 #SBATCH --mail-type=FAIL
 #SBATCH --account=bm1183

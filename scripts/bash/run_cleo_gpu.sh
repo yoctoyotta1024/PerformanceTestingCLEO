@@ -3,7 +3,7 @@
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=2
+#SBATCH --cpus-per-task=256
 #SBATCH --gpus-per-task=1
 #SBATCH --exclusive
 #SBATCH --mem=940M
@@ -24,6 +24,7 @@ spack unload --all
 buildtype=$1
 executable=$2   # get from command line argument
 configfile=$3   # get from command line argument
+stacksize_limit=204800 # kB
 
 if [[ "${buildtype}" == "" ||
       "${executable}" == "" ||
@@ -55,6 +56,10 @@ else
   fi
 
   export MALLOC_TRIM_THRESHOLD_="-1"
+
+  ulimit -s ${stacksize_limit}
+  ulimit -c 0
+  ulimit -a
 
   runcmd="${executable} ${configfile}"
   echo ${runcmd}

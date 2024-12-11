@@ -3,7 +3,7 @@
 #SBATCH --partition=compute
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=2
+#SBATCH --cpus-per-task=256
 #SBATCH --mem=940M
 #SBATCH --time=00:30:00
 #SBATCH --mail-user=clara.bayley@mpimet.mpg.de
@@ -22,6 +22,7 @@ spack unload --all
 buildtype=$1
 executable=$2   # get from command line argument
 configfile=$3   # get from command line argument
+stacksize_limit=204800 # kB
 
 if [[ "${buildtype}" == "" ||
       "${executable}" == "" ||
@@ -46,6 +47,10 @@ else
   if [[ "${buildtype}" != "cuda" ]]
   then
     export MALLOC_TRIM_THRESHOLD_="-1"
+
+    ulimit -s ${stacksize_limit}
+    ulimit -c 0
+    ulimit -a
 
     runcmd="${executable} ${configfile}"
     echo ${runcmd}

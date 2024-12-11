@@ -36,8 +36,6 @@ sys.path.append(str(path2src))  # for imports for profilers
 kokkos_tools_lib = Path("/work/bm1183/m300950/kokkos_tools_lib/lib64/")
 from use_kp_profilers import get_profiler
 
-bash_script = Path(__file__).resolve().parent / "bash" / "run_cleo.sh"
-
 parser = argparse.ArgumentParser()
 parser.add_argument("path2builds", type=Path, help="Absolute path to builds")
 parser.add_argument(
@@ -55,6 +53,11 @@ buildtype = args.buildtype
 executable = args.executable
 profiler = args.profiler
 sbatch = args.sbatch
+
+if buildtype == "cuda":
+    bash_script = Path(__file__).resolve().parent / "bash" / "run_cleo_gpu.sh"
+else:
+    bash_script = Path(__file__).resolve().parent / "bash" / "run_cleo.sh"
 
 executable_path = path2builds / buildtype / executable_paths[executable]
 nsupers_runs = {

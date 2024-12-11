@@ -31,12 +31,16 @@ parser.add_argument("path2builds", type=Path, help="Absolute path to builds")
 parser.add_argument(
     "buildtype", type=str, help="Type of build: serial, openmp, cuda or threads"
 )
+parser.add_argument(
+    "gen_initconds", type=str, help="General initial condition binary files"
+)
 args = parser.parse_args()
 
 path2src = Path(__file__).resolve().parent.parent.parent / "src"
 path2CLEO = args.path2CLEO
 path2builds = args.path2builds
 buildtype = args.buildtype
+gen_initconds = args.gen_initconds
 
 sys.path.append(str(path2CLEO))  # for imports for editing a config file
 sys.path.append(str(path2src))  # for imports for input files generation
@@ -45,7 +49,6 @@ from pySD import editconfigfile
 
 ### ----- create temporary config file for simulation(s) ----- ###
 src_config_filename = path2src / "collisions0d" / "config_colls0d.yaml"
-isfigures = [True, True]
 nsupers_runs = {
     8: 5,
     64: 5,
@@ -96,7 +99,15 @@ for nsupers in nsupers_runs.keys():
         shutil.copy(Path(src_config_filename), config_filename)
         editconfigfile.edit_config_params(config_filename, params)
 
+
+if gen_initconds == "true":
+    for nsupers in nsupers_runs.keys():
         ### ----- write initial gridbox boundaries and superdroplets binary files ----- ###
-        shutil.rmtree(params["grid_filename"], ignore_errors=True)
-        shutil.rmtree(params["initsupers_filename"], ignore_errors=True)
-        initconds_colls0d.main(path2CLEO, config_filename, isfigures)
+        isfigures = [True, True]
+        for nrun in range(nsupers_runs[nsupers]):
+            config_filename = tmppath / f"config_{nsupers}_{nrun}.yaml"
+
+            shutil.rmtree(params["grid_filename"], ignore_errors=True)
+            shutil.rmtree(params["initsupers_filename"], ignore_errors=True)
+            initconds_colls0d.main(path2CLEO, config_filename, isfigures)
+            isfigures = [False, False]  # only plot figures once

@@ -68,8 +68,10 @@ nsupers_runs = {
     16384: 2,
     131072: 2,
     262144: 2,
+    524288: 1,
+    1048576: 1,
+    4194304: 1,
 }
-
 profiler = get_profiler(profiler, kokkos_tools_lib=kokkos_tools_lib)
 
 for nsupers in nsupers_runs.keys():

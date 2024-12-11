@@ -40,13 +40,16 @@ executable = args.executable
 profiler = args.profiler
 do_write_runs_datasets = True
 nsupers_runs = {
-    8: 10,
-    64: 10,
+    8: 5,
+    64: 5,
     1024: 5,
     8192: 5,
     16384: 2,
     131072: 2,
     262144: 2,
+    524288: 1,
+    1048576: 1,
+    4194304: 1,
 }
 
 

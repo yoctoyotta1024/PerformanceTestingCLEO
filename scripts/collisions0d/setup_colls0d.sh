@@ -29,9 +29,11 @@ if [ "${#buildtypes[@]}" -eq 0 ]; then
 fi
 
 ### ----------------- run profiling --------------- ###
+gen_initconds=true
 for buildtype in "${buildtypes[@]}"; do
-  runcmd="${python} ${path2src}/scripts/collisions0d/setup_colls0d.py ${path2CLEO} ${path2builds} ${buildtype}"
+  runcmd="${python} ${path2src}/scripts/collisions0d/setup_colls0d.py ${path2CLEO} ${path2builds} ${buildtype} ${gen_initconds}"
   echo ${runcmd}
   ${runcmd}
+  gen_initconds=false # only generate initial conditions once
 done
 ### ---------------------------------------------------- ###

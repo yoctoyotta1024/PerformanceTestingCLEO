@@ -30,7 +30,7 @@ python_initconds:
     ygrid: [0, 5000, 5000]                                      # [max, min, spacing] of gridbox boundaries in y direction
   supers:
     dryradius: 1.0e-16                                        # all SDs have negligible solute [m]
-    rspan: [1.0e-6, 5.0e-5]                                   # max and min range of radii to sample [m]
+    rspan: [1.0e-6, 7.5e-5]                                   # max and min range of radii to sample [m]
     xi_min: 10                                                # minimum value of initial multiplicities
     volexpr0: 30.531e-6                                       # peak of volume exponential distribution [m]
     numconc: 8388608                                          # = 2^23 = total no. conc of real droplets [m^-3]

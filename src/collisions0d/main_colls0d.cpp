@@ -96,18 +96,19 @@ template <typename Store>
 inline Observer auto create_observer(const Config &config,
                                      const Timesteps &tsteps,
                                      Dataset<Store> &dataset) {
-  const auto obsstep = tsteps.get_obsstep();
-  const auto maxchunk = config.get_maxchunk();
+  // const auto obsstep = tsteps.get_obsstep();
+  // const auto maxchunk = config.get_maxchunk();
 
-  const Observer auto obs0 = StreamOutObserver(obsstep, &step2realtime);
+  // const Observer auto obs0 = StreamOutObserver(obsstep, &step2realtime);
 
-  const Observer auto obs1 =
-      TimeObserver(obsstep, dataset, maxchunk, &step2dimlesstime);
+  // const Observer auto obs1 =
+  //     TimeObserver(obsstep, dataset, maxchunk, &step2dimlesstime);
 
-  const Observer auto obssd =
-      create_superdrops_observer(obsstep, dataset, maxchunk);
+  // const Observer auto obssd =
+  //     create_superdrops_observer(obsstep, dataset, maxchunk);
 
-  return obssd >> obs1 >> obs0;  // TODO(CB): no observers
+  // return obssd >> obs1 >> obs0;
+  return NullObserver{};
 }
 
 template <typename Store>

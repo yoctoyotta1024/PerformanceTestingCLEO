@@ -19,12 +19,13 @@
 ### ------------------------------------------------------------------------ ###
 module purge
 spack unload --all
-module load intel-oneapi-compilers/2023.2.1-gcc-11.2.0
-spack load cuda@11.8.0%oneapi@=2023.0.0
-spack load openmpi@4.1.5%oneapi
-spack load cmake@3.23.1%oneapi
-gxx="/sw/spack-levante/openmpi-4.1.6-ux3zoj/bin/mpic++"
-gcc="/sw/spack-levante/openmpi-4.1.6-ux3zoj/bin/mpicc"
+# TODO(CB): get intel compiler to work for CUDA build
+module load gcc/11.2.0-gcc-11.2.0 # bcn7mbu
+spack load cuda@12.2.0%gcc@=11.2.0
+spack load openmpi@4.1.2%gcc@11.2.0
+spack load cmake@3.26.3%gcc@=11.2.0/fuvwuhz
+gxx="/sw/spack-levante/openmpi-4.1.2-mnmady/bin/mpic++"
+gcc="/sw/spack-levante/openmpi-4.1.2-mnmady/bin/mpicc"
 
 path2src=$1    # required
 path2build=$2   # required
@@ -41,22 +42,19 @@ CC=${gcc}               # C
 CXX=${gxx}              # C++
 
 # CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -pedantic -Wno-unused-parameter -g -gdwarf-4 -O0" # correctness and debugging
-CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -pedantic -Wno-unused-parameter -O3 -fma"           # performance
+CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -pedantic -Wno-unused-parameter -O3 -mfma"                # performance
 ### ---------------------------------------------------- ###
 
 ### --------------- choose CUDA compiler --------------- ###
 # set nvcc compiler used by Kokkos nvcc wrapper as CUDA_ROOT/bin/nvcc
 # NOTE(!) this path should correspond to the loaded nvhpc/cuda module.
 # you can get a clue for the correct path e.g. via 'spack find -p cuda@11.8'
-CUDA_ROOT="/sw/spack-levante/cuda-11.8.0-3ypk2g/"
+CUDA_ROOT="/sw/spack-levante/cuda-12.2.0-2ttufp/"
 
 # set default (C++) compiler used by kokkos nvcc wrapper
 # (wrapper is found in bin directory of Kokkos after its
 # installation e.g. build/_deps/kokkos-src/bin/nvcc wrapper)
 NVCC_WRAPPER_DEFAULT_COMPILER=${gxx}
-
-# configure icpc compiler that matches gxx mpi wrapper ('which icpc')
-. /sw/spack-levante/intel-oneapi-compilers-2023.2.1-kfv7xx/setvars.sh
 ### ---------------------------------------------------- ###
 
 ### ------------ choose Kokkos configuration ----------- ###

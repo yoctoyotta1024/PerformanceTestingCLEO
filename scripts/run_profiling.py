@@ -36,11 +36,11 @@ sys.path.append(str(path2src))  # for imports for profilers
 kokkos_tools_lib = Path("/work/bm1183/m300950/kokkos_tools_lib/lib64/")
 from use_kp_profilers import get_profiler
 
-bash_script = Path(__file__).resolve().parent / "bash" / "run_cleo.sh"
-
 parser = argparse.ArgumentParser()
 parser.add_argument("path2builds", type=Path, help="Absolute path to builds")
-parser.add_argument("buildtype", type=str, help="Type of build: serial, openmp or cuda")
+parser.add_argument(
+    "buildtype", type=str, help="Type of build: serial, openmp, cuda or threads"
+)
 parser.add_argument("executable", type=str, help="Executable name, e.g. colls0d")
 parser.add_argument("profiler", type=str, help="KP name: kerneltimer or spacetimestack")
 parser.add_argument(
@@ -54,17 +54,24 @@ executable = args.executable
 profiler = args.profiler
 sbatch = args.sbatch
 
+if buildtype == "cuda":
+    bash_script = Path(__file__).resolve().parent / "bash" / "run_cleo_gpu.sh"
+else:
+    bash_script = Path(__file__).resolve().parent / "bash" / "run_cleo.sh"
+
 executable_path = path2builds / buildtype / executable_paths[executable]
 nsupers_runs = {
-    8: 10,
-    64: 10,
+    8: 5,
+    64: 5,
     1024: 5,
     8192: 5,
     16384: 2,
     131072: 2,
-    524288: 2,
+    262144: 2,
+    524288: 1,
+    1048576: 1,
+    4194304: 1,
 }
-
 profiler = get_profiler(profiler, kokkos_tools_lib=kokkos_tools_lib)
 
 for nsupers in nsupers_runs.keys():
@@ -89,6 +96,7 @@ for nsupers in nsupers_runs.keys():
         )
         cmd = [
             str(bash_script),
+            buildtype,
             str(executable_path),
             str(config_filename),
         ]

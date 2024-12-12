@@ -44,15 +44,12 @@ executable = args.executable
 
 lstyles = {
     "serial": "dotted",
-    "openmp": "dashed",
+    "openmp": "dashdot",
     "cuda": "solid",
+    "threads": "dashed",
 }
 
-markers = {
-    "serial": "s",
-    "openmp": "o",
-    "cuda": "x",
-}
+markers = {"serial": "o", "openmp": "s", "cuda": "x", "threads": "d"}
 
 savedir = Path("/home/m/m300950/performance_testing_cleo/plots/")
 
@@ -374,10 +371,12 @@ def plot_simple_memory_scaling(datasets: xr.Dataset):
 serial = open_kerneltimer_dataset(path2builds, "serial", executable)
 openmp = open_kerneltimer_dataset(path2builds, "openmp", executable)
 cuda = open_kerneltimer_dataset(path2builds, "cuda", executable)
+threads = open_kerneltimer_dataset(path2builds, "threads", executable)
 datasets_time = {
     "serial": serial,
     "openmp": openmp,
     "cuda": cuda,
+    "threads": threads,
 }
 # %%
 fig, axs = plot_simple_wallclock_scaling(datasets_time)
@@ -396,10 +395,12 @@ savefig(savename)
 serial = open_spacetimestack_dataset(path2builds, "serial", executable)
 openmp = open_spacetimestack_dataset(path2builds, "openmp", executable)
 cuda = open_spacetimestack_dataset(path2builds, "cuda", executable)
+threads = open_spacetimestack_dataset(path2builds, "threads", executable)
 datasets_mem = {
     "serial": serial,
     "openmp": openmp,
     "cuda": cuda,
+    "threads": threads,
 }
 
 # %%

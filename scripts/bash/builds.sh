@@ -2,8 +2,8 @@
 #SBATCH --job-name=builds
 #SBATCH --partition=compute
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=128
-#SBATCH --mem=30G
+#SBATCH --ntasks-per-node=1
+#SBATCH --mem=940M
 #SBATCH --time=00:05:00
 #SBATCH --mail-user=clara.bayley@mpimet.mpg.de
 #SBATCH --mail-type=FAIL
@@ -20,11 +20,11 @@ path2buildbash=${path2src}/../scripts/bash/
 
 for buildtype in "${buildtypes[@]}"; do
     ### --------------------- build source ------------------- ###
-    if [ "${buildtype}" != "serial" ] && [ "${buildtype}" != "openmp" ] && [ "${buildtype}" != "cuda" ];
+    if [ "${buildtype}" != "serial" ] && [ "${buildtype}" != "openmp" ] && [ "${buildtype}" != "cuda" ] && [ "${buildtype}" != "threads" ] ;
     then
-        echo "'${buildtype}' not valid build type. Please specify 'serial', 'openmp' or 'cuda'"
+        echo "'${buildtype}' not valid build type. Please specify 'serial', 'openmp', 'cuda' or 'threads'"
     fi
-    if [ "${buildtype}" == "serial" ] || [ "${buildtype}" == "openmp" ] || [ "${buildtype}" == "cuda" ];
+    if [ "${buildtype}" == "serial" ] || [ "${buildtype}" == "openmp" ] || [ "${buildtype}" == "cuda" ] || [ "${buildtype}" == "threads" ];
     then
         buildbash=${path2buildbash}/build_${buildtype}.sh
         path2build=${path2builds}/${buildtype}

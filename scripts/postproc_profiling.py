@@ -32,7 +32,9 @@ from use_kp_profilers import get_profiler
 
 parser = argparse.ArgumentParser()
 parser.add_argument("path2builds", type=Path, help="Absolute path to builds")
-parser.add_argument("buildtype", type=str, help="Type of build: serial, openmp or cuda")
+parser.add_argument(
+    "buildtype", type=str, help="Type of build: serial, openmp, cuda or threads"
+)
 parser.add_argument("executable", type=str, help="Executable name, e.g. colls0d")
 parser.add_argument("profiler", type=str, help="KP name: kerneltimer or spacetimestack")
 args = parser.parse_args()
@@ -43,13 +45,16 @@ executable = args.executable
 profiler = args.profiler
 
 nsupers_runs = {
-    8: 10,
-    64: 10,
+    8: 5,
+    64: 5,
     1024: 5,
     8192: 5,
     16384: 2,
     131072: 2,
-    524288: 2,
+    262144: 2,
+    524288: 1,
+    1048576: 1,
+    4194304: 1,
 }
 
 profiler = get_profiler(profiler, kokkos_tools_lib=kokkos_tools_lib)
@@ -65,5 +70,6 @@ for nsupers in nsupers_runs.keys():
             / Path(f"nrun{nrun}")
         )
 
-        profiler.postprocess(filespath=binpath_run, to_dataset=True)
-        print(f"postproccesing complete for nsupers={nsupers}, nrun={nrun}")
+        datfiles = profiler.postprocess(filespath=binpath_run, to_dataset=True)
+        if len(datfiles) > 0:
+            print(f"postproccesing complete for nsupers={nsupers}, nrun={nrun}")

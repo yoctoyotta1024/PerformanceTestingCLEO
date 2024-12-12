@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH --job-name=compileexec
 #SBATCH --partition=gpu
-#SBATCH --gpus=4
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=128
-#SBATCH --mem=30G
-#SBATCH --time=00:30:00
+#SBATCH --ntasks-per-node=1
+#SBATCH --gpus-per-task=1
+#SBATCH --mem=940M
+#SBATCH --time=00:10:00
 #SBATCH --mail-user=clara.bayley@mpimet.mpg.de
 #SBATCH --mail-type=FAIL
 #SBATCH --account=bm1183
@@ -25,15 +25,16 @@ executable=$2      # get from command line argument
 buildtypes=("${@:3}")      # get from command line argument
 
 for buildtype in "${buildtypes[@]}"; do
-    if [ "${buildtype}" != "serial" ] && [ "${buildtype}" != "openmp" ] && [ "${buildtype}" != "cuda" ];
+    if [ "${buildtype}" != "serial" ] && [ "${buildtype}" != "openmp" ] && [ "${buildtype}" != "cuda" ] && [ "${buildtype}" != "threads" ];
     then
-        echo "'${buildtype}' not valid build type. Please specify 'serial', 'openmp' or 'cuda'"
+        echo "'${buildtype}' not valid build type. Please specify 'serial', 'openmp', 'cuda' or 'threads'"
     fi
-    if [ "${buildtype}" == "serial" ] || [ "${buildtype}" == "openmp" ] || [ "${buildtype}" == "cuda" ];
+    if [ "${buildtype}" == "serial" ] || [ "${buildtype}" == "openmp" ] || [ "${buildtype}" == "cuda" ] || [ "${buildtype}" == "threads" ];
     then
         ### ------------------- load packages ------------------ ###
-        module load gcc/11.2.0-gcc-11.2.0 openmpi/4.1.2-gcc-11.2.0 # use gcc mpi wrappers
-        spack load cmake@3.23.1%gcc
+        module load intel-oneapi-compilers/2023.2.1-gcc-11.2.0
+        spack load openmpi@4.1.5%oneapi
+        spack load cmake@3.23.1%oneapi
         # load nvhpc compilers if compiling cuda build
         if [[ "${buildtype}" == "cuda" ]]
         then

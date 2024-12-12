@@ -2,8 +2,8 @@
 #SBATCH --job-name=serialbuild
 #SBATCH --partition=compute
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=128
-#SBATCH --mem=30G
+#SBATCH --ntasks-per-node=1
+#SBATCH --mem=940M
 #SBATCH --time=00:05:00
 #SBATCH --mail-user=clara.bayley@mpimet.mpg.de
 #SBATCH --mail-type=FAIL
@@ -18,10 +18,11 @@
 ### ------------------------------------------------------------------------ ###
 module purge
 spack unload --all
-module load gcc/11.2.0-gcc-11.2.0 openmpi/4.1.2-gcc-11.2.0
-spack load cmake@3.23.1%gcc
-gxx="/sw/spack-levante/openmpi-4.1.2-mnmady/bin/mpic++"
-gcc="/sw/spack-levante/openmpi-4.1.2-mnmady/bin/mpicc"
+module load intel-oneapi-compilers/2023.2.1-gcc-11.2.0
+spack load openmpi@4.1.5%oneapi
+spack load cmake@3.23.1%oneapi
+gxx="/sw/spack-levante/openmpi-4.1.6-ux3zoj/bin/mpic++"
+gcc="/sw/spack-levante/openmpi-4.1.6-ux3zoj/bin/mpicc"
 
 path2src=$1    # required
 path2build=$2   # required
@@ -37,13 +38,13 @@ path2build=$2   # required
 CC=${gcc}               # C
 CXX=${gxx}              # C++
 
-# CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -pedantic -g -gdwarf-4 -O0 -mpc64"      # correctness and debugging (note -gdwarf-4 not possible for nvc++)
-CMAKE_CXX_FLAGS="-Werror -Wall -pedantic -O3"                                    # performance
+# CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -pedantic -Wno-unused-parameter -g -gdwarf-4 -O0" # correctness and debugging
+CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -pedantic -Wno-unused-parameter -O3 -fma"           # performance
 ### ---------------------------------------------------- ###
 
 ### ------------ choose Kokkos configuration ----------- ###
 # flags for serial kokkos
-kokkosflags="-DKokkos_ARCH_NATIVE=ON -DKokkos_ENABLE_SERIAL=ON" # serial kokkos
+kokkosflags="-DKokkos_ARCH_ZEN3=ON -DKokkos_ENABLE_SERIAL=ON" # serial kokkos
 
 # flags for host parallelism (e.g. using OpenMP)
 kokkoshost=""
@@ -72,5 +73,6 @@ cmake -DCMAKE_CXX_COMPILER=${CXX} \
     -S ${path2src} -B ${path2build} \
     ${kokkosflags} ${kokkosdevice} ${kokkoshost} \
     ${yacflags}
+make -C ${path2build} -j 128
 
 ### ---------------------------------------------------- ###

@@ -27,7 +27,9 @@ from pathlib import Path
 
 parser = argparse.ArgumentParser()
 parser.add_argument("path2builds", type=Path, help="Absolute path to builds")
-parser.add_argument("buildtype", type=str, help="Type of build: serial, openmp or cuda")
+parser.add_argument(
+    "buildtype", type=str, help="Type of build: serial, openmp, cuda or threads"
+)
 parser.add_argument("executable", type=str, help="Executable name, e.g. colls0d")
 parser.add_argument("profiler", type=str, help="KP name: kerneltimer or spacetimestack")
 args = parser.parse_args()
@@ -38,13 +40,16 @@ executable = args.executable
 profiler = args.profiler
 do_write_runs_datasets = True
 nsupers_runs = {
-    8: 10,
-    64: 10,
+    8: 5,
+    64: 5,
     1024: 5,
     8192: 5,
     16384: 2,
     131072: 2,
-    524288: 2,
+    262144: 2,
+    524288: 1,
+    1048576: 1,
+    4194304: 1,
 }
 
 
@@ -128,7 +133,10 @@ def ensemble_over_nsupers_grand_dataset(
     grand_ds.attrs["name"] = f"KP {profiler} grand DS"
     grand_ds.attrs["original_files"] = original_files
     grand_ds.attrs["buildtype"] = buildtype
-    msg = "grand dataset from original_files created. Note non-float variables have been dropped"
+    msg = (
+        "grand dataset from original_files created. "
+        + "Note attributes and non-float variables have been dropped"
+    )
     print(msg)
     return grand_ds
 

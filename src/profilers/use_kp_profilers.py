@@ -101,6 +101,8 @@ class KpKernelTimer:
                 zarr_filename = str(Path(filename).parent) + zarr_filename
                 ds.to_zarr(Path(zarr_filename))
 
+        return datfiles  # names of files post-processed
+
 
 class KpSpaceTimeStack:
     def __init__(
@@ -141,3 +143,5 @@ class KpSpaceTimeStack:
                     zarr_filename = f"/kp_spacetimestack_{zarr_filename}.zarr"
                     zarr_filename = str(Path(filename).parent) + zarr_filename
                     ds.to_zarr(Path(zarr_filename))
+
+        return datfiles  # names of files post-processed

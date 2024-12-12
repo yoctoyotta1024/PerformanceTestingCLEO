@@ -2,6 +2,36 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v1.4.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/4af906ac03d21df70651f7bb779273c579252915..v1.4.0) - 2024-12-12
+#### Bug Fixes
+- use gcc compiler for cuda build - ([c09704a](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/c09704a7401708fa34f12740a1b716343370a68e)) - clara.bayley
+#### Features
+- seperate run scripts for cuda and noncuda builds - ([30cf97d](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/30cf97d0cf9348b26e0add2e8e8993591cbf99aa)) - clara.bayley
+- add c++threads to options for thread parallelism - ([4af906a](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/4af906ac03d21df70651f7bb779273c579252915)) - clara.bayley
+#### Miscellaneous Chores
+- update cleo version - ([23b05c1](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/23b05c1fa0932312e061c5ce6451b72122eb22dc)) - clara.bayley
+#### Performance Improvements
+- add more detail to cleo fetch content - ([4519b0f](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/4519b0f50625810adac8d74756f36ddf5e045b31)) - clara.bayley
+#### Refactoring
+- config kokkos correctly and print - ([0c0b7b1](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/0c0b7b11ba9d3406f7cd2d1aed971b77c411ebe1)) - clara.bayley
+- remove ulimits printing - ([ac3033e](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/ac3033ed52c978d925b8ae37dc24317100fc269b)) - clara.bayley
+- increase memory allocation in runcleo - ([0f89fa2](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/0f89fa2aca37de3217d5ba82a7b9e3714fb85544)) - clara.bayley
+- increase sbatch runtime - ([df5090c](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/df5090c935940eb8324e82579376523a73cfb37d)) - clara.bayley
+- reduce mem in sbatch and add cups per task - ([39781d2](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/39781d27095bdc8ac6fefcbe468fe839ca0d99a8)) - clara.bayley
+- reduce mem in sbatch and add cups per task - ([03566a9](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/03566a9a82b0a0f6a5e7daf99b834d726d5e210d)) - clara.bayley
+- only print statement if datfiles found - ([287b288](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/287b288ed81fca5280a52597d8c18da68653ccd5)) - clara.bayley
+- only plot init conds for one run - ([6c99190](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/6c991901b3bdaaf593c2e02d818f5ba1fc903596)) - clara.bayley
+- adjust initial conditions for colls0d to increase xi - ([b6c1ff6](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/b6c1ff6ab866b75a2be05a7fd51773ec4eeef94b)) - clara.bayley
+- no observers in compilation - ([99f8723](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/99f8723acd65f60beba1fa2baeabd90e75180071)) - clara.bayley
+- note attributes lost in script too - ([13b3679](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/13b367910ed431252d9c8a0e8e13d76b60a02ccf)) - clara.bayley
+- use intel compilers instead of gcc - ([1ae25c5](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/1ae25c5b9e28458e787a2417905a41f06077c2fb)) - clara.bayley
+- optimise compiler flags and kokkos arch flags - ([cf6f30a](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/cf6f30a045dac7d02ba187c6a6fd5dfbe1b4a8eb)) - clara.bayley
+- make in build as well - ([920079b](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/920079b061dc4cf43e92cef074c13a5679025d46)) - clara.bayley
+- add runtime optimisations for levante - ([8093f0d](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/8093f0d6e714df5a5c2011326d191223d9395091)) - clara.bayley
+- adapt SLURM settings - ([6c7d67a](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/6c7d67a9112fbf2f502d454cd5c8ff320d919cdc)) - clara.bayley
+
+- - -
+
 ## [v1.3.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/ba1a544b20aadc9d69721125e318e271c9d5db00..v1.3.0) - 2024-12-10
 #### Documentation
 - fix formatting of code blocks and numbering - ([605abc4](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/605abc47ff56221127706bb2fa73801afc474f4f)) - clara.bayley

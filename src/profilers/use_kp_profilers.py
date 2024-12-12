@@ -35,6 +35,10 @@ def get_profiler(
         return KpKernelTimer(kokkos_tools_lib)
     elif profiler == "spacetimestack":
         return KpSpaceTimeStack(kokkos_tools_lib)
+    elif profiler == "memoryusage":
+        return KpMemoryUsage(kokkos_tools_lib)
+    elif profiler == "memoryevents":
+        return KpMemoryEvents(kokkos_tools_lib)
     else:
         raise ValueError(f"{profiler} not a valid option. Please provide correct name.")
 
@@ -143,5 +147,77 @@ class KpSpaceTimeStack:
                     zarr_filename = f"/kp_spacetimestack_{zarr_filename}.zarr"
                     zarr_filename = str(Path(filename).parent) + zarr_filename
                     ds.to_zarr(Path(zarr_filename))
+
+        return datfiles  # names of files post-processed
+
+
+class KpMemoryUsage:
+    def __init__(
+        self,
+        kokkos_tools_lib: Optional[Path] = Path(
+            "/work/bm1183/m300950/kokkos_tools_lib/lib64/"
+        ),
+    ):
+        import os
+
+        self.kokkos_tools_lib = kokkos_tools_lib
+
+        os.environ["KOKKOS_TOOLS_LIBS"] = str(
+            self.kokkos_tools_lib / "libkp_memory_usage.so"
+        )
+        print("Using Kokkos Profiling Tool", os.environ["KOKKOS_TOOLS_LIBS"])
+
+    def postprocess(
+        self, filespath: Optional[Path] = None, to_dataset: Optional[bool] = False
+    ):
+        import glob
+        import os
+
+        if filespath is None:
+            filespath = Path.cwd()
+
+        # Use glob to find all .dat files in the specified directory
+        datfiles = glob.glob(os.path.join(filespath, "*.memspace_usage"))
+
+        for filename in datfiles:
+            if to_dataset:
+                name = "KP Memory Usage File DS"
+                print(name, "TODO")
+
+        return datfiles  # names of files post-processed
+
+
+class KpMemoryEvents:
+    def __init__(
+        self,
+        kokkos_tools_lib: Optional[Path] = Path(
+            "/work/bm1183/m300950/kokkos_tools_lib/lib64/"
+        ),
+    ):
+        import os
+
+        self.kokkos_tools_lib = kokkos_tools_lib
+
+        os.environ["KOKKOS_TOOLS_LIBS"] = str(
+            self.kokkos_tools_lib / "libkp_memory_events.so"
+        )
+        print("Using Kokkos Profiling Tool", os.environ["KOKKOS_TOOLS_LIBS"])
+
+    def postprocess(
+        self, filespath: Optional[Path] = None, to_dataset: Optional[bool] = False
+    ):
+        import glob
+        import os
+
+        if filespath is None:
+            filespath = Path.cwd()
+
+        # Use glob to find all .dat files in the specified directory
+        datfiles = glob.glob(os.path.join(filespath, "*..mem_events"))
+
+        for filename in datfiles:
+            if to_dataset:
+                name = "KP Memory Events File DS"
+                print(name, "TODO")
 
         return datfiles  # names of files post-processed

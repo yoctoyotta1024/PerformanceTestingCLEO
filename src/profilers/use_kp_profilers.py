@@ -23,28 +23,43 @@ from typing import Optional
 import read_kp_profilers
 
 
-def get_profiler(
-    profiler: str,
+def get_profilers(
+    profiler_names: list[str],
     kokkos_tools_lib: Optional[Path] = Path(
         "/work/bm1183/m300950/kokkos_tools_lib/lib64/"
     ),
 ):
-    if profiler == "none":
+    profilers = []
+    for profiler_name in profiler_names:
+        profilers.append(get_profiler(profiler_name, kokkos_tools_lib=kokkos_tools_lib))
+    return profilers
+
+
+def get_profiler(
+    profiler_name: str,
+    kokkos_tools_lib: Optional[Path] = Path(
+        "/work/bm1183/m300950/kokkos_tools_lib/lib64/"
+    ),
+):
+    if profiler_name == "none":
         return NullKpProfiler()
-    elif profiler == "kerneltimer":
+    elif profiler_name == "kerneltimer":
         return KpKernelTimer(kokkos_tools_lib)
-    elif profiler == "spacetimestack":
+    elif profiler_name == "spacetimestack":
         return KpSpaceTimeStack(kokkos_tools_lib)
-    elif profiler == "memoryusage":
+    elif profiler_name == "memoryusage":
         return KpMemoryUsage(kokkos_tools_lib)
-    elif profiler == "memoryevents":
+    elif profiler_name == "memoryevents":
         return KpMemoryEvents(kokkos_tools_lib)
     else:
-        raise ValueError(f"{profiler} not a valid option. Please provide correct name.")
+        raise ValueError(
+            f"{profiler_name} not a valid option. Please provide correct name."
+        )
 
 
 class NullKpProfiler:
     def __init__(self):
+        self.name = "none"
         print("Using No Kokkos Profiling Tool")
 
     def postprocess(
@@ -62,6 +77,7 @@ class KpKernelTimer:
     ):
         import os
 
+        self.name = "kerneltimer"
         self.kokkos_tools_lib = kokkos_tools_lib
         self.kp_reader = self.kokkos_tools_lib / ".." / "bin" / "kp_reader"
 
@@ -117,6 +133,7 @@ class KpSpaceTimeStack:
     ):
         import os
 
+        self.name = "spacetimestack"
         self.kokkos_tools_lib = kokkos_tools_lib
 
         os.environ["KOKKOS_TOOLS_LIBS"] = str(
@@ -160,6 +177,7 @@ class KpMemoryUsage:
     ):
         import os
 
+        self.name = "memoryusage"
         self.kokkos_tools_lib = kokkos_tools_lib
 
         os.environ["KOKKOS_TOOLS_LIBS"] = str(
@@ -196,6 +214,7 @@ class KpMemoryEvents:
     ):
         import os
 
+        self.name = "memoryevents"
         self.kokkos_tools_lib = kokkos_tools_lib
 
         os.environ["KOKKOS_TOOLS_LIBS"] = str(

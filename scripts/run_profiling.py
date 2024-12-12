@@ -34,7 +34,7 @@ path2src = (
 )  # for profilers module
 sys.path.append(str(path2src))  # for imports for profilers
 kokkos_tools_lib = Path("/work/bm1183/m300950/kokkos_tools_lib/lib64/")
-from use_kp_profilers import get_profiler
+from use_kp_profilers import get_profilers
 
 parser = argparse.ArgumentParser()
 parser.add_argument("path2builds", type=Path, help="Absolute path to builds")
@@ -42,16 +42,19 @@ parser.add_argument(
     "buildtype", type=str, help="Type of build: serial, openmp, cuda or threads"
 )
 parser.add_argument("executable", type=str, help="Executable name, e.g. colls0d")
-parser.add_argument("profiler", type=str, help="KP name: kerneltimer or spacetimestack")
 parser.add_argument(
     "sbatch", type=str, help="=='sbatch', else execute on current terminal"
 )
+parser.add_argument(
+    "profilers", type=str, nargs="+", help="KP names, e.g. kerneltimer spacetimestack"
+)
+
 args = parser.parse_args()
 
 path2builds = args.path2builds
 buildtype = args.buildtype
 executable = args.executable
-profiler = args.profiler
+profilers = args.profilers
 sbatch = args.sbatch
 
 if buildtype == "cuda":
@@ -72,7 +75,7 @@ nsupers_runs = {
     1048576: 1,
     4194304: 1,
 }
-profiler = get_profiler(profiler, kokkos_tools_lib=kokkos_tools_lib)
+profilers = get_profilers(profilers, kokkos_tools_lib=kokkos_tools_lib)
 
 for nsupers in nsupers_runs.keys():
     for nrun in range(nsupers_runs[nsupers]):

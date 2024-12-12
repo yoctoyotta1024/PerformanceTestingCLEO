@@ -62,5 +62,9 @@ E.g. For a serial build;
       serial openmp cuda threads
 
 #. c) You can add/remove profilers in the list of profiler names seperated by a '.',
+<<<<<<< HEAD
       e.g. ``kerneltimer.spacetimestack.memoryevents.memoryusage`` to run profilers
       sequentially
+=======
+      e.g. ``kerneltimer.spacetimestack.memoryevents.memoryusage``
+>>>>>>> de2643e (docs: update bash command examples)

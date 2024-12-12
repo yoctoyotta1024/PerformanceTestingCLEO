@@ -62,9 +62,33 @@ E.g. For a serial build;
       serial openmp cuda threads
 
 #. c) You can add/remove profilers in the list of profiler names seperated by a '.',
-<<<<<<< HEAD
       e.g. ``kerneltimer.spacetimestack.memoryevents.memoryusage`` to run profilers
       sequentially
-=======
-      e.g. ``kerneltimer.spacetimestack.memoryevents.memoryusage``
->>>>>>> de2643e (docs: update bash command examples)
+
+
+################################################################################
+./scripts/bash/builds.sh ./src /home/m/m300950/performance_testing_cleo/builds serial openmp
+./scripts/bash/compiles.sh /home/m/m300950/performance_testing_cleo/builds colls0d serial openmp
+./scripts/collisions0d/setup_colls0d.sh \
+       /work/bm1183/m300950/bin/envs/perftests/bin/python \
+       /home/m/m300950/CLEO \
+       /home/m/m300950/performance_testing_cleo \
+       /home/m/m300950/performance_testing_cleo/builds \
+       serial openmp
+
+./scripts/bash/run_profiling.sh \
+      /work/bm1183/m300950/bin/envs/perftests/bin/python \
+      /home/m/m300950/performance_testing_cleo \
+      /home/m/m300950/performance_testing_cleo/builds \
+      colls0d \
+      kerneltimer.spacetimestack.memoryevents.memoryusage \
+      sbatch \
+      serial openmp
+
+./scripts/bash/postproc_profiling.sh \
+      /work/bm1183/m300950/bin/envs/perftests/bin/python \
+      /home/m/m300950/performance_testing_cleo \
+      /home/m/m300950/performance_testing_cleo/builds \
+      colls0d \
+      kerneltimer.spacetimestack.memoryevents.memoryusage \
+      serial openmp

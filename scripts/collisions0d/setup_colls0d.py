@@ -50,16 +50,10 @@ from pySD import editconfigfile
 ### ----- create temporary config file for simulation(s) ----- ###
 src_config_filename = path2src / "collisions0d" / "config_colls0d.yaml"
 nsupers_runs = {
-    8: 5,
-    64: 5,
-    1024: 5,
-    8192: 5,
-    16384: 2,
-    131072: 2,
-    262144: 2,
-    524288: 1,
-    1048576: 1,
-    4194304: 1,
+    8: 1,
+    1024: 1,
+    8192: 1,
+    32768: 1,
 }
 savefigpath = path2builds / "bin" / "colls0d"
 sharepath = path2builds / "share" / "colls0d"
@@ -103,7 +97,7 @@ for nsupers in nsupers_runs.keys():
 if gen_initconds == "true":
     for nsupers in nsupers_runs.keys():
         ### ----- write initial gridbox boundaries and superdroplets binary files ----- ###
-        isfigures = [True, True]
+        isfigures = [False, False]
         for nrun in range(nsupers_runs[nsupers]):
             config_filename = tmppath / f"config_{nsupers}_{nrun}.yaml"
 

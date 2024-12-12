@@ -47,16 +47,10 @@ executable = args.executable
 profilers = args.profilers
 
 nsupers_runs = {
-    8: 5,
-    64: 5,
-    1024: 5,
-    8192: 5,
-    16384: 2,
-    131072: 2,
-    262144: 2,
-    524288: 1,
-    1048576: 1,
-    4194304: 1,
+    8: 1,
+    1024: 1,
+    8192: 1,
+    32768: 1,
 }
 
 for profiler_name in profilers:

@@ -254,13 +254,13 @@ in a build directory of your choice.</p>
 <section id="example-collisions0d-performance-test-in-serial">
 <h2>Example: Collisions0d Performance Test in Serial<a class="headerlink" href="#example-collisions0d-performance-test-in-serial" title="Link to this heading">¶</a></h2>
 <p>You can build and compile this example from the root of your performance_testing_cleo directory first
-by building and compiling the exectuabel for a build of your choice (serial, openmp or cuda).</p>
+by building and compiling the exectuabel for a build of your choice (serial, openmp, cuda or threads).</p>
 <p>E.g. For a serial build;
 #. Build and compile:</p>
 <blockquote>
 <div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mkdir<span class="w"> </span>/work/bm1183/m300950/performance_testing_cleo/builds
-<span class="gp">$ </span>./scripts/bash/builds.sh<span class="w"> </span>./src<span class="w"> </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda
-<span class="gp">$ </span>./scripts/bash/compiles.sh<span class="w"> </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span>colls0d<span class="w"> </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda
+<span class="gp">$ </span>./scripts/bash/builds.sh<span class="w"> </span>./src<span class="w"> </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda<span class="w"> </span>threads
+<span class="gp">$ </span>./scripts/bash/compiles.sh<span class="w"> </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span>colls0d<span class="w"> </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda<span class="w"> </span>threads
 </pre></div>
 </div>
 </div></blockquote>
@@ -271,7 +271,7 @@ by building and compiling the exectuabel for a build of your choice (serial, ope
 <span class="w">  </span>/home/m/m300950/CLEO<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/home/m/m300950/performance_testing_cleo<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda
+<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda<span class="w"> </span>threads
 </pre></div>
 </div>
 </li>
@@ -289,14 +289,14 @@ by building and compiling the exectuabel for a build of your choice (serial, ope
 <span class="w">  </span>colls0d<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>kerneltimer<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>sbatch<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda
+<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda<span class="w"> </span>threads
 <span class="gp">$ </span>./scripts/bash/postproc_profiling.sh<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/work/bm1183/m300950/bin/envs/perftests/bin/python<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/home/m/m300950/performance_testing_cleo<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>colls0d<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>kerneltimer<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda
+<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda<span class="w"> </span>threads
 </pre></div>
 </div>
 </li>
@@ -310,14 +310,14 @@ by building and compiling the exectuabel for a build of your choice (serial, ope
 <span class="w">  </span>colls0d<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>spacetimestack<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>sbatch<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda
+<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda<span class="w"> </span>threads
 <span class="gp">$ </span>./scripts/bash/postproc_profiling.sh<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/work/bm1183/m300950/bin/envs/perftests/bin/python<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/home/m/m300950/performance_testing_cleo<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>colls0d<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>spacetimestack<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda
+<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda<span class="w"> </span>threads
 </pre></div>
 </div>
 </li>
@@ -328,14 +328,14 @@ by building and compiling the exectuabel for a build of your choice (serial, ope
 <span class="w">  </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>colls0d<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>kerneltimer<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda
+<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda<span class="w"> </span>threads
 <span class="gp">$ </span>./scripts/bash/create_grand_datasets.sh<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/work/bm1183/m300950/bin/envs/perftests/bin/python<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/home/m/m300950/performance_testing_cleo<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>colls0d<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>spacetimestack<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda
+<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda<span class="w"> </span>threads
 </pre></div>
 </div>
 </li>
@@ -378,7 +378,7 @@ by building and compiling the exectuabel for a build of your choice (serial, ope
             
             <a href="https://github.com/pradyunsg/furo">Furo</a>
             <div class="last-updated">
-              Last updated on 10 December 2024</div>
+              Last updated on 12 December 2024</div>
           </div>
           <div class="right-details">
             

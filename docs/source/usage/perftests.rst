@@ -43,7 +43,7 @@ E.g. For a serial build;
       /home/m/m300950/performance_testing_cleo \
       /work/bm1183/m300950/performance_testing_cleo/builds \
       colls0d \
-      kerneltimer \
+      kerneltimer.spacetimestack.memoryevents.memoryusage \
       sbatch \
       serial openmp cuda threads
     $ ./scripts/bash/postproc_profiling.sh \
@@ -58,8 +58,9 @@ E.g. For a serial build;
       /home/m/m300950/performance_testing_cleo \
       /work/bm1183/m300950/performance_testing_cleo/builds \
       colls0d \
-      kerneltimer \
+      kerneltimer.spacetimestack.memoryevents.memoryusage \
       serial openmp cuda threads
 
-#. c) For other profilers replace ``kerneltimer``
-      with ``spacetimestack``, ``memoryevents`` or ``memoryusage``
+#. c) You can add/remove profilers in the list of profiler names seperated by a '.',
+      e.g. ``kerneltimer.spacetimestack.memoryevents.memoryusage`` to run profilers
+      sequentially

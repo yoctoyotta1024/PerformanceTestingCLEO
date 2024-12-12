@@ -28,7 +28,7 @@ path2src = (
 )  # for profilers module
 sys.path.append(str(path2src))  # for imports for profilers
 kokkos_tools_lib = Path("/work/bm1183/m300950/kokkos_tools_lib/lib64/")
-from use_kp_profilers import get_profilers
+from use_kp_profilers import get_profiler
 
 parser = argparse.ArgumentParser()
 parser.add_argument("path2builds", type=Path, help="Absolute path to builds")
@@ -59,20 +59,19 @@ nsupers_runs = {
     4194304: 1,
 }
 
-profilers = get_profilers(profilers, kokkos_tools_lib=kokkos_tools_lib)
+for profiler_name in profilers:
+    profiler = get_profiler(profiler_name, kokkos_tools_lib=kokkos_tools_lib)
+    for nsupers in nsupers_runs.keys():
+        for nrun in range(nsupers_runs[nsupers]):
+            binpath_run = (
+                path2builds
+                / buildtype
+                / "bin"
+                / executable
+                / Path(f"nsupers{nsupers}")
+                / Path(f"nrun{nrun}")
+            )
 
-for nsupers in nsupers_runs.keys():
-    for nrun in range(nsupers_runs[nsupers]):
-        binpath_run = (
-            path2builds
-            / buildtype
-            / "bin"
-            / executable
-            / Path(f"nsupers{nsupers}")
-            / Path(f"nrun{nrun}")
-        )
-
-        for profiler in profilers:
             datfiles = profiler.postprocess(filespath=binpath_run, to_dataset=True)
             if len(datfiles) > 0:
                 print(

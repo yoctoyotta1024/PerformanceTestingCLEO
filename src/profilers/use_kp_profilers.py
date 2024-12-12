@@ -23,18 +23,6 @@ from typing import Optional
 import read_kp_profilers
 
 
-def get_profilers(
-    profiler_names: list[str],
-    kokkos_tools_lib: Optional[Path] = Path(
-        "/work/bm1183/m300950/kokkos_tools_lib/lib64/"
-    ),
-):
-    profilers = []
-    for profiler_name in profiler_names:
-        profilers.append(get_profiler(profiler_name, kokkos_tools_lib=kokkos_tools_lib))
-    return profilers
-
-
 def get_profiler(
     profiler_name: str,
     kokkos_tools_lib: Optional[Path] = Path(

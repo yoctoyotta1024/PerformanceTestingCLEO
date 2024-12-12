@@ -34,7 +34,7 @@ path2src = (
 )  # for profilers module
 sys.path.append(str(path2src))  # for imports for profilers
 kokkos_tools_lib = Path("/work/bm1183/m300950/kokkos_tools_lib/lib64/")
-from use_kp_profilers import get_profilers
+from use_kp_profilers import get_profiler
 
 parser = argparse.ArgumentParser()
 parser.add_argument("path2builds", type=Path, help="Absolute path to builds")
@@ -75,46 +75,47 @@ nsupers_runs = {
     1048576: 1,
     4194304: 1,
 }
-profilers = get_profilers(profilers, kokkos_tools_lib=kokkos_tools_lib)
 
-for nsupers in nsupers_runs.keys():
-    for nrun in range(nsupers_runs[nsupers]):
-        binpath_run = (
-            path2builds
-            / buildtype
-            / "bin"
-            / executable
-            / Path(f"nsupers{nsupers}")
-            / Path(f"nrun{nrun}")
-        )
-        binpath_run.mkdir(exist_ok=True, parents=True)
-        os.chdir(binpath_run)
+for profiler_name in profilers:
+    profiler = get_profiler(profiler_name, kokkos_tools_lib=kokkos_tools_lib)
+    for nsupers in nsupers_runs.keys():
+        for nrun in range(nsupers_runs[nsupers]):
+            binpath_run = (
+                path2builds
+                / buildtype
+                / "bin"
+                / executable
+                / Path(f"nsupers{nsupers}")
+                / Path(f"nrun{nrun}")
+            )
+            binpath_run.mkdir(exist_ok=True, parents=True)
+            os.chdir(binpath_run)
 
-        config_filename = (
-            path2builds
-            / buildtype
-            / "tmp"
-            / executable
-            / Path(f"config_{nsupers}_{nrun}.yaml")
-        )
-        cmd = [
-            str(bash_script),
-            buildtype,
-            str(executable_path),
-            str(config_filename),
-        ]
-        print(Path.cwd())
-        if sbatch == "sbatch":
-            cmd.insert(0, "sbatch")
-            subprocess.run(cmd)
-        else:
-            out = (
-                binpath_run / "run_cleo_out.terminalpipe.out"
-            )  # see similarity to SBATCH --output in run_cleo.sh
-            err = (
-                binpath_run / "run_cleo_err.terminalpipe.out"
-            )  # see similarity to SBATCH --error in run_cleo.sh
-            with open(out, "w") as outfile, open(err, "w") as errfile:
-                subprocess.run(cmd, stdout=outfile, stderr=errfile)
-        print(" ".join(cmd))
-        print("\n")
+            config_filename = (
+                path2builds
+                / buildtype
+                / "tmp"
+                / executable
+                / Path(f"config_{nsupers}_{nrun}.yaml")
+            )
+            cmd = [
+                str(bash_script),
+                buildtype,
+                str(executable_path),
+                str(config_filename),
+            ]
+            print(Path.cwd())
+            if sbatch == "sbatch":
+                cmd.insert(0, "sbatch")
+                subprocess.run(cmd)
+            else:
+                out = (
+                    binpath_run / "run_cleo_out.terminalpipe.out"
+                )  # see similarity to SBATCH --output in run_cleo.sh
+                err = (
+                    binpath_run / "run_cleo_err.terminalpipe.out"
+                )  # see similarity to SBATCH --error in run_cleo.sh
+                with open(out, "w") as outfile, open(err, "w") as errfile:
+                    subprocess.run(cmd, stdout=outfile, stderr=errfile)
+            print(" ".join(cmd))
+            print("\n")

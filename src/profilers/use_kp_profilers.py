@@ -185,10 +185,10 @@ class KpMemoryUsage:
         # Use glob to find all .dat files in the specified directory
         datfiles = glob.glob(os.path.join(filespath, "*.memspace_usage"))
 
-        for filename in datfiles:
-            if to_dataset:
-                name = "KP Memory Usage File DS"
-                print(name, "TODO")
+        if len(datfiles) > 0:
+            print("*.memspace_usage files found, see:")
+            for filename in datfiles:
+                print("     " + filename)
 
         return datfiles  # names of files post-processed
 
@@ -220,11 +220,11 @@ class KpMemoryEvents:
             filespath = Path.cwd()
 
         # Use glob to find all .dat files in the specified directory
-        datfiles = glob.glob(os.path.join(filespath, "*..mem_events"))
+        datfiles = glob.glob(os.path.join(filespath, "*.mem_events"))
 
-        for filename in datfiles:
-            if to_dataset:
-                name = "KP Memory Events File DS"
-                print(name, "TODO")
+        if len(datfiles) > 0:
+            print("*.mem_events files found, see:")
+            for filename in datfiles:
+                print("     " + filename)
 
         return datfiles  # names of files post-processed

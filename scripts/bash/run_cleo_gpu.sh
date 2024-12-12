@@ -59,7 +59,6 @@ else
 
   ulimit -s ${stacksize_limit}
   ulimit -c 0
-  ulimit -a
 
   runcmd="${executable} ${configfile}"
   echo ${runcmd}

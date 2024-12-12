@@ -53,42 +53,13 @@ E.g. For a serial build;
       colls0d \
       kerneltimer \
       serial openmp cuda threads
+    $ ./scripts/bash/create_grand_datasets.sh \
+      /work/bm1183/m300950/bin/envs/perftests/bin/python \
+      /home/m/m300950/performance_testing_cleo \
+      /work/bm1183/m300950/performance_testing_cleo/builds \
+      colls0d \
+      kerneltimer \
+      serial openmp cuda threads
 
-#. c) Or e.g. run the example with the Kokkos kernel timer performance tool:
-
-   .. code-block:: console
-
-     $ ./scripts/bash/run_profiling.sh \
-       /work/bm1183/m300950/bin/envs/perftests/bin/python \
-       /home/m/m300950/performance_testing_cleo \
-       /work/bm1183/m300950/performance_testing_cleo/builds \
-       colls0d \
-       spacetimestack \
-       sbatch \
-       serial openmp cuda threads
-     $ ./scripts/bash/postproc_profiling.sh \
-       /work/bm1183/m300950/bin/envs/perftests/bin/python \
-       /home/m/m300950/performance_testing_cleo \
-       /work/bm1183/m300950/performance_testing_cleo/builds \
-       colls0d \
-       spacetimestack \
-       serial openmp cuda threads
-
-#. Then concatenate runs into single dataset for each build e.g. using helper script
-
-   .. code-block:: console
-
-     $ ./scripts/bash/create_grand_datasets.sh \
-       /work/bm1183/m300950/bin/envs/perftests/bin/python \
-       /home/m/m300950/performance_testing_cleo \
-       /work/bm1183/m300950/performance_testing_cleo/builds \
-       colls0d \
-       kerneltimer \
-       serial openmp cuda threads
-     $ ./scripts/bash/create_grand_datasets.sh \
-       /work/bm1183/m300950/bin/envs/perftests/bin/python \
-       /home/m/m300950/performance_testing_cleo \
-       /work/bm1183/m300950/performance_testing_cleo/builds \
-       colls0d \
-       spacetimestack \
-       serial openmp cuda threads
+#. c) For other profilers replace ``kerneltimer``
+      with ``spacetimestack``, ``memoryevents`` or ``memoryusage``

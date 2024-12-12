@@ -24,6 +24,7 @@ import os
 import sys
 from pathlib import Path
 import subprocess
+import random
 
 executable_paths = {
     "colls0d": Path("collisions0d") / "colls0d",
@@ -109,11 +110,12 @@ for profiler_name in profilers:
                 cmd.insert(0, "sbatch")
                 subprocess.run(cmd)
             else:
-                out = (
-                    binpath_run / "run_cleo_out.terminalpipe.out"
+                fileid = f"terminalpipe{random.randint(10000, 99999)}"
+                out = binpath_run / Path(
+                    f"run_cleo_out.{fileid}.out"
                 )  # see similarity to SBATCH --output in run_cleo.sh
-                err = (
-                    binpath_run / "run_cleo_err.terminalpipe.out"
+                err = binpath_run / Path(
+                    f"run_cleo_err.{fileid}.out"
                 )  # see similarity to SBATCH --error in run_cleo.sh
                 with open(out, "w") as outfile, open(err, "w") as errfile:
                     subprocess.run(cmd, stdout=outfile, stderr=errfile)

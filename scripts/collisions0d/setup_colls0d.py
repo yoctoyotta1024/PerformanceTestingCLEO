@@ -8,7 +8,7 @@ Created Date: Thursday 5th December 2024
 Author: Clara Bayley (CB)
 Additional Contributors:
 -----
-Last Modified: Thursday 5th December 2024
+Last Modified: Thursday 13th December 2024
 Modified By: CB
 -----
 License: BSD 3-Clause "New" or "Revised" License
@@ -24,6 +24,7 @@ import argparse
 import sys
 import shutil
 from pathlib import Path
+import numpy as np
 
 parser = argparse.ArgumentParser()
 parser.add_argument("path2CLEO", type=Path, help="Absolute path to CLEO (for pySD)")
@@ -49,17 +50,18 @@ from pySD import editconfigfile
 
 ### ----- create temporary config file for simulation(s) ----- ###
 src_config_filename = path2src / "collisions0d" / "config_colls0d.yaml"
-nsupers_runs = {
-    8: 5,
-    64: 5,
-    1024: 5,
-    8192: 5,
-    16384: 2,
-    131072: 2,
-    262144: 2,
-    524288: 1,
-    1048576: 1,
-    4194304: 1,
+ngbxs_nsupers_runs = {
+    (1, 1): 2,
+    (8, 1): 2,
+    (64, 1): 2,
+    (512, 1): 2,
+    (4096, 1): 2,
+    (32768, 1): 2,
+    (262144, 1): 2,
+    (1, 16): 2,
+    (64, 16): 2,
+    (4096, 16): 2,
+    (262144, 16): 2,
 }
 savefigpath = path2builds / "bin" / "colls0d"
 sharepath = path2builds / "share" / "colls0d"
@@ -68,10 +70,26 @@ tmppath = path2builds / buildtype / "tmp" / "colls0d"
 constants_filepath = path2builds / buildtype / "_deps" / "cleo-src" / "libs"
 params = {
     "constants_filename": str(constants_filepath / "cleoconstants.hpp"),
-    "grid_filename": str(sharepath / "dimlessGBxboundaries.dat"),
     "sharepath": str(sharepath),
     "savefigpath": str(savefigpath),
 }
+
+
+def get_config_filename(tmppath: Path, ngbxs: int, nsupers: int, nrun: int):
+    return tmppath / f"config_{ngbxs}_{nsupers}_{nrun}.yaml"
+
+
+def get_grid_filename(sharepath: Path, ngbxs: int):
+    return str(sharepath / f"dimlessGBxboundaries_{ngbxs}.dat")
+
+
+def get_initsupers_filename(sharepath: Path, ngbxs: int, nsupers: int, nrun: int):
+    return sharepath / f"dimlessSDsinit_{ngbxs}_{nsupers}_{nrun}.dat"
+
+
+def get_binpath_onerun(binpath: Path, ngbxs: int, nsupers: int, nrun: int):
+    return binpath / f"ngbxs{ngbxs}_nsupers{nsupers}" / f"nrun{nrun}"
+
 
 ### --- ensure build, share and bin directories exist --- ###
 if path2CLEO == path2builds:
@@ -82,32 +100,48 @@ else:
     binpath.mkdir(exist_ok=True, parents=True)
     tmppath.mkdir(exist_ok=True, parents=True)
 
-for nsupers in nsupers_runs.keys():
+for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
     ### ----- Copy config to temporary file and edit specific parameters ----- ###
-    for nrun in range(nsupers_runs[nsupers]):
-        config_filename = tmppath / f"config_{nsupers}_{nrun}.yaml"
-        binpath_run = binpath / Path(f"nsupers{nsupers}") / Path(f"nrun{nrun}")
+    for nrun in range(ngbxs_nsupers_runs[(ngbxs, nsupers)]):
+        config_filename = get_config_filename(tmppath, ngbxs, nsupers, nrun)
+        binpath_run = get_binpath_onerun(binpath, ngbxs, nsupers, nrun)
 
-        params["maxnsupers"] = nsupers
+        if np.cbrt(ngbxs) != np.round(np.cbrt(ngbxs)):
+            raise ValueError("ngbxs must be a cube number for integer dimensions")
+        params["ngbxs"] = ngbxs
+        ndim_z = ndim_x = ndim_y = int(np.cbrt(ngbxs))
+        params["zgrid"] = [0, 10000, 10000 / ndim_z]
+        params["xgrid"] = [0, 10000, 10000 / ndim_x]
+        params["ygrid"] = [0, 10000, 10000 / ndim_y]
+        params["grid_filename"] = str(get_grid_filename(sharepath, ngbxs))
+
+        params["maxnsupers"] = nsupers * ngbxs
         params["initsupers_filename"] = str(
-            sharepath / f"dimlessSDsinit_{nsupers}_{nrun}.dat"
+            get_initsupers_filename(sharepath, ngbxs, nsupers, nrun)
         )
+
         params["setup_filename"] = str(binpath_run / "setup.txt")
-        params["stats_filename"] = str(binpath_run / "stats.txt")
         params["zarrbasedir"] = str(binpath_run / "sol.zarr")
 
         shutil.copy(Path(src_config_filename), config_filename)
         editconfigfile.edit_config_params(config_filename, params)
 
-
 if gen_initconds == "true":
-    for nsupers in nsupers_runs.keys():
-        ### ----- write initial gridbox boundaries and superdroplets binary files ----- ###
+    for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
         isfigures = [True, True]
-        for nrun in range(nsupers_runs[nsupers]):
-            config_filename = tmppath / f"config_{nsupers}_{nrun}.yaml"
+        ### ----- write initial gridbox boundaries binary file ----- ###
+        config_filename = get_config_filename(tmppath, ngbxs, nsupers, nrun=0)
+        shutil.rmtree(get_grid_filename(sharepath, ngbxs), ignore_errors=True)
+        initconds_colls0d.gridbox_boundaries(path2CLEO, config_filename, isfigures)
 
-            shutil.rmtree(params["grid_filename"], ignore_errors=True)
-            shutil.rmtree(params["initsupers_filename"], ignore_errors=True)
-            initconds_colls0d.main(path2CLEO, config_filename, isfigures)
-            isfigures = [False, False]  # only plot figures once
+        ### ----- write initial superdroplets binary files ----- ###
+        for nrun in range(ngbxs_nsupers_runs[(ngbxs, nsupers)]):
+            config_filename = get_config_filename(tmppath, ngbxs, nsupers, nrun)
+            shutil.rmtree(
+                get_initsupers_filename(sharepath, ngbxs, nsupers, nrun),
+                ignore_errors=True,
+            )
+            initconds_colls0d.initial_superdroplet_conditions(
+                path2CLEO, config_filename, isfigures
+            )
+            isfigures = [False, False]  # only plot SD figures once

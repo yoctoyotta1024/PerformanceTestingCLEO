@@ -36,13 +36,15 @@ parser.add_argument(
     "buildtype", type=str, help="Type of build: serial, openmp, cuda or threads"
 )
 parser.add_argument("executable", type=str, help="Executable name, e.g. colls0d")
-parser.add_argument("profiler", type=str, help="KP name: kerneltimer or spacetimestack")
+parser.add_argument(
+    "profilers", type=str, nargs="+", help="KP names, e.g. kerneltimer spacetimestack"
+)
 args = parser.parse_args()
 
 path2builds = args.path2builds
 buildtype = args.buildtype
 executable = args.executable
-profiler = args.profiler
+profilers = args.profilers
 
 nsupers_runs = {
     8: 5,
@@ -57,19 +59,21 @@ nsupers_runs = {
     4194304: 1,
 }
 
-profiler = get_profiler(profiler, kokkos_tools_lib=kokkos_tools_lib)
+for profiler_name in profilers:
+    profiler = get_profiler(profiler_name, kokkos_tools_lib=kokkos_tools_lib)
+    for nsupers in nsupers_runs.keys():
+        for nrun in range(nsupers_runs[nsupers]):
+            binpath_run = (
+                path2builds
+                / buildtype
+                / "bin"
+                / executable
+                / Path(f"nsupers{nsupers}")
+                / Path(f"nrun{nrun}")
+            )
 
-for nsupers in nsupers_runs.keys():
-    for nrun in range(nsupers_runs[nsupers]):
-        binpath_run = (
-            path2builds
-            / buildtype
-            / "bin"
-            / executable
-            / Path(f"nsupers{nsupers}")
-            / Path(f"nrun{nrun}")
-        )
-
-        datfiles = profiler.postprocess(filespath=binpath_run, to_dataset=True)
-        if len(datfiles) > 0:
-            print(f"postproccesing complete for nsupers={nsupers}, nrun={nrun}")
+            datfiles = profiler.postprocess(filespath=binpath_run, to_dataset=True)
+            if len(datfiles) > 0:
+                print(
+                    f"{profiler.name} postproccesing complete for nsupers={nsupers}, nrun={nrun}"
+                )

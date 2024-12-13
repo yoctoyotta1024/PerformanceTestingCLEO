@@ -24,23 +24,30 @@ import read_kp_profilers
 
 
 def get_profiler(
-    profiler: str,
+    profiler_name: str,
     kokkos_tools_lib: Optional[Path] = Path(
         "/work/bm1183/m300950/kokkos_tools_lib/lib64/"
     ),
 ):
-    if profiler == "none":
+    if profiler_name == "none":
         return NullKpProfiler()
-    elif profiler == "kerneltimer":
+    elif profiler_name == "kerneltimer":
         return KpKernelTimer(kokkos_tools_lib)
-    elif profiler == "spacetimestack":
+    elif profiler_name == "spacetimestack":
         return KpSpaceTimeStack(kokkos_tools_lib)
+    elif profiler_name == "memoryusage":
+        return KpMemoryUsage(kokkos_tools_lib)
+    elif profiler_name == "memoryevents":
+        return KpMemoryEvents(kokkos_tools_lib)
     else:
-        raise ValueError(f"{profiler} not a valid option. Please provide correct name.")
+        raise ValueError(
+            f"{profiler_name} not a valid option. Please provide correct name."
+        )
 
 
 class NullKpProfiler:
     def __init__(self):
+        self.name = "none"
         print("Using No Kokkos Profiling Tool")
 
     def postprocess(
@@ -58,6 +65,7 @@ class KpKernelTimer:
     ):
         import os
 
+        self.name = "kerneltimer"
         self.kokkos_tools_lib = kokkos_tools_lib
         self.kp_reader = self.kokkos_tools_lib / ".." / "bin" / "kp_reader"
 
@@ -113,6 +121,7 @@ class KpSpaceTimeStack:
     ):
         import os
 
+        self.name = "spacetimestack"
         self.kokkos_tools_lib = kokkos_tools_lib
 
         os.environ["KOKKOS_TOOLS_LIBS"] = str(
@@ -143,5 +152,79 @@ class KpSpaceTimeStack:
                     zarr_filename = f"/kp_spacetimestack_{zarr_filename}.zarr"
                     zarr_filename = str(Path(filename).parent) + zarr_filename
                     ds.to_zarr(Path(zarr_filename))
+
+        return datfiles  # names of files post-processed
+
+
+class KpMemoryUsage:
+    def __init__(
+        self,
+        kokkos_tools_lib: Optional[Path] = Path(
+            "/work/bm1183/m300950/kokkos_tools_lib/lib64/"
+        ),
+    ):
+        import os
+
+        self.name = "memoryusage"
+        self.kokkos_tools_lib = kokkos_tools_lib
+
+        os.environ["KOKKOS_TOOLS_LIBS"] = str(
+            self.kokkos_tools_lib / "libkp_memory_usage.so"
+        )
+        print("Using Kokkos Profiling Tool", os.environ["KOKKOS_TOOLS_LIBS"])
+
+    def postprocess(
+        self, filespath: Optional[Path] = None, to_dataset: Optional[bool] = False
+    ):
+        import glob
+        import os
+
+        if filespath is None:
+            filespath = Path.cwd()
+
+        # Use glob to find all .dat files in the specified directory
+        datfiles = glob.glob(os.path.join(filespath, "*.memspace_usage"))
+
+        if len(datfiles) > 0:
+            print("*.memspace_usage files found, see:")
+            for filename in datfiles:
+                print("     " + filename)
+
+        return datfiles  # names of files post-processed
+
+
+class KpMemoryEvents:
+    def __init__(
+        self,
+        kokkos_tools_lib: Optional[Path] = Path(
+            "/work/bm1183/m300950/kokkos_tools_lib/lib64/"
+        ),
+    ):
+        import os
+
+        self.name = "memoryevents"
+        self.kokkos_tools_lib = kokkos_tools_lib
+
+        os.environ["KOKKOS_TOOLS_LIBS"] = str(
+            self.kokkos_tools_lib / "libkp_memory_events.so"
+        )
+        print("Using Kokkos Profiling Tool", os.environ["KOKKOS_TOOLS_LIBS"])
+
+    def postprocess(
+        self, filespath: Optional[Path] = None, to_dataset: Optional[bool] = False
+    ):
+        import glob
+        import os
+
+        if filespath is None:
+            filespath = Path.cwd()
+
+        # Use glob to find all .dat files in the specified directory
+        datfiles = glob.glob(os.path.join(filespath, "*.mem_events"))
+
+        if len(datfiles) > 0:
+            print("*.mem_events files found, see:")
+            for filename in datfiles:
+                print("     " + filename)
 
         return datfiles  # names of files post-processed

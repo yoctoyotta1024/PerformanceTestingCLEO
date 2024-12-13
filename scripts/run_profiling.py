@@ -24,6 +24,7 @@ import os
 import sys
 from pathlib import Path
 import subprocess
+import random
 
 executable_paths = {
     "colls0d": Path("collisions0d") / "colls0d",
@@ -42,16 +43,19 @@ parser.add_argument(
     "buildtype", type=str, help="Type of build: serial, openmp, cuda or threads"
 )
 parser.add_argument("executable", type=str, help="Executable name, e.g. colls0d")
-parser.add_argument("profiler", type=str, help="KP name: kerneltimer or spacetimestack")
 parser.add_argument(
     "sbatch", type=str, help="=='sbatch', else execute on current terminal"
 )
+parser.add_argument(
+    "profilers", type=str, nargs="+", help="KP names, e.g. kerneltimer spacetimestack"
+)
+
 args = parser.parse_args()
 
 path2builds = args.path2builds
 buildtype = args.buildtype
 executable = args.executable
-profiler = args.profiler
+profilers = args.profilers
 sbatch = args.sbatch
 
 if buildtype == "cuda":
@@ -72,46 +76,48 @@ nsupers_runs = {
     1048576: 1,
     4194304: 1,
 }
-profiler = get_profiler(profiler, kokkos_tools_lib=kokkos_tools_lib)
 
-for nsupers in nsupers_runs.keys():
-    for nrun in range(nsupers_runs[nsupers]):
-        binpath_run = (
-            path2builds
-            / buildtype
-            / "bin"
-            / executable
-            / Path(f"nsupers{nsupers}")
-            / Path(f"nrun{nrun}")
-        )
-        binpath_run.mkdir(exist_ok=True, parents=True)
-        os.chdir(binpath_run)
+for profiler_name in profilers:
+    profiler = get_profiler(profiler_name, kokkos_tools_lib=kokkos_tools_lib)
+    for nsupers in nsupers_runs.keys():
+        for nrun in range(nsupers_runs[nsupers]):
+            binpath_run = (
+                path2builds
+                / buildtype
+                / "bin"
+                / executable
+                / Path(f"nsupers{nsupers}")
+                / Path(f"nrun{nrun}")
+            )
+            binpath_run.mkdir(exist_ok=True, parents=True)
+            os.chdir(binpath_run)
 
-        config_filename = (
-            path2builds
-            / buildtype
-            / "tmp"
-            / executable
-            / Path(f"config_{nsupers}_{nrun}.yaml")
-        )
-        cmd = [
-            str(bash_script),
-            buildtype,
-            str(executable_path),
-            str(config_filename),
-        ]
-        print(Path.cwd())
-        if sbatch == "sbatch":
-            cmd.insert(0, "sbatch")
-            subprocess.run(cmd)
-        else:
-            out = (
-                binpath_run / "run_cleo_out.terminalpipe.out"
-            )  # see similarity to SBATCH --output in run_cleo.sh
-            err = (
-                binpath_run / "run_cleo_err.terminalpipe.out"
-            )  # see similarity to SBATCH --error in run_cleo.sh
-            with open(out, "w") as outfile, open(err, "w") as errfile:
-                subprocess.run(cmd, stdout=outfile, stderr=errfile)
-        print(" ".join(cmd))
-        print("\n")
+            config_filename = (
+                path2builds
+                / buildtype
+                / "tmp"
+                / executable
+                / Path(f"config_{nsupers}_{nrun}.yaml")
+            )
+            cmd = [
+                str(bash_script),
+                buildtype,
+                str(executable_path),
+                str(config_filename),
+            ]
+            print(Path.cwd())
+            if sbatch == "sbatch":
+                cmd.insert(0, "sbatch")
+                subprocess.run(cmd)
+            else:
+                fileid = f"terminalpipe{random.randint(10000, 99999)}"
+                out = binpath_run / Path(
+                    f"run_cleo_out.{fileid}.out"
+                )  # see similarity to SBATCH --output in run_cleo.sh
+                err = binpath_run / Path(
+                    f"run_cleo_err.{fileid}.out"
+                )  # see similarity to SBATCH --error in run_cleo.sh
+                with open(out, "w") as outfile, open(err, "w") as errfile:
+                    subprocess.run(cmd, stdout=outfile, stderr=errfile)
+            print(" ".join(cmd))
+            print("\n")

@@ -16,7 +16,7 @@
 # File Description:
 # Configuration file for 0D box model of collisions using CLEO.
 # Note: The inital superdroplets data read from file "initsupers_filename" can be made with
-# CLEO's pySD module (see Python script "scripts/collisions0d/initconds.py" for usage) and likewise
+# CLEO's pySD module (see Python script "scripts/collisions0d/setup_colls0d.py" for usage) and likewise
 # for "grid_filename".
 
 ### Initial Conditions Parameters for Python Script ###

@@ -66,9 +66,9 @@ else:
 executable_path = path2builds / buildtype / executable_paths[executable]
 nsupers_runs = {
     8: 1,
-    1024: 1,
-    8192: 1,
-    32768: 1,
+    # 1024: 1,
+    # 8192: 1,
+    # 32768: 1,
 }
 
 for profiler_name in profilers:

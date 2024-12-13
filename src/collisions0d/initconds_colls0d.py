@@ -29,7 +29,7 @@ def main(path2CLEO, config_filename, isfigures=[False, False]):
     import yaml
 
     sys.path.append(path2CLEO)  # for imports from pySD package
-    from pySD.initsuperdropsbinary_src import rgens, probdists, attrsgen
+    from pySD.initsuperdropsbinary_src import rgens, probdists, attrsgen, crdgens
     from pySD import geninitconds as gic
 
     config = yaml.safe_load(open(config_filename))
@@ -68,7 +68,7 @@ def main(path2CLEO, config_filename, isfigures=[False, False]):
     dryradiigen = rgens.MonoAttrGen(dryradius)
     xiprobdist = probdists.VolExponential(volexpr0, rspan)
     xiprobdist = probdists.MinXiDistrib(xiprobdist, xi_min)
-    coord3gen = None  # do not generate superdroplet coords
+    coord3gen = crdgens.SampleCoordGen(True)  # do not generate superdroplet coords
     coord1gen = None
     coord2gen = None
     initattrsgen = attrsgen.AttrsGenerator(
@@ -99,7 +99,7 @@ def main(path2CLEO, config_filename, isfigures=[False, False]):
         numconc,
         isfigures=isfigures,
         savefigpath=savefigpath,
-        gbxs2plt="all",
+        gbxs2plt=0,
         savelabel=f"_{nsupers}",
     )
     ### ---------------------------------------------------------------- ###

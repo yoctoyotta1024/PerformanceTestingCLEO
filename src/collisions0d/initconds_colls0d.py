@@ -51,11 +51,8 @@ def gridbox_boundaries(path2CLEO, config_filename, isfigures=[False, False]):
 
     ### --- settings for 0-D Model gridbox boundaries --- ###
     zgrid = pyconfig["grid"]["zgrid"]
-    zgrid = [zgrid["zmin"], zgrid["zmax"], zgrid["zres"]]
     xgrid = pyconfig["grid"]["xgrid"]
-    xgrid = [xgrid["xmin"], xgrid["xmax"], xgrid["xres"]]
     ygrid = pyconfig["grid"]["ygrid"]
-    ygrid = [ygrid["ymin"], ygrid["ymax"], ygrid["yres"]]
     ### ---------------------------------------------------------------- ###
 
     ### -------------------- INPUT FILES GENERATION -------------------- ###
@@ -93,7 +90,7 @@ def initial_superdroplet_conditions(
 
     ### --- number of gridboxes and uperdroplets per gridbox --- ###
     ngbxs = config["domain"]["ngbxs"]
-    nsupers = int(config["domain"]["maxnsupers"] / ngbxs)
+    nsupers = config["domain"]["maxnsupers"]
     savelabel = f"_{ngbxs}_{nsupers}"
 
     ### --- settings for initial superdroplets --- ###

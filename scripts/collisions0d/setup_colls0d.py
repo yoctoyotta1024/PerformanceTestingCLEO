@@ -132,7 +132,9 @@ if gen_initconds == "true":
         ### ----- write initial gridbox boundaries binary file ----- ###
         config_filename = get_config_filename(tmppath, ngbxs, nsupers, nrun=0)
         shutil.rmtree(get_grid_filename(sharepath, ngbxs), ignore_errors=True)
-        initconds_colls0d.gridbox_boundaries(path2CLEO, config_filename, isfigures)
+        initconds_colls0d.gridbox_boundaries(
+            path2CLEO, config_filename, isfigures=isfigures
+        )
 
         ### ----- write initial superdroplets binary files ----- ###
         for nrun in range(ngbxs_nsupers_runs[(ngbxs, nsupers)]):
@@ -142,6 +144,6 @@ if gen_initconds == "true":
                 ignore_errors=True,
             )
             initconds_colls0d.initial_superdroplet_conditions(
-                path2CLEO, config_filename, isfigures
+                path2CLEO, config_filename, isfigures=isfigures
             )
             isfigures = [False, False]  # only plot SD figures once

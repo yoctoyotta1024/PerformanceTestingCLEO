@@ -26,38 +26,78 @@ from pathlib import Path
 
 
 def main(path2CLEO, config_filename, isfigures=[False, False]):
+    gridbox_boundaries(path2CLEO, config_filename, isfigures=isfigures)
+    initial_superdroplet_conditions(path2CLEO, config_filename, isfigures=isfigures)
+
+
+def gridbox_boundaries(path2CLEO, config_filename, isfigures=[False, False]):
     import yaml
 
     sys.path.append(path2CLEO)  # for imports from pySD package
-    from pySD.initsuperdropsbinary_src import rgens, probdists, attrsgen
     from pySD import geninitconds as gic
 
     config = yaml.safe_load(open(config_filename))
     pyconfig = config["python_initconds"]
 
-    ### ---------------------------------------------------------------- ###
     ### ----------------------- INPUT PARAMETERS ----------------------- ###
-    ### ---------------------------------------------------------------- ###
     ### --- essential paths and filenames --- ###
-    # path and filenames for creating initial SD conditions
     constants_filename = config["inputfiles"]["constants_filename"]
-    initsupers_filename = config["initsupers"]["initsupers_filename"]
     grid_filename = config["inputfiles"]["grid_filename"]
     savefigpath = Path(pyconfig["paths"]["savefigpath"])
+
+    ### --- number of gridboxes and uperdroplets per gridbox --- ###
+    ngbxs = config["domain"]["ngbxs"]
+    savelabel = f"_{ngbxs}"
 
     ### --- settings for 0-D Model gridbox boundaries --- ###
     zgrid = pyconfig["grid"]["zgrid"]
     xgrid = pyconfig["grid"]["xgrid"]
     ygrid = pyconfig["grid"]["ygrid"]
+    ### ---------------------------------------------------------------- ###
+
+    ### -------------------- INPUT FILES GENERATION -------------------- ###
+    gic.generate_gridbox_boundaries(
+        grid_filename,
+        zgrid,
+        xgrid,
+        ygrid,
+        constants_filename,
+        isfigures=isfigures,
+        savefigpath=savefigpath,
+        savelabel=savelabel,
+    )
+    ### ---------------------------------------------------------------- ###
+
+
+def initial_superdroplet_conditions(
+    path2CLEO, config_filename, isfigures=[False, False]
+):
+    import yaml
+
+    sys.path.append(path2CLEO)  # for imports from pySD package
+    from pySD.initsuperdropsbinary_src import rgens, probdists, attrsgen, crdgens
+    from pySD import geninitconds as gic
+
+    config = yaml.safe_load(open(config_filename))
+    pyconfig = config["python_initconds"]
+
+    ### ----------------------- INPUT PARAMETERS ----------------------- ###
+    ### --- essential paths and filenames --- ###
+    initsupers_filename = config["initsupers"]["initsupers_filename"]
+    constants_filename = config["inputfiles"]["constants_filename"]
+    grid_filename = config["inputfiles"]["grid_filename"]
+    savefigpath = Path(pyconfig["paths"]["savefigpath"])
+
+    ### --- number of gridboxes and uperdroplets per gridbox --- ###
+    ngbxs = config["domain"]["ngbxs"]
+    nsupers = config["domain"]["maxnsupers"]
+    savelabel = f"_{ngbxs}_{nsupers}"
 
     ### --- settings for initial superdroplets --- ###
-    # settings for superdroplet coordinates
-    nsupers = config["domain"]["maxnsupers"]
-
     # settings for superdroplet attributes
     dryradius = pyconfig["supers"]["dryradius"]
 
-    # radius distirbution from exponential in droplet volume for setup
+    # settings for radius distribution from exponential in droplet volume for setup
     rspan = pyconfig["supers"]["rspan"]
     xi_min = pyconfig["supers"]["xi_min"]
     volexpr0 = pyconfig["supers"]["volexpr0"]
@@ -68,27 +108,15 @@ def main(path2CLEO, config_filename, isfigures=[False, False]):
     dryradiigen = rgens.MonoAttrGen(dryradius)
     xiprobdist = probdists.VolExponential(volexpr0, rspan)
     xiprobdist = probdists.MinXiDistrib(xiprobdist, xi_min)
-    coord3gen = None  # do not generate superdroplet coords
-    coord1gen = None
-    coord2gen = None
+    coord3gen = crdgens.SampleCoordGen(True)
+    coord1gen = crdgens.SampleCoordGen(True)
+    coord2gen = crdgens.SampleCoordGen(True)
     initattrsgen = attrsgen.AttrsGenerator(
         radiigen, dryradiigen, xiprobdist, coord3gen, coord1gen, coord2gen
     )
     ### ---------------------------------------------------------------- ###
-    ### ---------------------------------------------------------------- ###
 
-    ### ---------------------------------------------------------------- ###
     ### -------------------- INPUT FILES GENERATION -------------------- ###
-    ### ---------------------------------------------------------------- ###
-    gic.generate_gridbox_boundaries(
-        grid_filename,
-        zgrid,
-        xgrid,
-        ygrid,
-        constants_filename,
-        isfigures=isfigures,
-        savefigpath=savefigpath,
-    )
     gic.generate_initial_superdroplet_conditions(
         initattrsgen,
         initsupers_filename,
@@ -99,10 +127,9 @@ def main(path2CLEO, config_filename, isfigures=[False, False]):
         numconc,
         isfigures=isfigures,
         savefigpath=savefigpath,
-        gbxs2plt="all",
-        savelabel=f"_{nsupers}",
+        gbxs2plt=0,
+        savelabel=savelabel,
     )
-    ### ---------------------------------------------------------------- ###
     ### ---------------------------------------------------------------- ###
 
 

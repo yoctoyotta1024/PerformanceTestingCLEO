@@ -110,9 +110,9 @@ for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
             raise ValueError("ngbxs must be a cube number for integer dimensions")
         params["ngbxs"] = ngbxs
         ndim_z = ndim_x = ndim_y = int(np.cbrt(ngbxs))
-        params["zgrid"] = [0, 10000, 10000 / ndim_z]
-        params["xgrid"] = [0, 10000, 10000 / ndim_x]
-        params["ygrid"] = [0, 10000, 10000 / ndim_y]
+        params["zres"] = 10000 / ndim_z
+        params["xres"] = 10000 / ndim_x
+        params["yres"] = 10000 / ndim_y
         params["grid_filename"] = str(get_grid_filename(sharepath, ngbxs))
 
         params["maxnsupers"] = nsupers * ngbxs

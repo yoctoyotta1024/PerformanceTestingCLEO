@@ -2,6 +2,19 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v1.5.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/fb35f1674b9c5ee8449e55e25551c5d009f6ecb0..v1.5.0) - 2024-12-13
+#### Documentation
+- update bash command examples - ([c9ab1a0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/c9ab1a0d632f89da490ca3f73704611c73e8208e)) - clara.bayley
+- update with all profilers - ([aadf21c](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/aadf21cb414a946031345563a080ad6cd06f9e94)) - clara.bayley
+#### Features
+- draft for new memory profilers - ([fb35f16](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/fb35f1674b9c5ee8449e55e25551c5d009f6ecb0)) - clara.bayley
+#### Refactoring
+- complete postprocessing funcs for new memory profilers - ([3315d77](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/3315d77517f162209f2bd7603a0c4a9fd3dfaa42)) - clara.bayley
+- add number to terminal piped output - ([a9848ea](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/a9848ea8d20caaccfad005ac7af35fac47091ee9)) - clara.bayley
+- allow multiple simultaneous profilers and add name to profiler class attributes - ([8f73c6d](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/8f73c6ded2e97a38d8ec3cda32fdc2890b2151ff)) - clara.bayley
+
+- - -
+
 ## [v1.4.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/4af906ac03d21df70651f7bb779273c579252915..v1.4.0) - 2024-12-12
 #### Bug Fixes
 - use gcc compiler for cuda build - ([c09704a](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/c09704a7401708fa34f12740a1b716343370a68e)) - clara.bayley

@@ -90,7 +90,7 @@ def initial_superdroplet_conditions(
 
     ### --- number of gridboxes and uperdroplets per gridbox --- ###
     ngbxs = config["domain"]["ngbxs"]
-    nsupers = config["domain"]["maxnsupers"]
+    nsupers = int(config["domain"]["maxnsupers"] / ngbxs)
     savelabel = f"_{ngbxs}_{nsupers}"
 
     ### --- settings for initial superdroplets --- ###

@@ -86,14 +86,14 @@ def get_config_filename(
 
 
 def get_binpath_onerun(
-    path2build, executable: str, ngbxs: int, nsupers: int, nrun: int
+    path2build: Path, executable: str, ngbxs: int, nsupers: int, nrun: int
 ):
     return (
         path2build
         / "bin"
         / executable
-        / Path(f"ngbxs{ngbxs}_nsupers{nsupers}")
-        / Path(f"nrun{nrun}")
+        / f"ngbxs{ngbxs}_nsupers{nsupers}"
+        / f"nrun{nrun}"
     )
 
 

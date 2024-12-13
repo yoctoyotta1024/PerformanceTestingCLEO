@@ -41,39 +41,47 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-path2builds = args.path2builds
+path2build = args.path2builds / args.buildtype
 buildtype = args.buildtype
 executable = args.executable
 profilers = args.profilers
 
-nsupers_runs = {
-    8: 5,
-    64: 5,
-    1024: 5,
-    8192: 5,
-    16384: 2,
-    131072: 2,
-    262144: 2,
-    524288: 1,
-    1048576: 1,
-    4194304: 1,
+ngbxs_nsupers_runs = {
+    (1, 1): 2,
+    (8, 1): 2,
+    (64, 1): 2,
+    (512, 1): 2,
+    (4096, 1): 2,
+    (32768, 1): 2,
+    (262144, 1): 2,
+    (1, 16): 2,
+    (64, 16): 2,
+    (4096, 16): 2,
+    (262144, 16): 2,
 }
+
+
+def get_binpath_onerun(
+    path2build: Path, executable: str, ngbxs: int, nsupers: int, nrun: int
+):
+    return (
+        path2build
+        / "bin"
+        / executable
+        / f"ngbxs{ngbxs}_nsupers{nsupers}"
+        / f"nrun{nrun}"
+    )
+
 
 for profiler_name in profilers:
     profiler = get_profiler(profiler_name, kokkos_tools_lib=kokkos_tools_lib)
-    for nsupers in nsupers_runs.keys():
-        for nrun in range(nsupers_runs[nsupers]):
-            binpath_run = (
-                path2builds
-                / buildtype
-                / "bin"
-                / executable
-                / Path(f"nsupers{nsupers}")
-                / Path(f"nrun{nrun}")
+    for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
+        for nrun in range(ngbxs_nsupers_runs[(ngbxs, nsupers)]):
+            binpath_run = get_binpath_onerun(
+                path2build, executable, ngbxs, nsupers, nrun
             )
-
             datfiles = profiler.postprocess(filespath=binpath_run, to_dataset=True)
             if len(datfiles) > 0:
                 print(
-                    f"{profiler.name} postproccesing complete for nsupers={nsupers}, nrun={nrun}"
+                    f"{profiler.name} postproccesing complete for ngbxs={ngbxs}, nsupers={nsupers}, nrun={nrun}"
                 )

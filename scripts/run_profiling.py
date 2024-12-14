@@ -44,15 +44,18 @@ parser.add_argument(
 )
 parser.add_argument("executable", type=str, help="Executable name, e.g. colls0d")
 parser.add_argument(
-    "sbatch", type=str, help="=='sbatch', else execute on current terminal"
+    "profilers", type=str, nargs="+", help="KP names, e.g. kerneltimer spacetimestack"
 )
 parser.add_argument(
-    "profilers", type=str, nargs="+", help="KP names, e.g. kerneltimer spacetimestack"
+    "--sbatch",
+    type=str,
+    default="TRUE",
+    help="=='TRUE', else execute on current terminal",
 )
 
 args = parser.parse_args()
 
-path2builds = args.path2builds
+path2build = args.path2builds / args.buildtype
 buildtype = args.buildtype
 executable = args.executable
 profilers = args.profilers
@@ -63,41 +66,52 @@ if buildtype == "cuda":
 else:
     bash_script = Path(__file__).resolve().parent / "bash" / "run_cleo.sh"
 
-executable_path = path2builds / buildtype / executable_paths[executable]
-nsupers_runs = {
-    8: 5,
-    64: 5,
-    1024: 5,
-    8192: 5,
-    16384: 2,
-    131072: 2,
-    262144: 2,
-    524288: 1,
-    1048576: 1,
-    4194304: 1,
+executable_path = path2build / executable_paths[executable]
+ngbxs_nsupers_runs = {
+    (1, 1): 2,
+    (8, 1): 2,
+    (64, 1): 2,
+    (512, 1): 2,
+    (4096, 1): 2,
+    (32768, 1): 2,
+    (262144, 1): 2,
+    (1, 16): 2,
+    (64, 16): 2,
+    (4096, 16): 2,
+    (262144, 16): 2,
 }
+
+
+def get_config_filename(
+    path2build: Path, executable: str, ngbxs: int, nsupers: int, nrun: int
+):
+    return path2build / "tmp" / executable / f"config_{ngbxs}_{nsupers}_{nrun}.yaml"
+
+
+def get_binpath_onerun(
+    path2build: Path, executable: str, ngbxs: int, nsupers: int, nrun: int
+):
+    return (
+        path2build
+        / "bin"
+        / executable
+        / f"ngbxs{ngbxs}_nsupers{nsupers}"
+        / f"nrun{nrun}"
+    )
+
 
 for profiler_name in profilers:
     profiler = get_profiler(profiler_name, kokkos_tools_lib=kokkos_tools_lib)
-    for nsupers in nsupers_runs.keys():
-        for nrun in range(nsupers_runs[nsupers]):
-            binpath_run = (
-                path2builds
-                / buildtype
-                / "bin"
-                / executable
-                / Path(f"nsupers{nsupers}")
-                / Path(f"nrun{nrun}")
+    for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
+        for nrun in range(ngbxs_nsupers_runs[(ngbxs, nsupers)]):
+            binpath_run = get_binpath_onerun(
+                path2build, executable, ngbxs, nsupers, nrun
             )
             binpath_run.mkdir(exist_ok=True, parents=True)
             os.chdir(binpath_run)
 
-            config_filename = (
-                path2builds
-                / buildtype
-                / "tmp"
-                / executable
-                / Path(f"config_{nsupers}_{nrun}.yaml")
+            config_filename = get_config_filename(
+                path2build, executable, ngbxs, nsupers, nrun
             )
             cmd = [
                 str(bash_script),
@@ -106,7 +120,7 @@ for profiler_name in profilers:
                 str(config_filename),
             ]
             print(Path.cwd())
-            if sbatch == "sbatch":
+            if sbatch == "TRUE":
                 cmd.insert(0, "sbatch")
                 subprocess.run(cmd)
             else:

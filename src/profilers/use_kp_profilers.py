@@ -20,6 +20,7 @@ classes to use Kokkos profilers in run scripts
 
 from pathlib import Path
 from typing import Optional
+import xarray as xr
 import read_kp_profilers
 
 
@@ -45,13 +46,24 @@ def get_profiler(
         )
 
 
+def _write_zarr_dataset(ds: xr.Dataset, zarr_filename: Path, allow_overwrite: bool):
+    if allow_overwrite:
+        mode = "w"
+    else:
+        mode = "w-"
+    ds.to_zarr(zarr_filename, mode=mode)
+
+
 class NullKpProfiler:
     def __init__(self):
         self.name = "none"
         print("Using No Kokkos Profiling Tool")
 
     def postprocess(
-        self, filespath: Optional[Path] = None, to_dataset: Optional[bool] = False
+        self,
+        filespath: Optional[Path] = None,
+        to_dataset: Optional[bool] = False,
+        allow_overwrite: Optional[bool] = False,
     ):
         return None
 
@@ -76,7 +88,10 @@ class KpKernelTimer:
         print("Using Kokkos Tool Reader", self.kp_reader)
 
     def postprocess(
-        self, filespath: Optional[Path] = None, to_dataset: Optional[bool] = False
+        self,
+        filespath: Optional[Path] = None,
+        to_dataset: Optional[bool] = False,
+        allow_overwrite: Optional[bool] = False,
     ):
         import glob
         import subprocess
@@ -107,7 +122,7 @@ class KpKernelTimer:
                 zarr_filename = str(Path(filename).name).replace(".", "p")
                 zarr_filename = f"/kp_kerneltimer_{zarr_filename}.zarr"
                 zarr_filename = str(Path(filename).parent) + zarr_filename
-                ds.to_zarr(Path(zarr_filename))
+                _write_zarr_dataset(ds, Path(zarr_filename), allow_overwrite)
 
         return datfiles  # names of files post-processed
 
@@ -130,7 +145,10 @@ class KpSpaceTimeStack:
         print("Using Kokkos Profiling Tool", os.environ["KOKKOS_TOOLS_LIBS"])
 
     def postprocess(
-        self, filespath: Optional[Path] = None, to_dataset: Optional[bool] = False
+        self,
+        filespath: Optional[Path] = None,
+        to_dataset: Optional[bool] = False,
+        allow_overwrite: Optional[bool] = False,
     ):
         import glob
         import os
@@ -151,7 +169,7 @@ class KpSpaceTimeStack:
                     zarr_filename = str(Path(filename).name).replace(".", "p")
                     zarr_filename = f"/kp_spacetimestack_{zarr_filename}.zarr"
                     zarr_filename = str(Path(filename).parent) + zarr_filename
-                    ds.to_zarr(Path(zarr_filename))
+                    _write_zarr_dataset(ds, Path(zarr_filename), allow_overwrite)
 
         return datfiles  # names of files post-processed
 
@@ -174,7 +192,10 @@ class KpMemoryUsage:
         print("Using Kokkos Profiling Tool", os.environ["KOKKOS_TOOLS_LIBS"])
 
     def postprocess(
-        self, filespath: Optional[Path] = None, to_dataset: Optional[bool] = False
+        self,
+        filespath: Optional[Path] = None,
+        to_dataset: Optional[bool] = False,
+        allow_overwrite: Optional[bool] = False,
     ):
         import glob
         import os
@@ -211,7 +232,10 @@ class KpMemoryEvents:
         print("Using Kokkos Profiling Tool", os.environ["KOKKOS_TOOLS_LIBS"])
 
     def postprocess(
-        self, filespath: Optional[Path] = None, to_dataset: Optional[bool] = False
+        self,
+        filespath: Optional[Path] = None,
+        to_dataset: Optional[bool] = False,
+        allow_overwrite: Optional[bool] = False,
     ):
         import glob
         import os

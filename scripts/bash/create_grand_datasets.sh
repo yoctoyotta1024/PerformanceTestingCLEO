@@ -23,7 +23,8 @@ path2src=${2:-/home/m/m300950/performance_testing_cleo}       # performance_test
 path2builds=${3:-${path2src}/builds}                          # builds in path2builds/[build_type]
 executable=${4:-colls0d}
 profiler=${5:-kerneltimer}                                    # "kerneltimer" or "spacetimestack"
-buildtypes=("${@:6}")                                         # "serial", "openmp" , "cuda" and/or "threads"
+allow_overwrite=${6:-FALSE}                                   # "TRUE" or otherwise evaluates as false
+buildtypes=("${@:7}")                                         # "serial", "openmp" , "cuda" and/or "threads"
 
 if [ "${#buildtypes[@]}" -eq 0 ]; then
   buildtypes=("cuda" "openmp" "serial" "threads")
@@ -31,7 +32,8 @@ fi
 
 ### ---------------- create grand datasets -------------- ###
 for buildtype in "${buildtypes[@]}"; do
-  runcmd="${python} ${path2src}/scripts/create_grand_datasets.py ${path2builds} ${buildtype} ${executable} ${profiler}"
+  runcmd="${python} ${path2src}/scripts/create_grand_datasets.py \
+    ${path2builds} ${buildtype} ${executable} ${profiler} --allow_overwrite=${allow_overwrite}"
   echo ${runcmd}
   ${runcmd}
 done

@@ -16,7 +16,7 @@
 # File Description:
 # Configuration file for 0D box model of collisions using CLEO.
 # Note: The inital superdroplets data read from file "initsupers_filename" can be made with
-# CLEO's pySD module (see Python script "scripts/collisions0d/initconds.py" for usage) and likewise
+# CLEO's pySD module (see Python script "scripts/collisions0d/setup_colls0d.py" for usage) and likewise
 # for "grid_filename".
 
 ### Initial Conditions Parameters for Python Script ###
@@ -25,9 +25,9 @@ python_initconds:
     savefigpath: XXX
     sharepath: XXX
   grid:
-    zgrid: [0, 5000, 5000]                                      # [max, min, spacing] of gridbox boundaries in z direction
-    xgrid: [0, 5000, 5000]                                      # [max, min, spacing] of gridbox boundaries in x direction
-    ygrid: [0, 5000, 5000]                                      # [max, min, spacing] of gridbox boundaries in y direction
+    zgrid: [0, 10000, X]                                      # [max, min, spacing] of gridbox boundaries in z direction
+    xgrid: [0, 10000, X]                                      # [max, min, spacing] of gridbox boundaries in x direction
+    ygrid: [0, 10000, X]                                      # [max, min, spacing] of gridbox boundaries in y direction
   supers:
     dryradius: 1.0e-16                                        # all SDs have negligible solute [m]
     rspan: [1.0e-6, 7.5e-5]                                   # max and min range of radii to sample [m]
@@ -37,8 +37,8 @@ python_initconds:
 
 ### SDM Runtime Parameters ###
 domain:
-  nspacedims: 0                                                 # no. of spatial dimensions to model
-  ngbxs: 1                                                      # total number of Gbxs
+  nspacedims: 3                                                 # no. of spatial dimensions to model
+  ngbxs: X                                                      # total number of Gbxs
   maxnsupers: X                                                 # maximum number of SDs
 
 timesteps:
@@ -61,6 +61,5 @@ initsupers:
 ### Output Parameters ###
 outputdata:
   setup_filename: XXX                                           # .txt filename to copy configuration to
-  stats_filename: XXX                                           # .txt file to output runtime statistics to
   zarrbasedir: XXX                                              # zarr store base directory
   maxchunk: 2500000                                             # maximum no. of elements in chunks of zarr store array

@@ -288,21 +288,23 @@ by building and compiling the exectuabel for a build of your choice (serial, ope
 <span class="w">  </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>colls0d<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>kerneltimer.spacetimestack.memoryevents.memoryusage<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>sbatch<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>TRUE<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda<span class="w"> </span>threads
 <span class="gp">$ </span>./scripts/bash/postproc_profiling.sh<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/work/bm1183/m300950/bin/envs/perftests/bin/python<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/home/m/m300950/performance_testing_cleo<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>colls0d<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>kerneltimer<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>kerneltimer.spacetimestack.memoryevents.memoryusage<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>FALSE<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda<span class="w"> </span>threads
 <span class="gp">$ </span>./scripts/bash/create_grand_datasets.sh<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/work/bm1183/m300950/bin/envs/perftests/bin/python<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/home/m/m300950/performance_testing_cleo<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>colls0d<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>kerneltimer.spacetimestack.memoryevents.memoryusage<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>kerneltimer.spacetimestack<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>FALSE<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda<span class="w"> </span>threads
 </pre></div>
 </div>
@@ -352,7 +354,7 @@ sequentially</p></li>
             
             <a href="https://github.com/pradyunsg/furo">Furo</a>
             <div class="last-updated">
-              Last updated on 13 December 2024</div>
+              Last updated on 14 December 2024</div>
           </div>
           <div class="right-details">
             

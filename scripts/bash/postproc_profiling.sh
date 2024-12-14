@@ -23,7 +23,8 @@ path2src=${2:-/home/m/m300950/performance_testing_cleo}       # performance_test
 path2builds=${3:-${path2src}/builds}                          # builds in path2builds/[build_type]
 executable=${4:-colls0d}
 profilers=${5:-kerneltimer.spacetimestack}                    # list with '.' seperating profilers
-buildtypes=("${@:6}")                                         # "serial", "openmp" , "cuda" and/or "threads"
+allow_overwrite=${6:-FALSE}                                   # "TRUE" or otherwise evaluates as false
+buildtypes=("${@:7}")                                         # "serial", "openmp" , "cuda" and/or "threads"
 
 if [ "${#buildtypes[@]}" -eq 0 ]; then
   buildtypes=("cuda" "openmp" "serial" "threads")
@@ -33,7 +34,8 @@ profilers=$(echo $profilers | sed 's/\./ /g')
 
 ### ----------------- run profiling --------------- ###
 for buildtype in "${buildtypes[@]}"; do
-  runcmd="${python} ${path2src}/scripts/postproc_profiling.py ${path2builds} ${buildtype} ${executable} ${profilers}"
+  runcmd="${python} ${path2src}/scripts/postproc_profiling.py \
+    ${path2builds} ${buildtype} ${executable} ${profilers} --allow_overwrite=${allow_overwrite}"
   echo ${runcmd}
   ${runcmd}
 done

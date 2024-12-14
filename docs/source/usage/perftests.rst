@@ -52,6 +52,7 @@ E.g. For a serial build;
       /work/bm1183/m300950/performance_testing_cleo/builds \
       colls0d \
       kerneltimer.spacetimestack.memoryevents.memoryusage \
+      FALSE \
       serial openmp cuda threads
     $ ./scripts/bash/create_grand_datasets.sh \
       /work/bm1183/m300950/bin/envs/perftests/bin/python \

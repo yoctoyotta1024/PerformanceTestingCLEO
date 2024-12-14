@@ -39,12 +39,22 @@ parser.add_argument("executable", type=str, help="Executable name, e.g. colls0d"
 parser.add_argument(
     "profilers", type=str, nargs="+", help="KP names, e.g. kerneltimer spacetimestack"
 )
+parser.add_argument(
+    "--allow_overwrite",
+    type=str,
+    default="FALSE",
+    help="Allow zarr datasets to overwrite exisiting ones (!)",
+)
 args = parser.parse_args()
 
 path2build = args.path2builds / args.buildtype
 buildtype = args.buildtype
 executable = args.executable
 profilers = args.profilers
+if args.allow_overwrite == "TRUE":
+    allow_overwrite = True
+else:
+    allow_overwrite = False
 
 ngbxs_nsupers_runs = {
     (1, 1): 2,
@@ -80,7 +90,9 @@ for profiler_name in profilers:
             binpath_run = get_binpath_onerun(
                 path2build, executable, ngbxs, nsupers, nrun
             )
-            datfiles = profiler.postprocess(filespath=binpath_run, to_dataset=True)
+            datfiles = profiler.postprocess(
+                filespath=binpath_run, to_dataset=True, allow_overwrite=allow_overwrite
+            )
             if len(datfiles) > 0:
                 print(
                     f"{profiler.name} postproccesing complete for ngbxs={ngbxs}, nsupers={nsupers}, nrun={nrun}"

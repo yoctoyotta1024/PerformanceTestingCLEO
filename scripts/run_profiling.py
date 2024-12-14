@@ -44,10 +44,13 @@ parser.add_argument(
 )
 parser.add_argument("executable", type=str, help="Executable name, e.g. colls0d")
 parser.add_argument(
-    "sbatch", type=str, help="=='sbatch', else execute on current terminal"
+    "profilers", type=str, nargs="+", help="KP names, e.g. kerneltimer spacetimestack"
 )
 parser.add_argument(
-    "profilers", type=str, nargs="+", help="KP names, e.g. kerneltimer spacetimestack"
+    "--sbatch",
+    type=str,
+    default="TRUE",
+    help="=='TRUE', else execute on current terminal",
 )
 
 args = parser.parse_args()
@@ -117,7 +120,7 @@ for profiler_name in profilers:
                 str(config_filename),
             ]
             print(Path.cwd())
-            if sbatch == "sbatch":
+            if sbatch == "TRUE":
                 cmd.insert(0, "sbatch")
                 subprocess.run(cmd)
             else:

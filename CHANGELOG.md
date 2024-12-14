@@ -2,6 +2,29 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v1.5.1](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/63dfefb3aaad50f3b0628b269c10c2cd1be6a41a..v1.5.1) - 2024-12-14
+#### Bug Fixes
+- correct usage by default and in notes - ([390eb2a](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/390eb2aa15e14a05e338c60efd5c406ae19c1ff2)) - clara.bayley
+- fix nsupers in init conds - ([0135e2d](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/0135e2d8c9dee1a22d85134298a9a5a4ff855bcc)) - clara.bayley
+- revert "fix yaml formatting of z,x and y grid params" - ([58679db](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/58679dbc781e01608fcf361a930deeb09de4106f)) - clara.bayley
+- fix yaml formatting of z,x and y grid params - ([0c93046](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/0c93046786e7858fa63afc57d74ddb773f5755cd)) - clara.bayley
+#### Documentation
+- fix usage to more normal example - ([299f3d9](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/299f3d9135d65eb76164732644cba1fb39d586e3)) - clara.bayley
+#### Miscellaneous Chores
+- update CLEO version - ([63dfefb](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/63dfefb3aaad50f3b0628b269c10c2cd1be6a41a)) - clara.bayley
+#### Refactoring
+- add optional parameter to allow overwriting zarr datasets in grand datasets script - ([10c2247](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/10c22478095a04880b960348c9076ab406ba93d4)) - clara.bayley
+- add optional parameter to allow overwriting zarr datasets in postprocessing - ([62bd92d](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/62bd92d7666e771d3f8f18dedc12c2f702e761c6)) - clara.bayley
+- make sbatch an optional argument - ([affef6a](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/affef6aede639fe3fc8b19123b20563a16077323)) - clara.bayley
+- generalise grand datasets creation to ngbxs variable too - ([f172ca6](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/f172ca67ab58a3088caff3e7970d15ef02da2903)) - clara.bayley
+- generalise postprocessing script for paths with ngbxs - ([fc8d722](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/fc8d722fc560aaa576bdc9481b4c5a362e117b44)) - clara.bayley
+- run_profiling wiht correct paths including gridboxes - ([696dd19](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/696dd19569b28edf9d010d633bdda9ae56bb34d1)) - clara.bayley
+- seperate init supers and init gbxs functions - ([b1c6125](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/b1c61256d704847f4450e28a30dd5f82ca2e66e5)) - clara.bayley
+- nsupers now dict for nsupers per gbx with ngbxs in tuple for key - ([7b1b0b8](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/7b1b0b8409d528e2107ea5b7ed99dafddee44234)) - clara.bayley
+- generalise config file to accept more than one gridbox - ([60e6925](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/60e69252328e653076f9f4b417bfc214941215e0)) - clara.bayley
+
+- - -
+
 ## [v1.5.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/fb35f1674b9c5ee8449e55e25551c5d009f6ecb0..v1.5.0) - 2024-12-13
 #### Documentation
 - update bash command examples - ([c9ab1a0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/c9ab1a0d632f89da490ca3f73704611c73e8208e)) - clara.bayley

@@ -60,6 +60,7 @@ E.g. For a serial build;
       /work/bm1183/m300950/performance_testing_cleo/builds \
       colls0d \
       kerneltimer.spacetimestack \
+      FALSE \
       serial openmp cuda threads
 
 #. c) You can add/remove profilers in the list of profiler names seperated by a '.',

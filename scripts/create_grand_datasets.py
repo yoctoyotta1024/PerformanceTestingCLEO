@@ -33,6 +33,12 @@ parser.add_argument(
 )
 parser.add_argument("executable", type=str, help="Executable name, e.g. colls0d")
 parser.add_argument("profiler", type=str, help="KP name: kerneltimer or spacetimestack")
+parser.add_argument(
+    "--allow_overwrite",
+    type=str,
+    default="FALSE",
+    help="Allow zarr datasets to overwrite exisiting ones (!)",
+)
 args = parser.parse_args()
 
 path2build = args.path2builds / args.buildtype
@@ -41,7 +47,13 @@ executable = args.executable
 profiler = args.profiler
 do_write_runs_datasets = True
 do_write_grand_dataset = True
+if args.allow_overwrite == "TRUE":
+    allow_overwrite = True
+else:
+    allow_overwrite = False
+
 nsupers_grand_datasets = [1, 16]
+
 ngbxs_nsupers_runs = {
     (1, 1): 2,
     (8, 1): 2,
@@ -204,6 +216,14 @@ def ensemble_grand_dataset_over_coord(
     return grand_ds
 
 
+def write_zarr_dataset(ds: xr.Dataset, zarr_filename: Path, allow_overwrite: bool):
+    if allow_overwrite:
+        mode = "w"
+    else:
+        mode = "w-"
+    ds.to_zarr(zarr_filename, mode=mode)
+
+
 # ------------------------------------------------------ #
 
 
@@ -224,7 +244,7 @@ if do_write_runs_datasets:
             filename = get_runsensemblestats_dataset_name(
                 path2build, executable, ngbxs, nsupers, profiler
             )
-            runs_ds.to_zarr(filename)
+            write_zarr_dataset(runs_ds, filename, allow_overwrite)
 # ------------------------------------------------------ #
 
 # -------- write ensemble of ngbxs datasets ---------- #
@@ -267,5 +287,5 @@ if do_write_grand_dataset:
                 path2build, executable, nsupers_dataset, profiler
             )
             print(grand_ds)
-            grand_ds.to_zarr(filename)
+            write_zarr_dataset(grand_ds, filename, allow_overwrite)
 # ------------------------------------------------------ #

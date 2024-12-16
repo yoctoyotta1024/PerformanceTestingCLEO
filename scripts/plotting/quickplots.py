@@ -22,7 +22,6 @@ Note: standard data format assumed.
 # %%
 import argparse
 import xarray as xr
-import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
 import sys
@@ -78,8 +77,7 @@ def line_of_best_fit(
 
 # %% funtion definitions for kernel timer plots
 def plot_simple_wallclock_scaling(datasets: dict):
-    fig, axs = plt.subplots(figsize=(12, 6))
-    axs.spines[["right", "top"]].set_visible(False)
+    fig, axs = hfuncs.subplots(figsize=(12, 6))
     c1 = "k"
     a = 0
     for lab, data in datasets.items():
@@ -113,10 +111,7 @@ def plot_simple_wallclock_scaling(datasets: dict):
 
 
 def plot_simple_wallclock_timeinkernels_scaling(datasets: dict):
-    fig, axs = plt.subplots(figsize=(12, 18), nrows=3, ncols=1, sharex=True)
-    for ax in axs:
-        ax.spines[["right", "top"]].set_visible(False)
-
+    fig, axs = hfuncs.subplots(figsize=(12, 18), nrows=3, ncols=1, sharex=True)
     c1 = "k"
     for lab, data in datasets.items():
         x = data.attrs["nsupers"] * data.ngbxs
@@ -201,7 +196,7 @@ def plot_simple_wallclock_timeinkernels_scaling(datasets: dict):
 
 
 def plot_wallclock_decomposition_scaling(datasets: dict):
-    fig, axs = plt.subplots(figsize=(12, 18), nrows=3, ncols=1, sharex=True)
+    fig, axs = hfuncs.subplots(figsize=(12, 18), nrows=3, ncols=1, sharex=True)
     for ax in axs:
         ax.spines[["right", "top"]].set_visible(False)
         ax.set_xscale("log")
@@ -291,10 +286,9 @@ def plot_wallclock_decomposition_scaling(datasets: dict):
 
 # %% funtion definitions for memory consumption plots
 def plot_simple_memory_scaling(datasets: xr.Dataset):
-    fig, axs = plt.subplots(figsize=(12, 12), nrows=2, ncols=1, sharex=True)
-    for ax in axs:
-        ax.spines[["right", "top"]].set_visible(False)
-        ax.set_xscale("log")
+    fig, axs = hfuncs.subplots(
+        figsize=(12, 18), nrows=2, ncols=1, sharex=True, logx=True
+    )
 
     c1 = "k"
     for lab, data in datasets.items():

@@ -61,6 +61,37 @@ def open_spacetimestack_dataset(
     return xr.open_zarr(path2ds)
 
 
+def subplots(
+    figsize: Optional[tuple] = (12, 18),
+    nrows: Optional[int] = 1,
+    ncols: Optional[int] = 1,
+    sharex: Optional[bool] = False,
+    sharey: Optional[bool] = False,
+    logx: Optional[bool] = False,
+):
+    import matplotlib.pyplot as plt
+    from matplotlib.axes import Axes
+    import numpy as np
+
+    fig, axes = plt.subplots(
+        figsize=figsize, nrows=nrows, ncols=ncols, sharex=sharex, sharey=sharey
+    )
+
+    if isinstance(axes, Axes):
+        axs = np.array([axes])
+    else:
+        axs = axes
+
+    for ax in axs.flatten():
+        ax.spines[["right", "top"]].set_visible(False)
+
+    if logx:
+        for ax in axs.flatten():
+            ax.set_xscale("log")
+
+    return fig, axes
+
+
 def savefig(savename: Path, dpi: Optional[int] = 128):
     import matplotlib.pyplot as plt
 

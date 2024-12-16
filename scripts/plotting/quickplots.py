@@ -2,8 +2,8 @@
 Copyright (c) 2024 MPI-M, Clara Bayley
 
 -----  PerformanceTestingCLEO -----
-File: performance_plots.py
-Project: scripts
+File: quickplots.py
+Project: plotting
 Created Date: Monday 9th December 2024
 Author: Clara Bayley (CB)
 Additional Contributors:

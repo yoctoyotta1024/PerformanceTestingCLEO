@@ -69,6 +69,7 @@ def subplots(
     sharex: Optional[bool] = False,
     sharey: Optional[bool] = False,
     logx: Optional[bool] = False,
+    logy: Optional[bool] = False,
 ):
     import matplotlib.pyplot as plt
     from matplotlib.axes import Axes
@@ -89,6 +90,9 @@ def subplots(
     if logx:
         for ax in axs.flatten():
             ax.set_xscale("log")
+    if logy:
+        for ax in axs.flatten():
+            ax.set_yscale("log")
 
     return fig, axes
 

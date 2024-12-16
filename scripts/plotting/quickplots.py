@@ -57,6 +57,11 @@ markers = hfuncs.buildtype_markers
 
 savedir = Path("/home/m/m300950/performance_testing_cleo/plots/")
 
+skip = {
+    1: 3,
+    16: 1,
+}
+
 
 # %% funtion definitions for generic helper functions
 def line_of_best_fit(
@@ -81,7 +86,9 @@ def line_of_best_fit(
 
 # %% funtion definitions for kernel timer plots
 def plot_simple_wallclock_scaling(datasets: dict):
-    fig, axs = hfuncs.subplots(figsize=(12, 8))
+    fig, axs = hfuncs.subplots(
+        figsize=(12, 15), nrows=2, sharex=True, logx=True, logy=True
+    )
     c1 = "k"
     a = 0
     for lab, data in datasets.items():
@@ -91,9 +98,9 @@ def plot_simple_wallclock_scaling(datasets: dict):
         slab = None
         if a == 0:
             slab = "IQR"
-        hfuncs.add_shading(axs, x, lq, uq, c1, lstyles[lab], label=slab)
+        hfuncs.add_shading(axs[0], x, lq, uq, c1, lstyles[lab], label=slab)
 
-        axs.plot(
+        axs[0].plot(
             x,
             y,
             color=c1,
@@ -103,14 +110,41 @@ def plot_simple_wallclock_scaling(datasets: dict):
         )
 
         # c2 = "purple"
-        # xfit, yfit, m, c = line_of_best_fit(x, y, skip=2, logaxs=True)
-        # axs.plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
+        # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip[nsupers], logaxs=True)
+        # axs[0].plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
         a += 1
-    axs.set_xscale("log")
-    axs.set_yscale("log")
-    axs.set_xlabel("Total Superdroplets in Domain")
-    axs.set_ylabel("Total Wall Clock Time /s")
-    axs.legend()
+    axs[0].set_title("Entire Program")
+
+    for lab, data in datasets.items():
+        x = data.attrs["nsupers"] * data.ngbxs
+        y = data.runcleo[:, 0, 0]
+        lq, uq = data.runcleo[:, 2, 0], data.runcleo[:, 3, 0]
+        slab = None
+        if a == 0:
+            slab = "IQR"
+        hfuncs.add_shading(axs[1], x, lq, uq, c1, lstyles[lab], label=slab)
+
+        axs[1].plot(
+            x,
+            y,
+            color=c1,
+            marker=markers[lab],
+            linestyle=lstyles[lab],
+            label=lab,
+        )
+
+        # c2 = "purple"
+        # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip[nsupers], logaxs=True)
+        # axs[1].plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
+        a += 1
+    axs[1].set_title("RunCLEO")
+
+    for ax in axs:
+        ax.set_ylabel("Wall Clock Time /s")
+
+    axs[0].legend()
+    axs[-1].set_xlabel("Total Superdroplets in Domain")
+
     return fig, axs
 
 
@@ -200,12 +234,9 @@ def plot_simple_wallclock_timeinkernels_scaling(datasets: dict):
 
 
 def plot_wallclock_decomposition_scaling(datasets: dict):
-    fig, axs = hfuncs.subplots(figsize=(12, 20), nrows=3, ncols=1, sharex=True)
-    for ax in axs:
-        ax.spines[["right", "top"]].set_visible(False)
-        ax.set_xscale("log")
-        ax.set_yscale("log")
-        ax.set_ylabel("Wall Clock Time /s")
+    fig, axs = hfuncs.subplots(
+        figsize=(12, 20), nrows=3, ncols=1, sharex=True, logx=True, logy=True
+    )
 
     vars = ["runcleo", "init", "timestep"]
     colors = ["black", "darkviolet", "green"]
@@ -284,7 +315,9 @@ def plot_wallclock_decomposition_scaling(datasets: dict):
 
     for ax in axs:
         ax.legend()
+        ax.set_ylabel("Wall Clock Time /s")
     axs[-1].set_xlabel("Total Superdroplets in Domain")
+
     return fig, axs
 
 
@@ -383,3 +416,5 @@ datasets_mem = {
 fig, axs = plot_simple_memory_scaling(datasets_mem)
 savename = savedir / f"memory_consumption_nsupers{nsupers}.png"
 hfuncs.savefig(savename)
+
+# %%

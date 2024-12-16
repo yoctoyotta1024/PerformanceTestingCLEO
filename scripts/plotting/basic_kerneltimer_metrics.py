@@ -66,7 +66,7 @@ savedir = Path("/home/m/m300950/performance_testing_cleo/plots/")
 def plot_speedup_scaling(
     datasets: dict, references: dict, buildtype: str, buildtype_references: str
 ):
-    fig, axs = hfuncs.subplots(figsize=(12, 18), nrows=3, logx=True)
+    fig, axs = hfuncs.subplots(figsize=(12, 20), nrows=3, logx=True)
     fig.suptitle(f"{buildtype} compared to {buildtype_references}")
 
     for nsupers in datasets.keys():
@@ -145,7 +145,7 @@ def plot_speedup_scaling(
 def plot_rough_efficiency_scaling(
     datasets: dict, references: dict, buildtype: str, buildtype_references: str
 ):
-    fig, axs = hfuncs.subplots(figsize=(12, 18), nrows=3, logx=True)
+    fig, axs = hfuncs.subplots(figsize=(12, 20), nrows=3, logx=True)
     fig.suptitle(f"{buildtype} compared to {buildtype_references}")
 
     for nsupers in datasets.keys():

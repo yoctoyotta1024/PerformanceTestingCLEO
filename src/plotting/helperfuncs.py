@@ -96,6 +96,7 @@ def subplots(
 def savefig(savename: Path, dpi: Optional[int] = 128):
     import matplotlib.pyplot as plt
 
+    plt.tight_layout()
     plt.savefig(savename, dpi=dpi, bbox_inches="tight")
     print(f"figure saved as {str(savename)}")
 

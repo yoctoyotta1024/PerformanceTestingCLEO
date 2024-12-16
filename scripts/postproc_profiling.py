@@ -45,7 +45,7 @@ parser.add_argument(
     "profilers",
     type=str,
     nargs="+",
-    choices=["kerneltimer", "spacetimestack", "memoryevents", "memoryusage"],
+    choices=["none", "kerneltimer", "spacetimestack", "memoryevents", "memoryusage"],
     help="KP names, e.g. kerneltimer spacetimestack",
 )
 parser.add_argument(

@@ -20,6 +20,7 @@ functions / classes to help scripts which load and plot performance data
 
 from pathlib import Path
 from typing import Optional
+import xarray as xr
 
 buildtype_lstyles = {
     "serial": "dotted",
@@ -116,3 +117,31 @@ def add_shading(
     ax.fill_between(
         x, lower, upper, color=c, linestyle=ls, alpha=a, label=label, zorder=0
     )
+
+
+def calculate_speedup(
+    time: xr.DataArray, time_serial: xr.DataArray, extrapolate: Optional[bool] = False
+):
+    if extrapolate:
+        raise NotImplementedError(
+            "no method to extrapolate serial time for speedup calculation"
+        )
+    return time_serial / time
+
+
+def calculate_rough_efficiency(
+    time: xr.DataArray,
+    time_serial: xr.DataArray,
+    buildtype: str,
+    extrapolate: Optional[bool] = False,
+):
+    processing_units = {
+        # TODO(CB): get from kokkos configuration statement during runtime so efficiency
+        # calculatin is not only a rough calculation
+        "serial": 1,
+        "threads": 1,
+        "openmp": 256,
+        "cuda": 6912,
+    }
+    speedup = calculate_speedup(time, time_serial, extrapolate=extrapolate)
+    return speedup / processing_units[buildtype]

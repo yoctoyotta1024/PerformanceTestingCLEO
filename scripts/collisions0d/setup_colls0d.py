@@ -30,10 +30,17 @@ parser = argparse.ArgumentParser()
 parser.add_argument("path2CLEO", type=Path, help="Absolute path to CLEO (for pySD)")
 parser.add_argument("path2builds", type=Path, help="Absolute path to builds")
 parser.add_argument(
-    "buildtype", type=str, help="Type of build: serial, openmp, cuda or threads"
+    "buildtype",
+    type=str,
+    choices=["serial", "openmp", "cuda", "threads"],
+    help="Type of build: serial, openmp, cuda or threads",
 )
 parser.add_argument(
-    "gen_initconds", type=str, help="General initial condition binary files"
+    "--gen_initconds",
+    type=str,
+    choices=["TRUE", "FALSE"],
+    default="TRUE",
+    help="=='TRUE', else don't generate initial condition binary files",
 )
 args = parser.parse_args()
 
@@ -126,7 +133,7 @@ for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
         shutil.copy(Path(src_config_filename), config_filename)
         editconfigfile.edit_config_params(config_filename, params)
 
-if gen_initconds == "true":
+if gen_initconds == "TRUE":
     for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
         isfigures = [True, True]
         ### ----- write initial gridbox boundaries binary file ----- ###

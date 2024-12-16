@@ -40,7 +40,11 @@ parser.add_argument(
     default="/work/bm1183/m300950/performance_testing_cleo/builds/",
 )
 parser.add_argument(
-    "--executable", type=str, help="Executable name, e.g. colls0d", default="colls0d"
+    "--executable",
+    type=str,
+    choices=["colls0d"],
+    help="Executable name, e.g. colls0d",
+    default="colls0d",
 )
 args, unknown = parser.parse_known_args()
 path2builds = args.path2builds

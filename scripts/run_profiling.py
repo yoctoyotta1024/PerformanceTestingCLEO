@@ -40,15 +40,25 @@ from use_kp_profilers import get_profiler
 parser = argparse.ArgumentParser()
 parser.add_argument("path2builds", type=Path, help="Absolute path to builds")
 parser.add_argument(
-    "buildtype", type=str, help="Type of build: serial, openmp, cuda or threads"
+    "buildtype",
+    type=str,
+    choices=["serial", "openmp", "cuda", "threads"],
+    help="Type of build: serial, openmp, cuda or threads",
 )
-parser.add_argument("executable", type=str, help="Executable name, e.g. colls0d")
 parser.add_argument(
-    "profilers", type=str, nargs="+", help="KP names, e.g. kerneltimer spacetimestack"
+    "executable", type=str, choices=["colls0d"], help="Executable name, e.g. colls0d"
+)
+parser.add_argument(
+    "profilers",
+    type=str,
+    nargs="+",
+    choices=["kerneltimer", "spacetimestack", "memoryevents", "memoryusage"],
+    help="KP names, e.g. kerneltimer spacetimestack",
 )
 parser.add_argument(
     "--sbatch",
     type=str,
+    choices=["TRUE", "FALSE"],
     default="TRUE",
     help="=='TRUE', else execute on current terminal",
 )

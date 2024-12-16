@@ -29,13 +29,24 @@ from typing import Optional
 parser = argparse.ArgumentParser()
 parser.add_argument("path2builds", type=Path, help="Absolute path to builds")
 parser.add_argument(
-    "buildtype", type=str, help="Type of build: serial, openmp, cuda or threads"
+    "buildtype",
+    type=str,
+    choices=["serial", "openmp", "cuda", "threads"],
+    help="Type of build: serial, openmp, cuda or threads",
 )
-parser.add_argument("executable", type=str, help="Executable name, e.g. colls0d")
-parser.add_argument("profiler", type=str, help="KP name: kerneltimer or spacetimestack")
+parser.add_argument(
+    "executable", type=str, choices=["colls0d"], help="Executable name, e.g. colls0d"
+)
+parser.add_argument(
+    "profiler",
+    type=str,
+    choices=["kerneltimer", "spacetimestack"],
+    help="KP name: kerneltimer or spacetimestack",
+)
 parser.add_argument(
     "--allow_overwrite",
     type=str,
+    choices=["TRUE", "FALSE"],
     default="FALSE",
     help="Allow zarr datasets to overwrite exisiting ones (!)",
 )

@@ -38,11 +38,16 @@ parser.add_argument(
     default="/work/bm1183/m300950/performance_testing_cleo/builds/",
 )
 parser.add_argument(
-    "--executable", type=str, help="Executable name, e.g. colls0d", default="colls0d"
+    "--executable",
+    type=str,
+    choices=["colls0d"],
+    help="Executable name, e.g. colls0d",
+    default="colls0d",
 )
 parser.add_argument(
     "--buildtype",
     type=str,
+    choices=["serial", "openmp", "cuda", "threads"],
     help="Type of build: serial, openmp, cuda or threads",
     default="openmp",
 )

@@ -3,7 +3,7 @@
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=256
+#SBATCH --cpus-per-task=1
 #SBATCH --gpus-per-task=1
 #SBATCH --exclusive
 #SBATCH --mem=10G

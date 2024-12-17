@@ -2,8 +2,8 @@
 Copyright (c) 2024 MPI-M, Clara Bayley
 
 -----  PerformanceTestingCLEO -----
-File: performance_plots.py
-Project: scripts
+File: quickplots.py
+Project: plotting
 Created Date: Monday 9th December 2024
 Author: Clara Bayley (CB)
 Additional Contributors:
@@ -22,10 +22,14 @@ Note: standard data format assumed.
 # %%
 import argparse
 import xarray as xr
-import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
+import sys
 from typing import Optional
+
+path2src = Path(__file__).resolve().parent.parent.parent / "src"
+sys.path.append(str(path2src))  # for imports for input files generation
+from plotting import helperfuncs as hfuncs
 
 # e.g. ipykernel_launcher.py [path2builds] [executable]
 parser = argparse.ArgumentParser()
@@ -36,40 +40,30 @@ parser.add_argument(
     default="/work/bm1183/m300950/performance_testing_cleo/builds/",
 )
 parser.add_argument(
-    "--executable", type=str, help="Executable name, e.g. colls0d", default="colls0d"
+    "--executable",
+    type=str,
+    choices=["colls0d"],
+    help="Executable name, e.g. colls0d",
+    default="colls0d",
 )
 args, unknown = parser.parse_known_args()
 path2builds = args.path2builds
 executable = args.executable
 
-lstyles = {
-    "serial": "dotted",
-    "openmp": "dashdot",
-    "cuda": "solid",
-    "threads": "dashed",
-}
+nsupers = 1
 
-markers = {"serial": "o", "openmp": "s", "cuda": "x", "threads": "d"}
+lstyles = hfuncs.buildtype_lstyles
+markers = hfuncs.buildtype_markers
 
 savedir = Path("/home/m/m300950/performance_testing_cleo/plots/")
 
+skip = {
+    1: 3,
+    16: 1,
+}
+
 
 # %% funtion definitions for generic helper functions
-def open_kerneltimer_dataset(path2builds: Path, buildtype: str, executable: str):
-    path2ds = path2builds / buildtype / "bin" / executable / "kp_kerneltimer.zarr"
-    return xr.open_zarr(path2ds)
-
-
-def open_spacetimestack_dataset(path2builds: Path, buildtype: str, executable: str):
-    path2ds = path2builds / buildtype / "bin" / executable / "kp_spacetimestack.zarr"
-    return xr.open_zarr(path2ds)
-
-
-def savefig(savename: Path, dpi: Optional[int] = 128):
-    plt.savefig(savename, dpi=dpi, bbox_inches="tight")
-    print(f"figure saved as {str(savename)}")
-
-
 def line_of_best_fit(
     x: np.ndarray,
     y: np.ndarray,
@@ -90,40 +84,19 @@ def line_of_best_fit(
     return x, yfit, slope, intercept
 
 
-def add_shading(
-    ax,
-    x,
-    lower,
-    upper,
-    c,
-    ls,
-    a: Optional[float] = 0.3,
-    label: Optional[str] = None,
-    add_y: Optional[bool] = None,
-):
-    if add_y is not None:
-        lower = add_y - lower
-        upper = add_y + upper
-    ax.fill_between(
-        x, lower, upper, color=c, linestyle=ls, alpha=a, label=label, zorder=0
-    )
-
-
 # %% funtion definitions for kernel timer plots
-def plot_simple_wallclock_scaling(datasets: dict):
-    fig, axs = plt.subplots(figsize=(12, 6))
-    axs.spines[["right", "top"]].set_visible(False)
+def plot_overall_wallclock_scaling(datasets: dict):
+    fig, axs = hfuncs.subplots(figsize=(12, 8), nrows=1, logx=True, logy=True)
     c1 = "k"
-    c2 = "purple"
     a = 0
     for lab, data in datasets.items():
-        x, y = data.nsupers, data.summary[:, 0, 0]
-
+        x = data.attrs["nsupers"] * data.ngbxs
+        y = data.summary[:, 0, 0]
         lq, uq = data.summary[:, 2, 0], data.summary[:, 3, 0]
         slab = None
         if a == 0:
             slab = "IQR"
-        add_shading(axs, x, lq, uq, c1, lstyles[lab], label=slab)
+        hfuncs.add_shading(axs, x, lq, uq, c1, lstyles[lab], label=slab)
 
         axs.plot(
             x,
@@ -134,25 +107,111 @@ def plot_simple_wallclock_scaling(datasets: dict):
             label=lab,
         )
 
-        xfit, yfit, m, c = line_of_best_fit(x, y, skip=2, logaxs=True)
-        axs.plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
+        # c2 = "purple"
+        # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip[nsupers], logaxs=True)
+        # axs.plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
         a += 1
-    axs.set_xscale("log")
-    axs.set_yscale("log")
-    axs.set_xlabel("Superdroplets per Gridbox")
-    axs.set_ylabel("Total Wall Clock Time /s")
     axs.legend()
+    axs.set_title("Entire Program")
+    axs.set_ylabel("Wall Clock Time /s")
+    axs.set_xlabel("Total Superdroplets in Domain")
+
+    return fig, axs
+
+
+def plot_simple_wallclock_scaling(datasets: dict):
+    fig, axs = hfuncs.subplots(
+        figsize=(12, 20), nrows=3, sharex=True, logx=True, logy=True
+    )
+    c1 = "k"
+    a = 0
+    for lab, data in datasets.items():
+        x = data.attrs["nsupers"] * data.ngbxs
+        y = data.summary[:, 0, 0]
+        lq, uq = data.summary[:, 2, 0], data.summary[:, 3, 0]
+        slab = None
+        if a == 0:
+            slab = "IQR"
+        hfuncs.add_shading(axs[0], x, lq, uq, c1, lstyles[lab], label=slab)
+
+        axs[0].plot(
+            x,
+            y,
+            color=c1,
+            marker=markers[lab],
+            linestyle=lstyles[lab],
+            label=lab,
+        )
+
+        # c2 = "purple"
+        # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip[nsupers], logaxs=True)
+        # axs[0].plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
+        a += 1
+    axs[0].set_title("Entire Program")
+
+    for lab, data in datasets.items():
+        x = data.attrs["nsupers"] * data.ngbxs
+        y = data.runcleo[:, 0, 0]
+        lq, uq = data.runcleo[:, 2, 0], data.runcleo[:, 3, 0]
+        slab = None
+        if a == 0:
+            slab = "IQR"
+        hfuncs.add_shading(axs[1], x, lq, uq, c1, lstyles[lab], label=slab)
+
+        axs[1].plot(
+            x,
+            y,
+            color=c1,
+            marker=markers[lab],
+            linestyle=lstyles[lab],
+            label=lab,
+        )
+
+        # c2 = "purple"
+        # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip[nsupers], logaxs=True)
+        # axs[1].plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
+        a += 1
+    axs[1].set_title("RunCLEO")
+
+    for lab, data in datasets.items():
+        x = data.attrs["nsupers"] * data.ngbxs
+        y = data.timestep[:, 0, 0]
+        lq, uq = data.timestep[:, 2, 0], data.timestep[:, 3, 0]
+        slab = None
+        if a == 0:
+            slab = "IQR"
+        hfuncs.add_shading(axs[2], x, lq, uq, c1, lstyles[lab], label=slab)
+
+        axs[2].plot(
+            x,
+            y,
+            color=c1,
+            marker=markers[lab],
+            linestyle=lstyles[lab],
+            label=lab,
+        )
+
+        # c2 = "purple"
+        # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip[nsupers], logaxs=True)
+        # axs[1].plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
+        a += 1
+    axs[2].set_title("RunCLEO")
+
+    for ax in axs:
+        ax.set_ylabel("Wall Clock Time /s")
+
+    axs[0].legend()
+    axs[-1].set_xlabel("Total Superdroplets in Domain")
+
     return fig, axs
 
 
 def plot_simple_wallclock_timeinkernels_scaling(datasets: dict):
-    fig, axs = plt.subplots(figsize=(12, 18), nrows=3, ncols=1, sharex=True)
-    for ax in axs:
-        ax.spines[["right", "top"]].set_visible(False)
-
+    fig, axs = hfuncs.subplots(figsize=(12, 20), nrows=3, ncols=1, sharex=True)
     c1 = "k"
     for lab, data in datasets.items():
-        x, y = data.nsupers, data.summary[:, 0, 3]
+        x = data.attrs["nsupers"] * data.ngbxs
+        y = data.summary[:, 0, 3]
         axs[0].plot(
             x,
             y,
@@ -162,14 +221,15 @@ def plot_simple_wallclock_timeinkernels_scaling(datasets: dict):
             label=lab,
         )
         lq, uq = data.summary[:, 2, 3], data.summary[:, 3, 3]
-        add_shading(axs[0], x, lq, uq, c1, lstyles[lab])
+        hfuncs.add_shading(axs[0], x, lq, uq, c1, lstyles[lab])
         axs[0].set_ylabel("% of Total Wall Clock Time in Kernels")
     axs[0].legend()
 
     c1 = "tab:blue"
     a = 0
     for lab, data in datasets.items():
-        x, y = data.nsupers, data.summary[:, 0, 1]
+        x = data.attrs["nsupers"] * data.ngbxs
+        y = data.summary[:, 0, 1]
         label = lab
         if a == 0:
             label = lab + " in kernels"
@@ -182,13 +242,14 @@ def plot_simple_wallclock_timeinkernels_scaling(datasets: dict):
             label=label,
         )
         lq, uq = data.summary[:, 2, 1], data.summary[:, 3, 1]
-        add_shading(axs[1], x, lq, uq, c1, lstyles[lab])
+        hfuncs.add_shading(axs[1], x, lq, uq, c1, lstyles[lab])
         a += 1
 
     c2 = "tab:green"
     a = 0
     for lab, data in datasets.items():
-        x, y = data.nsupers, data.summary[:, 0, 2]
+        x = data.attrs["nsupers"] * data.ngbxs
+        y = data.summary[:, 0, 2]
         label = lab
         if a == 0:
             label = lab + " outside kernels"
@@ -201,7 +262,7 @@ def plot_simple_wallclock_timeinkernels_scaling(datasets: dict):
             label=label,
         )
         lq, uq = data.summary[:, 2, 2], data.summary[:, 3, 2]
-        add_shading(axs[1], x, lq, uq, c2, lstyles[lab])
+        hfuncs.add_shading(axs[1], x, lq, uq, c2, lstyles[lab])
         a += 1
 
     axs[1].set_yscale("log")
@@ -210,7 +271,8 @@ def plot_simple_wallclock_timeinkernels_scaling(datasets: dict):
 
     c1 = "k"
     for lab, data in datasets.items():
-        x, y = data.nsupers, data.summary[:, 0, 4]
+        x = data.attrs["nsupers"] * data.ngbxs
+        y = data.summary[:, 0, 4]
         axs[2].plot(
             x,
             y,
@@ -220,22 +282,19 @@ def plot_simple_wallclock_timeinkernels_scaling(datasets: dict):
             label=lab,
         )
         lq, uq = data.summary[:, 2, 4], data.summary[:, 3, 4]
-        add_shading(axs[2], x, lq, uq, c1, lstyles[lab])
+        hfuncs.add_shading(axs[2], x, lq, uq, c1, lstyles[lab])
         axs[2].set_ylabel("Total Number of Calls to Kernels")
     axs[2].legend()
 
     axs[0].set_xscale("log")
-    axs[-1].set_xlabel("Superdroplets per Gridbox")
+    axs[-1].set_xlabel("Total Superdroplets in Domain")
     return fig, axs
 
 
 def plot_wallclock_decomposition_scaling(datasets: dict):
-    fig, axs = plt.subplots(figsize=(12, 18), nrows=3, ncols=1, sharex=True)
-    for ax in axs:
-        ax.spines[["right", "top"]].set_visible(False)
-        ax.set_xscale("log")
-        ax.set_yscale("log")
-        ax.set_ylabel("Wall Clock Time /s")
+    fig, axs = hfuncs.subplots(
+        figsize=(12, 20), nrows=3, ncols=1, sharex=True, logx=True, logy=True
+    )
 
     vars = ["runcleo", "init", "timestep"]
     colors = ["black", "darkviolet", "green"]
@@ -243,7 +302,8 @@ def plot_wallclock_decomposition_scaling(datasets: dict):
     for v, var in enumerate(vars):
         a = 0
         for lab, data in datasets.items():
-            x, y = data.nsupers, data[var][:, 0, 0]
+            x = data.attrs["nsupers"] * data.ngbxs
+            y = data[var][:, 0, 0]
             lq, uq = data[var][:, 2, 0], data[var][:, 3, 0]
             label = lab
             if a == 0:
@@ -256,7 +316,7 @@ def plot_wallclock_decomposition_scaling(datasets: dict):
                 linestyle=lstyles[lab],
                 label=label,
             )
-            add_shading(axs[0], x, lq, uq, colors[v], lstyles[lab])
+            hfuncs.add_shading(axs[0], x, lq, uq, colors[v], lstyles[lab])
             a += 1
     axs[0].set_title("total runtime")
 
@@ -265,7 +325,8 @@ def plot_wallclock_decomposition_scaling(datasets: dict):
     for v, var in enumerate(vars):
         a = 0
         for lab, data in datasets.items():
-            x, y = data.nsupers, data[var][:, 0, 0]
+            x = data.attrs["nsupers"] * data.ngbxs
+            y = data[var][:, 0, 0]
             lq, uq = data[var][:, 2, 0], data[var][:, 3, 0]
             label = lab
             if a == 0:
@@ -278,7 +339,7 @@ def plot_wallclock_decomposition_scaling(datasets: dict):
                 linestyle=lstyles[lab],
                 label=label,
             )
-            add_shading(axs[1], x, lq, uq, colors[v], lstyles[lab])
+            hfuncs.add_shading(axs[1], x, lq, uq, colors[v], lstyles[lab])
             a += 1
     axs[1].set_title("initialisation")
 
@@ -292,7 +353,8 @@ def plot_wallclock_decomposition_scaling(datasets: dict):
     for v, var in enumerate(vars):
         a = 0
         for lab, data in datasets.items():
-            x, y = data.nsupers, data[var][:, 0, 0]
+            x = data.attrs["nsupers"] * data.ngbxs
+            y = data[var][:, 0, 0]
             lq, uq = data[var][:, 2, 0], data[var][:, 3, 0]
             label = lab
             if a == 0:
@@ -305,28 +367,29 @@ def plot_wallclock_decomposition_scaling(datasets: dict):
                 linestyle=lstyles[lab],
                 label=label,
             )
-            add_shading(axs[2], x, lq, uq, colors[v], lstyles[lab])
+            hfuncs.add_shading(axs[2], x, lq, uq, colors[v], lstyles[lab])
             a += 1
     axs[2].set_title("timestepping")
 
     for ax in axs:
         ax.legend()
-    axs[-1].set_xlabel("Superdroplets per Gridbox")
+        ax.set_ylabel("Wall Clock Time /s")
+    axs[-1].set_xlabel("Total Superdroplets in Domain")
+
     return fig, axs
 
 
 # %% funtion definitions for memory consumption plots
 def plot_simple_memory_scaling(datasets: xr.Dataset):
-    fig, axs = plt.subplots(figsize=(12, 12), nrows=2, ncols=1, sharex=True)
-    for ax in axs:
-        ax.spines[["right", "top"]].set_visible(False)
-        ax.set_xscale("log")
+    fig, axs = hfuncs.subplots(
+        figsize=(12, 15), nrows=2, ncols=1, sharex=True, logx=True
+    )
 
     c1 = "k"
     for lab, data in datasets.items():
         yarr = data.host_high_water_memory_consumption / 1000  # [MB]
-        x, y = data.nsupers, yarr[:, 0]
-        lq, uq = yarr[:, 2], yarr[:, 3]
+        x = data.attrs["nsupers"] * data.ngbxs
+        y = yarr[:, 0]
         axs[0].plot(
             x,
             y,
@@ -335,7 +398,8 @@ def plot_simple_memory_scaling(datasets: xr.Dataset):
             linestyle=lstyles[lab],
             label=lab,
         )
-        add_shading(axs[0], x, lq, uq, c1, lstyles[lab])
+        lq, uq = yarr[:, 2], yarr[:, 3]
+        hfuncs.add_shading(axs[0], x, lq, uq, c1, lstyles[lab])
     axs[0].legend()
     axs[0].set_ylabel("host high water memory consumption / MB")
 
@@ -344,9 +408,9 @@ def plot_simple_memory_scaling(datasets: xr.Dataset):
     for i in range(2):
         a = 0
         for lab, data in datasets.items():
+            x = data.attrs["nsupers"] * data.ngbxs
             yarr = data.max_memory_allocation / 1000  # [MB]
-            x, y = data.nsupers, yarr[:, 0, i]
-            lq, uq = yarr[:, 2, i], yarr[:, 3, i]
+            y = yarr[:, 0, i]
             label = lab
             if a == 0:
                 label = lab + f" in {spaces[i]}"
@@ -358,44 +422,51 @@ def plot_simple_memory_scaling(datasets: xr.Dataset):
                 linestyle=lstyles[lab],
                 label=label,
             )
-            add_shading(axs[1], x, lq, uq, c1, lstyles[lab])
+            lq, uq = yarr[:, 2, i], yarr[:, 3, i]
+            hfuncs.add_shading(axs[1], x, lq, uq, c1, lstyles[lab])
             a += 1
     axs[1].legend()
     axs[1].set_ylabel("max memory allocation / MB")
 
-    axs[-1].set_xlabel("Superdroplets per Gridbox")
+    axs[-1].set_xlabel("Total Superdroplets in Domain")
     return fig, axs
 
 
 # %% load data
-serial = open_kerneltimer_dataset(path2builds, "serial", executable)
-openmp = open_kerneltimer_dataset(path2builds, "openmp", executable)
-cuda = open_kerneltimer_dataset(path2builds, "cuda", executable)
-threads = open_kerneltimer_dataset(path2builds, "threads", executable)
+serial = hfuncs.open_kerneltimer_dataset(path2builds, "serial", executable, nsupers)
+openmp = hfuncs.open_kerneltimer_dataset(path2builds, "openmp", executable, nsupers)
+threads = hfuncs.open_kerneltimer_dataset(path2builds, "threads", executable, nsupers)
+cuda = hfuncs.open_kerneltimer_dataset(path2builds, "cuda", executable, nsupers)
 datasets_time = {
     "serial": serial,
     "openmp": openmp,
-    "cuda": cuda,
     "threads": threads,
+    "cuda": cuda,
 }
 # %%
+fig, axs = plot_overall_wallclock_scaling(datasets_time)
+savename = savedir / f"total_wallclock_nsupers{nsupers}.png"
+hfuncs.savefig(savename)
+# %%
 fig, axs = plot_simple_wallclock_scaling(datasets_time)
-savename = savedir / "simple_wallclock.png"
-savefig(savename)
+savename = savedir / f"simple_wallclock_nsupers{nsupers}.png"
+hfuncs.savefig(savename)
 # %%
 fig, axs = plot_simple_wallclock_timeinkernels_scaling(datasets_time)
-savename = savedir / "wallclock_inkernels.png"
-savefig(savename)
+savename = savedir / f"wallclock_inkernels_nsupers{nsupers}.png"
+hfuncs.savefig(savename)
 # %%
 fig, axs = plot_wallclock_decomposition_scaling(datasets_time)
-savename = savedir / "wallclock_decomposition.png"
-savefig(savename)
+savename = savedir / f"wallclock_decomposition_nsupers{nsupers}.png"
+hfuncs.savefig(savename)
 
 # %%
-serial = open_spacetimestack_dataset(path2builds, "serial", executable)
-openmp = open_spacetimestack_dataset(path2builds, "openmp", executable)
-cuda = open_spacetimestack_dataset(path2builds, "cuda", executable)
-threads = open_spacetimestack_dataset(path2builds, "threads", executable)
+serial = hfuncs.open_spacetimestack_dataset(path2builds, "serial", executable, nsupers)
+openmp = hfuncs.open_spacetimestack_dataset(path2builds, "openmp", executable, nsupers)
+cuda = hfuncs.open_spacetimestack_dataset(path2builds, "cuda", executable, nsupers)
+threads = hfuncs.open_spacetimestack_dataset(
+    path2builds, "threads", executable, nsupers
+)
 datasets_mem = {
     "serial": serial,
     "openmp": openmp,
@@ -405,5 +476,7 @@ datasets_mem = {
 
 # %%
 fig, axs = plot_simple_memory_scaling(datasets_mem)
-savename = savedir / "memory_consumption.png"
-savefig(savename)
+savename = savedir / f"memory_consumption_nsupers{nsupers}.png"
+hfuncs.savefig(savename)
+
+# %%

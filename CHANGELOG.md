@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v1.6.1](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/fc0847225fedda198bc14ed520a3c62915fb0666..v1.6.1) - 2024-12-17
+#### Bug Fixes
+- correct plot title and loop over nsupers - ([fc08472](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/fc0847225fedda198bc14ed520a3c62915fb0666)) - clara.bayley
+
+- - -
+
 ## [v1.6.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/3b593b19783c5b850013b00f37acab4c130022a6..v1.6.0) - 2024-12-17
 #### Bug Fixes
 - correct print statement and arg choices - ([9fefb28](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/9fefb28908e67110986afd2162884e0b3c6e57ca)) - clara.bayley

@@ -2,6 +2,26 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v1.6.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/3b593b19783c5b850013b00f37acab4c130022a6..v1.6.0) - 2024-12-17
+#### Bug Fixes
+- correct print statement and arg choices - ([9fefb28](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/9fefb28908e67110986afd2162884e0b3c6e57ca)) - clara.bayley
+#### Features
+- new file for plotting performance of a single buildtype - ([0ecc445](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/0ecc445069f99cdd730f95508174d22eb97e6a2b)) - clara.bayley
+#### Miscellaneous Chores
+- file rename - ([5816143](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/5816143ff63ff8beb412453fa83bf99e1463dca6)) - clara.bayley
+#### Performance Improvements
+- increase figsize - ([975bab4](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/975bab482ce676acf684bd5916fade3231734b91)) - clara.bayley
+#### Refactoring
+- seperate overall scaling from simple scalings - ([a079e04](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/a079e044aa87ce5944d29e22b258e446385175d2)) - clara.bayley
+- add runcleo to simple scaling plot - ([741b495](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/741b495ed7083516446817b1c1350b5c3f113c8e)) - clara.bayley
+- use tight layout - ([fe3227a](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/fe3227afa01c1755f5dc3e1ffbfe7cf37c2a62c7)) - clara.bayley
+- add choices to parser args - ([5eb9598](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/5eb9598e60bad974d67ba0d1aa29fdbcb5f5a4bc)) - clara.bayley
+- move fig creation to helperfunc - ([3989ab8](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/3989ab8f8c34dcd7da1240e7aaa28d0e889a1f5e)) - clara.bayley
+- move generic useful plotting functions to src - ([9c9c16c](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/9c9c16cb7ab459f64daab546dfc9c0d79b04c32a)) - clara.bayley
+- generalise performance plots to total superdroplets not per gridbox - ([3b593b1](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/3b593b19783c5b850013b00f37acab4c130022a6)) - clara.bayley
+
+- - -
+
 ## [v1.5.1](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/63dfefb3aaad50f3b0628b269c10c2cd1be6a41a..v1.5.1) - 2024-12-14
 #### Bug Fixes
 - correct usage by default and in notes - ([390eb2a](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/390eb2aa15e14a05e338c60efd5c406ae19c1ff2)) - clara.bayley

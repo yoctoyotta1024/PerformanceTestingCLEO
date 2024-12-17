@@ -50,7 +50,7 @@ args, unknown = parser.parse_known_args()
 path2builds = args.path2builds
 executable = args.executable
 
-nsupers = 1
+nsupers_per_gbx = [1, 16]
 
 lstyles = hfuncs.buildtype_lstyles
 markers = hfuncs.buildtype_markers
@@ -195,7 +195,7 @@ def plot_simple_wallclock_scaling(datasets: dict):
         # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip[nsupers], logaxs=True)
         # axs[1].plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
         a += 1
-    axs[2].set_title("RunCLEO")
+    axs[2].set_title("Timestepping")
 
     for ax in axs:
         ax.set_ylabel("Wall Clock Time /s")
@@ -432,51 +432,59 @@ def plot_simple_memory_scaling(datasets: xr.Dataset):
     return fig, axs
 
 
-# %% load data
-serial = hfuncs.open_kerneltimer_dataset(path2builds, "serial", executable, nsupers)
-openmp = hfuncs.open_kerneltimer_dataset(path2builds, "openmp", executable, nsupers)
-threads = hfuncs.open_kerneltimer_dataset(path2builds, "threads", executable, nsupers)
-cuda = hfuncs.open_kerneltimer_dataset(path2builds, "cuda", executable, nsupers)
-datasets_time = {
-    "serial": serial,
-    "openmp": openmp,
-    "threads": threads,
-    "cuda": cuda,
-}
-# %%
-fig, axs = plot_overall_wallclock_scaling(datasets_time)
-savename = savedir / f"total_wallclock_nsupers{nsupers}.png"
-hfuncs.savefig(savename)
-# %%
-fig, axs = plot_simple_wallclock_scaling(datasets_time)
-savename = savedir / f"simple_wallclock_nsupers{nsupers}.png"
-hfuncs.savefig(savename)
-# %%
-fig, axs = plot_simple_wallclock_timeinkernels_scaling(datasets_time)
-savename = savedir / f"wallclock_inkernels_nsupers{nsupers}.png"
-hfuncs.savefig(savename)
-# %%
-fig, axs = plot_wallclock_decomposition_scaling(datasets_time)
-savename = savedir / f"wallclock_decomposition_nsupers{nsupers}.png"
-hfuncs.savefig(savename)
+# % mkake plots for each nsupers
+for nsupers in nsupers_per_gbx:
+    # %% load data
+    serial = hfuncs.open_kerneltimer_dataset(path2builds, "serial", executable, nsupers)
+    openmp = hfuncs.open_kerneltimer_dataset(path2builds, "openmp", executable, nsupers)
+    threads = hfuncs.open_kerneltimer_dataset(
+        path2builds, "threads", executable, nsupers
+    )
+    cuda = hfuncs.open_kerneltimer_dataset(path2builds, "cuda", executable, nsupers)
+    datasets_time = {
+        "serial": serial,
+        "openmp": openmp,
+        "threads": threads,
+        "cuda": cuda,
+    }
+    # %%
+    fig, axs = plot_overall_wallclock_scaling(datasets_time)
+    savename = savedir / f"total_wallclock_nsupers{nsupers}.png"
+    hfuncs.savefig(savename)
+    # %%
+    fig, axs = plot_simple_wallclock_scaling(datasets_time)
+    savename = savedir / f"simple_wallclock_nsupers{nsupers}.png"
+    hfuncs.savefig(savename)
+    # %%
+    fig, axs = plot_simple_wallclock_timeinkernels_scaling(datasets_time)
+    savename = savedir / f"wallclock_inkernels_nsupers{nsupers}.png"
+    hfuncs.savefig(savename)
+    # %%
+    fig, axs = plot_wallclock_decomposition_scaling(datasets_time)
+    savename = savedir / f"wallclock_decomposition_nsupers{nsupers}.png"
+    hfuncs.savefig(savename)
 
-# %%
-serial = hfuncs.open_spacetimestack_dataset(path2builds, "serial", executable, nsupers)
-openmp = hfuncs.open_spacetimestack_dataset(path2builds, "openmp", executable, nsupers)
-cuda = hfuncs.open_spacetimestack_dataset(path2builds, "cuda", executable, nsupers)
-threads = hfuncs.open_spacetimestack_dataset(
-    path2builds, "threads", executable, nsupers
-)
-datasets_mem = {
-    "serial": serial,
-    "openmp": openmp,
-    "cuda": cuda,
-    "threads": threads,
-}
+    # %%
+    serial = hfuncs.open_spacetimestack_dataset(
+        path2builds, "serial", executable, nsupers
+    )
+    openmp = hfuncs.open_spacetimestack_dataset(
+        path2builds, "openmp", executable, nsupers
+    )
+    cuda = hfuncs.open_spacetimestack_dataset(path2builds, "cuda", executable, nsupers)
+    threads = hfuncs.open_spacetimestack_dataset(
+        path2builds, "threads", executable, nsupers
+    )
+    datasets_mem = {
+        "serial": serial,
+        "openmp": openmp,
+        "cuda": cuda,
+        "threads": threads,
+    }
 
-# %%
-fig, axs = plot_simple_memory_scaling(datasets_mem)
-savename = savedir / f"memory_consumption_nsupers{nsupers}.png"
-hfuncs.savefig(savename)
+    # %%
+    fig, axs = plot_simple_memory_scaling(datasets_mem)
+    savename = savedir / f"memory_consumption_nsupers{nsupers}.png"
+    hfuncs.savefig(savename)
 
-# %%
+    # %%

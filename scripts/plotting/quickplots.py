@@ -60,8 +60,8 @@ markers = hfuncs.buildtype_markers
 savedir = Path("/home/m/m300950/performance_testing_cleo/plots/")
 
 skip = {
-    1: 2,
-    16: 0,
+    1: 3,
+    16: 1,
 }
 
 

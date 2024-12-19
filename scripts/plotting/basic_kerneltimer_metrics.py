@@ -61,11 +61,6 @@ markers = hfuncs.buildtype_markers
 
 savedir = Path("/home/m/m300950/performance_testing_cleo/plots/")
 
-skip = {
-    1: 2,
-    16: 0,
-}
-
 
 # %% funtion definitions for kernel timer plots
 def plot_speedup_scaling(
@@ -84,7 +79,6 @@ def plot_speedup_scaling(
             total_time,
             total_time_ref,
             extrapolate=True,
-            skip=skip[nsupers],
         )
 
         axs[0].plot(
@@ -106,7 +100,6 @@ def plot_speedup_scaling(
             total_time,
             total_time_ref,
             extrapolate=True,
-            skip=skip[nsupers],
         )
 
         axs[1].plot(
@@ -128,7 +121,6 @@ def plot_speedup_scaling(
             total_time,
             total_time_ref,
             extrapolate=True,
-            skip=skip[nsupers],
         )
 
         axs[2].plot(
@@ -173,7 +165,6 @@ def plot_rough_efficiency_scaling(
             total_time_ref,
             buildtype,
             extrapolate=True,
-            skip=skip[nsupers],
         )
 
         axs[0].plot(
@@ -196,7 +187,6 @@ def plot_rough_efficiency_scaling(
             total_time_ref,
             buildtype,
             extrapolate=True,
-            skip=skip[nsupers],
         )
 
         axs[1].plot(
@@ -219,7 +209,6 @@ def plot_rough_efficiency_scaling(
             total_time_ref,
             buildtype,
             extrapolate=True,
-            skip=skip[nsupers],
         )
 
         axs[2].plot(

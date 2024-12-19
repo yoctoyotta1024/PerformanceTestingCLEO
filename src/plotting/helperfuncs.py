@@ -135,7 +135,6 @@ def calculate_speedup(
     time: xr.DataArray,
     time_serial: xr.DataArray,
     extrapolate: Optional[bool] = False,
-    skip: Optional[int] = 0,
 ):
     import numpy as np
 
@@ -154,7 +153,6 @@ def calculate_rough_efficiency(
     time_serial: xr.DataArray,
     buildtype: str,
     extrapolate: Optional[bool] = False,
-    skip: Optional[int] = 0,
 ):
     processing_units = {
         # TODO(CB): get from kokkos configuration statement during runtime so efficiency
@@ -164,5 +162,5 @@ def calculate_rough_efficiency(
         "openmp": 256,
         "cuda": 6912,
     }
-    speedup = calculate_speedup(time, time_serial, extrapolate=extrapolate, skip=skip)
+    speedup = calculate_speedup(time, time_serial, extrapolate=extrapolate)
     return speedup / processing_units[buildtype]

@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v1.7.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/3a679cd1332e077650c01d912b70a8560f56fbf7..v1.7.0) - 2024-12-19
+#### Features
+- new file to plot strong scaling - ([3a679cd](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/3a679cd1332e077650c01d912b70a8560f56fbf7)) - clara.bayley
+#### Miscellaneous Chores
+- update CLEO version - ([6226ec6](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/6226ec60542f0c7b06d38219f76a9a34cb7baa71)) - clara.bayley
+#### Refactoring
+- move processing units dict and add plots to strong scaling - ([a60e7e3](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/a60e7e3e018ea395ba0576e09ce2075b1462a334)) - clara.bayley
+- temporary strange path to strong scaling files - ([ca7094b](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/ca7094b59d74b517de0cbb6520fee3806baf1de2)) - clara.bayley
+- implement extrapolation function - ([de0bdd6](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/de0bdd6062cd8ded40f42d9aa7c7d36d1b2e6c87)) - clara.bayley
+- add nthreads option to loading kerneltimer - ([5ad8952](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/5ad8952ff777e84ef36115fa4d2fb4064e26ecce)) - clara.bayley
+- cleaner data loading - ([16ac254](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/16ac254de1e31fc9d1b11e770e710e771a713c02)) - clara.bayley
+
+- - -
+
 ## [v1.6.1](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/fc0847225fedda198bc14ed520a3c62915fb0666..v1.6.1) - 2024-12-17
 #### Bug Fixes
 - correct plot title and loop over nsupers - ([fc08472](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/fc0847225fedda198bc14ed520a3c62915fb0666)) - clara.bayley

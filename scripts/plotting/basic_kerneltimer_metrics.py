@@ -61,6 +61,11 @@ markers = hfuncs.buildtype_markers
 
 savedir = Path("/home/m/m300950/performance_testing_cleo/plots/")
 
+skip = {
+    1: 2,
+    16: 0,
+}
+
 
 # %% funtion definitions for kernel timer plots
 def plot_speedup_scaling(
@@ -76,7 +81,10 @@ def plot_speedup_scaling(
         total_time = ds.summary[:, 0, 0]
         total_time_ref = ref.summary[:, 0, 0]
         speedup = hfuncs.calculate_speedup(
-            total_time, total_time_ref, extrapolate=False
+            total_time,
+            total_time_ref,
+            extrapolate=True,
+            skip=skip[nsupers],
         )
 
         axs[0].plot(
@@ -95,7 +103,10 @@ def plot_speedup_scaling(
         total_time = ds.init[:, 0, 0]
         total_time_ref = ref.init[:, 0, 0]
         speedup = hfuncs.calculate_speedup(
-            total_time, total_time_ref, extrapolate=False
+            total_time,
+            total_time_ref,
+            extrapolate=True,
+            skip=skip[nsupers],
         )
 
         axs[1].plot(
@@ -114,7 +125,10 @@ def plot_speedup_scaling(
         total_time = ds.timestep[:, 0, 0]
         total_time_ref = ref.timestep[:, 0, 0]
         speedup = hfuncs.calculate_speedup(
-            total_time, total_time_ref, extrapolate=False
+            total_time,
+            total_time_ref,
+            extrapolate=True,
+            skip=skip[nsupers],
         )
 
         axs[2].plot(
@@ -155,7 +169,11 @@ def plot_rough_efficiency_scaling(
         total_time = ds.summary[:, 0, 0]
         total_time_ref = ref.summary[:, 0, 0]
         efficiency = hfuncs.calculate_rough_efficiency(
-            total_time, total_time_ref, buildtype, extrapolate=False
+            total_time,
+            total_time_ref,
+            buildtype,
+            extrapolate=True,
+            skip=skip[nsupers],
         )
 
         axs[0].plot(
@@ -174,7 +192,11 @@ def plot_rough_efficiency_scaling(
         total_time = ds.init[:, 0, 0]
         total_time_ref = ref.init[:, 0, 0]
         efficiency = hfuncs.calculate_rough_efficiency(
-            total_time, total_time_ref, buildtype, extrapolate=False
+            total_time,
+            total_time_ref,
+            buildtype,
+            extrapolate=True,
+            skip=skip[nsupers],
         )
 
         axs[1].plot(
@@ -193,7 +215,11 @@ def plot_rough_efficiency_scaling(
         total_time = ds.timestep[:, 0, 0]
         total_time_ref = ref.timestep[:, 0, 0]
         efficiency = hfuncs.calculate_rough_efficiency(
-            total_time, total_time_ref, buildtype, extrapolate=False
+            total_time,
+            total_time_ref,
+            buildtype,
+            extrapolate=True,
+            skip=skip[nsupers],
         )
 
         axs[2].plot(

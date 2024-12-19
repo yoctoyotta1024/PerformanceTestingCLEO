@@ -33,9 +33,16 @@ buildtype_markers = {"serial": "o", "openmp": "s", "cuda": "x", "threads": "d"}
 
 
 def open_kerneltimer_dataset(
-    path2builds: Path, buildtype: str, executable: str, nsupers: int
+    path2builds: Path,
+    buildtype: str,
+    executable: str,
+    nsupers: int,
+    nthreads: Optional[int] = None,
 ):
     import xarray as xr
+
+    if nthreads is not None:
+        path2builds = path2builds / f"builds_threads_{nthreads}"
 
     path2ds = (
         path2builds
@@ -125,28 +132,29 @@ def add_shading(
 
 
 def calculate_speedup(
-    time: xr.DataArray, time_serial: xr.DataArray, extrapolate: Optional[bool] = False
-):
-    if extrapolate:
-        raise NotImplementedError(
-            "no method to extrapolate serial time for speedup calculation"
-        )
-    return time_serial / time
-
-
-def calculate_rough_efficiency(
     time: xr.DataArray,
-    time_serial: xr.DataArray,
-    buildtype: str,
+    time_reference: xr.DataArray,
     extrapolate: Optional[bool] = False,
 ):
-    processing_units = {
-        # TODO(CB): get from kokkos configuration statement during runtime so efficiency
-        # calculatin is not only a rough calculation
-        "serial": 1,
-        "threads": 1,
-        "openmp": 256,
-        "cuda": 6912,
-    }
-    speedup = calculate_speedup(time, time_serial, extrapolate=extrapolate)
+    import numpy as np
+
+    if extrapolate:
+        if time.shape != time_reference.shape or np.any(
+            time.coords["ngbxs"].values != time_reference.coords["ngbxs"].values
+        ):
+            print("warning: speedup calculation extrapolating reference")
+            time_reference = time_reference.interp(
+                ngbxs=time.coords["ngbxs"], kwargs={"fill_value": "extrapolate"}
+            )
+    return time_reference / time
+
+
+def calculate_efficiency(
+    time: xr.DataArray,
+    time_reference: xr.DataArray,
+    buildtype: str,
+    processing_units: dict,
+    extrapolate: Optional[bool] = False,
+):
+    speedup = calculate_speedup(time, time_reference, extrapolate=extrapolate)
     return speedup / processing_units[buildtype]

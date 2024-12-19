@@ -88,7 +88,7 @@ def line_of_best_fit(
 
 # %% funtion definitions for kernel timer plots
 def plot_overall_wallclock_scaling(datasets: dict):
-    fig, axs = hfuncs.subplots(figsize=(12, 8), nrows=1, logx=True, logy=True)
+    fig, axs = hfuncs.subplots(figsize=(12, 8), logx=True, logy=True)
     c1 = "k"
     a = 0
     for lab, data in datasets.items():

@@ -434,7 +434,7 @@ def plot_simple_memory_scaling(datasets: xr.Dataset):
     return fig, axs
 
 
-# % mkake plots for each nsupers
+# % make kernel timer plots for each nsupers
 for nsupers in nsupers_per_gbx:
     # %% load data
     datasets_time = {}
@@ -460,6 +460,8 @@ for nsupers in nsupers_per_gbx:
     savename = savedir / f"wallclock_decomposition_nsupers{nsupers}.png"
     hfuncs.savefig(savename)
 
+# % make spacetimestack plots for each nsupers
+for nsupers in nsupers_per_gbx:
     # %% load data
     datasets_mem = {}
     for buildtype in buildtypes:

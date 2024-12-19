@@ -132,12 +132,19 @@ def add_shading(
 
 
 def calculate_speedup(
-    time: xr.DataArray, time_serial: xr.DataArray, extrapolate: Optional[bool] = False
+    time: xr.DataArray,
+    time_serial: xr.DataArray,
+    extrapolate: Optional[bool] = False,
 ):
+    import numpy as np
+
     if extrapolate:
-        raise NotImplementedError(
-            "no method to extrapolate serial time for speedup calculation"
-        )
+        if time.shape != time_serial.shape or np.any(
+            time.coords["ngbxs"].values != time_serial.coords["ngbxs"].values
+        ):
+            time_serial = time_serial.interp(
+                ngbxs=time.coords["ngbxs"], kwargs={"fill_value": "extrapolate"}
+            )
     return time_serial / time
 
 

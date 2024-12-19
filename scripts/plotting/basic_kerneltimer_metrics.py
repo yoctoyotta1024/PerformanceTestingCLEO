@@ -76,7 +76,9 @@ def plot_speedup_scaling(
         total_time = ds.summary[:, 0, 0]
         total_time_ref = ref.summary[:, 0, 0]
         speedup = hfuncs.calculate_speedup(
-            total_time, total_time_ref, extrapolate=False
+            total_time,
+            total_time_ref,
+            extrapolate=True,
         )
 
         axs[0].plot(
@@ -95,7 +97,9 @@ def plot_speedup_scaling(
         total_time = ds.init[:, 0, 0]
         total_time_ref = ref.init[:, 0, 0]
         speedup = hfuncs.calculate_speedup(
-            total_time, total_time_ref, extrapolate=False
+            total_time,
+            total_time_ref,
+            extrapolate=True,
         )
 
         axs[1].plot(
@@ -114,7 +118,9 @@ def plot_speedup_scaling(
         total_time = ds.timestep[:, 0, 0]
         total_time_ref = ref.timestep[:, 0, 0]
         speedup = hfuncs.calculate_speedup(
-            total_time, total_time_ref, extrapolate=False
+            total_time,
+            total_time_ref,
+            extrapolate=True,
         )
 
         axs[2].plot(
@@ -155,7 +161,10 @@ def plot_rough_efficiency_scaling(
         total_time = ds.summary[:, 0, 0]
         total_time_ref = ref.summary[:, 0, 0]
         efficiency = hfuncs.calculate_rough_efficiency(
-            total_time, total_time_ref, buildtype, extrapolate=False
+            total_time,
+            total_time_ref,
+            buildtype,
+            extrapolate=True,
         )
 
         axs[0].plot(
@@ -174,7 +183,10 @@ def plot_rough_efficiency_scaling(
         total_time = ds.init[:, 0, 0]
         total_time_ref = ref.init[:, 0, 0]
         efficiency = hfuncs.calculate_rough_efficiency(
-            total_time, total_time_ref, buildtype, extrapolate=False
+            total_time,
+            total_time_ref,
+            buildtype,
+            extrapolate=True,
         )
 
         axs[1].plot(
@@ -193,7 +205,10 @@ def plot_rough_efficiency_scaling(
         total_time = ds.timestep[:, 0, 0]
         total_time_ref = ref.timestep[:, 0, 0]
         efficiency = hfuncs.calculate_rough_efficiency(
-            total_time, total_time_ref, buildtype, extrapolate=False
+            total_time,
+            total_time_ref,
+            buildtype,
+            extrapolate=True,
         )
 
         axs[2].plot(

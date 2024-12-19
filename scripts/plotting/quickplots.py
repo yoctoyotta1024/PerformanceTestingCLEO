@@ -50,6 +50,8 @@ args, unknown = parser.parse_known_args()
 path2builds = args.path2builds
 executable = args.executable
 
+buildtypes = ["serial", "openmp", "threads", "cuda"]
+
 nsupers_per_gbx = [1, 16]
 
 lstyles = hfuncs.buildtype_lstyles
@@ -435,19 +437,13 @@ def plot_simple_memory_scaling(datasets: xr.Dataset):
 # % mkake plots for each nsupers
 for nsupers in nsupers_per_gbx:
     # %% load data
-    serial = hfuncs.open_kerneltimer_dataset(path2builds, "serial", executable, nsupers)
-    openmp = hfuncs.open_kerneltimer_dataset(path2builds, "openmp", executable, nsupers)
-    threads = hfuncs.open_kerneltimer_dataset(
-        path2builds, "threads", executable, nsupers
-    )
-    cuda = hfuncs.open_kerneltimer_dataset(path2builds, "cuda", executable, nsupers)
-    datasets_time = {
-        "serial": serial,
-        "openmp": openmp,
-        "threads": threads,
-        "cuda": cuda,
-    }
-    # %%
+    datasets_time = {}
+    for buildtype in buildtypes:
+        datasets_time[buildtype] = hfuncs.open_kerneltimer_dataset(
+            path2builds, buildtype, executable, nsupers
+        )
+
+    # %% plot data
     fig, axs = plot_overall_wallclock_scaling(datasets_time)
     savename = savedir / f"total_wallclock_nsupers{nsupers}.png"
     hfuncs.savefig(savename)
@@ -464,27 +460,14 @@ for nsupers in nsupers_per_gbx:
     savename = savedir / f"wallclock_decomposition_nsupers{nsupers}.png"
     hfuncs.savefig(savename)
 
-    # %%
-    serial = hfuncs.open_spacetimestack_dataset(
-        path2builds, "serial", executable, nsupers
-    )
-    openmp = hfuncs.open_spacetimestack_dataset(
-        path2builds, "openmp", executable, nsupers
-    )
-    cuda = hfuncs.open_spacetimestack_dataset(path2builds, "cuda", executable, nsupers)
-    threads = hfuncs.open_spacetimestack_dataset(
-        path2builds, "threads", executable, nsupers
-    )
-    datasets_mem = {
-        "serial": serial,
-        "openmp": openmp,
-        "cuda": cuda,
-        "threads": threads,
-    }
+    # %% load data
+    datasets_mem = {}
+    for buildtype in buildtypes:
+        datasets_mem[buildtype] = hfuncs.open_spacetimestack_dataset(
+            path2builds, buildtype, executable, nsupers
+        )
 
-    # %%
+    # %% plot data
     fig, axs = plot_simple_memory_scaling(datasets_mem)
     savename = savedir / f"memory_consumption_nsupers{nsupers}.png"
     hfuncs.savefig(savename)
-
-    # %%

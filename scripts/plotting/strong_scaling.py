@@ -35,7 +35,7 @@ parser.add_argument(
     "--path2builds",
     type=Path,
     help="Absolute path to builds",
-    default="/work/bm1183/m300950/performance_testing_cleo/builds/",
+    default="/work/bm1183/m300950/performance_testing_cleo/thirdattempt_strongscaling",
 )
 parser.add_argument(
     "--executable",

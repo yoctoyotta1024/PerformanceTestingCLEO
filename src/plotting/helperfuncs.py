@@ -133,34 +133,28 @@ def add_shading(
 
 def calculate_speedup(
     time: xr.DataArray,
-    time_serial: xr.DataArray,
+    time_reference: xr.DataArray,
     extrapolate: Optional[bool] = False,
 ):
     import numpy as np
 
     if extrapolate:
-        if time.shape != time_serial.shape or np.any(
-            time.coords["ngbxs"].values != time_serial.coords["ngbxs"].values
+        if time.shape != time_reference.shape or np.any(
+            time.coords["ngbxs"].values != time_reference.coords["ngbxs"].values
         ):
-            time_serial = time_serial.interp(
+            print("warning: speedup calculation extrapolating reference")
+            time_reference = time_reference.interp(
                 ngbxs=time.coords["ngbxs"], kwargs={"fill_value": "extrapolate"}
             )
-    return time_serial / time
+    return time_reference / time
 
 
-def calculate_rough_efficiency(
+def calculate_efficiency(
     time: xr.DataArray,
-    time_serial: xr.DataArray,
+    time_reference: xr.DataArray,
     buildtype: str,
+    processing_units: dict,
     extrapolate: Optional[bool] = False,
 ):
-    processing_units = {
-        # TODO(CB): get from kokkos configuration statement during runtime so efficiency
-        # calculatin is not only a rough calculation
-        "serial": 1,
-        "threads": 1,
-        "openmp": 256,
-        "cuda": 6912,
-    }
-    speedup = calculate_speedup(time, time_serial, extrapolate=extrapolate)
+    speedup = calculate_speedup(time, time_reference, extrapolate=extrapolate)
     return speedup / processing_units[buildtype]

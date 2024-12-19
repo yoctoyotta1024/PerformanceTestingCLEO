@@ -33,9 +33,16 @@ buildtype_markers = {"serial": "o", "openmp": "s", "cuda": "x", "threads": "d"}
 
 
 def open_kerneltimer_dataset(
-    path2builds: Path, buildtype: str, executable: str, nsupers: int
+    path2builds: Path,
+    buildtype: str,
+    executable: str,
+    nsupers: int,
+    nthreads: Optional[int] = None,
 ):
     import xarray as xr
+
+    if nthreads is not None:
+        path2builds = Path(f"{path2builds}_threads_{nthreads}")
 
     path2ds = (
         path2builds

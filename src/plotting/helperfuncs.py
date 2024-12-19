@@ -42,7 +42,7 @@ def open_kerneltimer_dataset(
     import xarray as xr
 
     if nthreads is not None:
-        path2builds = Path(f"{path2builds}_threads_{nthreads}")
+        path2builds = path2builds / f"builds_threads_{nthreads}"
 
     path2ds = (
         path2builds

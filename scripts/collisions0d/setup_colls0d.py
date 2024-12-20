@@ -25,6 +25,7 @@ import sys
 import shutil
 from pathlib import Path
 import numpy as np
+from typing import Optional
 
 parser = argparse.ArgumentParser()
 parser.add_argument("path2CLEO", type=Path, help="Absolute path to CLEO (for pySD)")
@@ -60,16 +61,18 @@ src_config_filename = path2src / "collisions0d" / "config_colls0d.yaml"
 ngbxs_nsupers_runs = {
     (1, 1): 2,
     (8, 1): 2,
-    (64, 1): 2,
-    (512, 1): 2,
-    (4096, 1): 2,
-    (32768, 1): 2,
-    (262144, 1): 2,
-    (1, 16): 2,
-    (64, 16): 2,
-    (4096, 16): 2,
-    (262144, 16): 2,
 }
+
+if buildtype == "serial":
+    ngbxs_nsupers_nthreads = {
+        (ngbxs, nsupers): [1] for ngbxs, nsupers in ngbxs_nsupers_runs.keys()
+    }
+else:
+    ngbxs_nsupers_nthreads = {
+        (1, 1): [1],
+        (8, 1): [8, 16],
+    }
+
 savefigpath = path2builds / "bin" / "colls0d"
 sharepath = path2builds / "share" / "colls0d"
 binpath = path2builds / buildtype / "bin" / "colls0d"
@@ -82,8 +85,13 @@ params = {
 }
 
 
-def get_config_filename(tmppath: Path, ngbxs: int, nsupers: int, nrun: int):
-    return tmppath / f"config_{ngbxs}_{nsupers}_{nrun}.yaml"
+def get_config_filename(
+    tmppath: Path, ngbxs: int, nsupers: int, nrun: int, nthreads: Optional[int] = None
+):
+    if nthreads is not None:
+        return tmppath / f"config_{ngbxs}_{nsupers}_{nthreads}_{nrun}.yaml"
+    else:
+        return tmppath / f"config_{ngbxs}_{nsupers}_{nrun}.yaml"
 
 
 def get_grid_filename(sharepath: Path, ngbxs: int):
@@ -94,8 +102,18 @@ def get_initsupers_filename(sharepath: Path, ngbxs: int, nsupers: int, nrun: int
     return sharepath / f"dimlessSDsinit_{ngbxs}_{nsupers}_{nrun}.dat"
 
 
-def get_binpath_onerun(binpath: Path, ngbxs: int, nsupers: int, nrun: int):
-    return binpath / f"ngbxs{ngbxs}_nsupers{nsupers}" / f"nrun{nrun}"
+def get_binpath_onerun(
+    binpath: Path, ngbxs: int, nsupers: int, nrun: int, nthreads: Optional[int] = None
+):
+    if nthreads is not None:
+        return (
+            binpath
+            / f"ngbxs{ngbxs}_nsupers{nsupers}"
+            / f"nthreads{nthreads}"
+            / f"nrun{nrun}"
+        )
+    else:
+        return binpath / f"ngbxs{ngbxs}_nsupers{nsupers}" / f"nrun{nrun}"
 
 
 ### --- ensure build, share and bin directories exist --- ###
@@ -110,34 +128,47 @@ else:
 for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
     ### ----- Copy config to temporary file and edit specific parameters ----- ###
     for nrun in range(ngbxs_nsupers_runs[(ngbxs, nsupers)]):
-        config_filename = get_config_filename(tmppath, ngbxs, nsupers, nrun)
-        binpath_run = get_binpath_onerun(binpath, ngbxs, nsupers, nrun)
+        for nthreads in ngbxs_nsupers_nthreads[(ngbxs, nsupers)]:
+            config_filename = get_config_filename(
+                tmppath, ngbxs, nsupers, nrun, nthreads=nthreads
+            )
+            binpath_run = get_binpath_onerun(
+                binpath, ngbxs, nsupers, nrun, nthreads=nthreads
+            )
 
-        if np.cbrt(ngbxs) != np.round(np.cbrt(ngbxs)):
-            raise ValueError("ngbxs must be a cube number for integer dimensions")
-        params["ngbxs"] = ngbxs
-        ndim_z = ndim_x = ndim_y = int(np.cbrt(ngbxs))
-        params["zgrid"] = [0, 10000, 10000 / ndim_z]
-        params["xgrid"] = [0, 10000, 10000 / ndim_x]
-        params["ygrid"] = [0, 10000, 10000 / ndim_y]
-        params["grid_filename"] = str(get_grid_filename(sharepath, ngbxs))
+            params["num_threads"] = nthreads
 
-        params["maxnsupers"] = nsupers * ngbxs
-        params["initsupers_filename"] = str(
-            get_initsupers_filename(sharepath, ngbxs, nsupers, nrun)
-        )
+            params["ngbxs"] = ngbxs
+            params["grid_filename"] = str(get_grid_filename(sharepath, ngbxs))
+            if np.cbrt(ngbxs) != np.round(np.cbrt(ngbxs)):
+                raise ValueError("ngbxs must be a cube number for integer dimensions")
+            ndim_z = ndim_x = ndim_y = int(np.cbrt(ngbxs))
+            params["zgrid"] = [0, 10000, 10000 / ndim_z]
+            params["xgrid"] = [0, 10000, 10000 / ndim_x]
+            params["ygrid"] = [0, 10000, 10000 / ndim_y]
 
-        params["setup_filename"] = str(binpath_run / "setup.txt")
-        params["zarrbasedir"] = str(binpath_run / "sol.zarr")
+            params["maxnsupers"] = nsupers * ngbxs
+            params["initsupers_filename"] = str(
+                get_initsupers_filename(sharepath, ngbxs, nsupers, nrun)
+            )
 
-        shutil.copy(Path(src_config_filename), config_filename)
-        editconfigfile.edit_config_params(config_filename, params)
+            params["setup_filename"] = str(binpath_run / "setup.txt")
+            params["zarrbasedir"] = str(binpath_run / "sol.zarr")
+
+            shutil.copy(Path(src_config_filename), config_filename)
+            editconfigfile.edit_config_params(config_filename, params)
 
 if gen_initconds == "TRUE":
     for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
         isfigures = [True, True]
+        nthreads_dummy = ngbxs_nsupers_nthreads[(ngbxs, nsupers)][
+            0
+        ]  # all nthreads use same initial conditions
         ### ----- write initial gridbox boundaries binary file ----- ###
-        config_filename = get_config_filename(tmppath, ngbxs, nsupers, nrun=0)
+        nrun_dummy = 0  # all runs use same init gbxs
+        config_filename = get_config_filename(
+            tmppath, ngbxs, nsupers, nrun=nrun_dummy, nthreads=nthreads_dummy
+        )
         shutil.rmtree(get_grid_filename(sharepath, ngbxs), ignore_errors=True)
         initconds_colls0d.gridbox_boundaries(
             path2CLEO, config_filename, isfigures=isfigures
@@ -145,7 +176,9 @@ if gen_initconds == "TRUE":
 
         ### ----- write initial superdroplets binary files ----- ###
         for nrun in range(ngbxs_nsupers_runs[(ngbxs, nsupers)]):
-            config_filename = get_config_filename(tmppath, ngbxs, nsupers, nrun)
+            config_filename = get_config_filename(
+                tmppath, ngbxs, nsupers, nrun, nthreads=nthreads_dummy
+            )
             shutil.rmtree(
                 get_initsupers_filename(sharepath, ngbxs, nsupers, nrun),
                 ignore_errors=True,

@@ -141,14 +141,16 @@ int main(int argc, char *argv[]) {
     MPI_Abort(MPI_COMM_WORLD, 1);
   }
 
-  /* Initialise Kokkos parallel environment */
-  Kokkos::initialize(Kokkos::InitializationSettings());
+  /* Read input parameters from configuration file(s) */
+  const std::filesystem::path config_filename(argv[1]);
+  const Config config(config_filename);
+
+  /* Initialise Kokkos device and host environments */
+  Kokkos::initialize(config.get_kokkos_initialization_settings());
   {
     Kokkos::print_configuration(std::cout);
 
-    /* Read input parameters from configuration file(s) */
-    const std::filesystem::path config_filename(argv[1]);
-    const Config config(config_filename);
+    /* Create timestepping parameters from configuration */
     const Timesteps tsteps(config.get_timesteps());
 
     /* Create Xarray dataset with Zarr backend for writing data to a store */

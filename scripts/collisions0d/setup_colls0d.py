@@ -24,7 +24,6 @@ import argparse
 import sys
 import shutil
 from pathlib import Path
-import numpy as np
 from typing import Optional
 
 parser = argparse.ArgumentParser()
@@ -59,8 +58,15 @@ from pySD import editconfigfile
 ### ----- create temporary config file for simulation(s) ----- ###
 src_config_filename = path2src / "collisions0d" / "config_colls0d.yaml"
 ngbxs_nsupers_runs = {
-    (1, 1): 2,
-    (8, 1): 2,
+    (1, 128): 5,
+    (16, 128): 5,
+    (64, 128): 5,
+    (128, 128): 5,
+    (256, 128): 2,
+    (512, 128): 2,
+    (1024, 128): 2,
+    (2048, 128): 2,
+    (4096, 128): 2,
 }
 
 if buildtype == "serial":
@@ -69,8 +75,15 @@ if buildtype == "serial":
     }
 else:
     ngbxs_nsupers_nthreads = {
-        (1, 1): [1],
-        (8, 1): [8, 16],
+        (1, 128): [256, 128, 64, 16, 8, 1],
+        (16, 128): [256, 128, 64, 16, 8, 1],
+        (64, 128): [256, 128, 64, 16, 8, 1],
+        (128, 128): [256, 128, 64, 16, 8, 1],
+        (256, 128): [256, 128, 64, 16, 8, 1],
+        (512, 128): [256, 128, 64, 16, 8],
+        (1024, 128): [256, 128, 64, 16, 8],
+        (2048, 128): [256, 128, 64, 16, 8],
+        (4096, 128): [256, 128, 64, 16, 8],
     }
 
 savefigpath = path2builds / "bin" / "colls0d"
@@ -140,9 +153,12 @@ for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
 
             params["ngbxs"] = ngbxs
             params["grid_filename"] = str(get_grid_filename(sharepath, ngbxs))
-            if np.cbrt(ngbxs) != np.round(np.cbrt(ngbxs)):
-                raise ValueError("ngbxs must be a cube number for integer dimensions")
-            ndim_z = ndim_x = ndim_y = int(np.cbrt(ngbxs))
+            if ngbxs < 64:
+                ndim_x = ndim_y = 1
+            else:
+                ndim_x = ndim_y = 8
+                assert ngbxs % 64 == 0, "ngbxs > 64 must also be a multiple of 64"
+            ndim_z = ngbxs / ndim_x / ndim_y
             params["zgrid"] = [0, 10000, 10000 / ndim_z]
             params["xgrid"] = [0, 10000, 10000 / ndim_x]
             params["ygrid"] = [0, 10000, 10000 / ndim_y]

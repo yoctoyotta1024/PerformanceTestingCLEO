@@ -8,9 +8,10 @@ include(FetchContent)
 FetchContent_Declare(
   cleo
   DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-  URL https://github.com/yoctoyotta1024/CLEO/archive/refs/tags/v0.29.5.zip
-  GIT_TAG 3ae197ee5ff5850e9577d21eab6fe7a2bac5adb8
+  # URL https://github.com/yoctoyotta1024/CLEO/archive/refs/tags/v0.29.6.zip
+  URL https://github.com/yoctoyotta1024/CLEO/archive/refs/heads/main.zip
+  GIT_TAG cf0756c2d1f46593fea375a018f450ae15a0ec90
 )
 FetchContent_MakeAvailable(cleo)
 
-message(STATUS "CLEO v0.29.5 installation in: ${CLEO_BINARY_DIR}")
+message(STATUS "CLEO v0.29.6 installation in: ${CLEO_BINARY_DIR}")

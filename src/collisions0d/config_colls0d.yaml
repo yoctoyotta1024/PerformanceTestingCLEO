@@ -37,7 +37,7 @@ python_initconds:
 
 ### Kokkos Initialization Parameters ###
 kokkos_settings:
-  num_threads : 8                                      # number of threads for host parallel backend
+  num_threads : X                                      # number of threads for host parallel backend
   map_device_id_by : mpi_rank                          # select device for execution, either "mpi_rank" or "random".
 
 ### SDM Runtime Parameters ###

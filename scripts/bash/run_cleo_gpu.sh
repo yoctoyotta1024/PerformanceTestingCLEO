@@ -11,8 +11,8 @@
 #SBATCH --mail-user=clara.bayley@mpimet.mpg.de
 #SBATCH --mail-type=FAIL
 #SBATCH --account=bm1183
-#SBATCH --output=./run_cleo_job_out.%j.out
-#SBATCH --error=./run_cleo_job_err.%j.out
+#SBATCH --output=./tmp_jobs/run_cleo_job_out.%j.out
+#SBATCH --error=./tmp_jobs/run_cleo_job_err.%j.out
 
 ### ------------------------------------------------------------------------ ###
 ### -------------- PLEASE NOTE: this script assumes you have --------------- ###

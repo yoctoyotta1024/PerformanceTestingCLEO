@@ -203,11 +203,15 @@ for profiler_name in profilers:
                 print(" ".join(cmd) + "\n")
                 subprocess.run(cmd)
             else:
-                out = Path.cwd() / Path(
-                    f"run_cleo_job_out.terminal{files_tag}.out"
+                out = (
+                    Path.cwd()
+                    / "tmp_jobs"
+                    / f"run_cleo_job_out.terminal{files_tag}.out"
                 )  # see similarity to SBATCH --output in run_cleo.sh
-                err = Path.cwd() / Path(
-                    f"run_cleo_job_err.terminal{files_tag}.out"
+                err = (
+                    Path.cwd()
+                    / "tmp_jobs"
+                    / f"run_cleo_job_err.terminal{files_tag}.out"
                 )  # see similarity to SBATCH --error in run_cleo.sh
                 print(" ".join(cmd) + "\n")
                 with open(out, "w") as outfile, open(err, "w") as errfile:

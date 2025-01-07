@@ -23,7 +23,7 @@ from pathlib import Path
 from typing import Optional
 
 
-def get_ngbxs_nsupers_runs():
+def get_ngbxs_nsupers_runs() -> dict:
     ngbxs_nsupers_runs = {
         (1, 128): 5,
         (16, 128): 5,
@@ -40,7 +40,7 @@ def get_ngbxs_nsupers_runs():
 
 def get_ngbxs_nsupers_nthreads(
     buildtype: str, ngbxs_nsupers_runs: Optional[str] = None
-):
+) -> dict:
     if buildtype == "serial":
         ngbxs_nsupers_nthreads = {
             (ngbxs, nsupers): [1] for ngbxs, nsupers in ngbxs_nsupers_runs.keys()
@@ -87,7 +87,7 @@ def get_all_nthreads_config_filenames(
 
 def get_run_binpath(
     binpath: Path, ngbxs: int, nsupers: int, nrun: int, nthreads: Optional[int] = None
-):
+) -> Path:
     if nthreads is not None:
         return (
             binpath
@@ -113,3 +113,29 @@ def get_all_nthreads_run_binpaths(
         binpath_run = get_run_binpath(binpath, ngbxs, nsupers, nrun, nthreads=nthreads)
         paths.append(binpath_run)
     return paths
+
+
+def get_runsensemblestats_dataset_name(
+    binpath: Path,
+    ngbxs: int,
+    nsupers: int,
+    profiler: str,
+    nthreads: Optional[int] = None,
+) -> Path:
+    if nthreads is not None:
+        return (
+            binpath
+            / f"ngbxs{ngbxs}_nsupers{nsupers}"
+            / f"nthreads{nthreads}"
+            / f"kp_{profiler}_runsensemblestats.zarr"
+        )
+    else:
+        return (
+            binpath
+            / f"ngbxs{ngbxs}_nsupers{nsupers}"
+            / f"kp_{profiler}_runsensemblestats.zarr"
+        )
+
+
+def get_grand_dataset_name(binpath: Path, nsupers: int, profiler: str) -> Path:
+    return binpath / f"kp_{profiler}_ngbxsensemble_nsupers{nsupers}.zarr"

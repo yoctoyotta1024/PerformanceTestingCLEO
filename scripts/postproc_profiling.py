@@ -77,8 +77,8 @@ ngbxs_nsupers_nthreads = ssv.get_ngbxs_nsupers_nthreads(
 for profiler_name in profilers:
     profiler = get_profiler(profiler_name, kokkos_tools_lib=kokkos_tools_lib)
     for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
-        for nrun in range(ngbxs_nsupers_runs[(ngbxs, nsupers)]):
-            for nthreads in ngbxs_nsupers_nthreads[(ngbxs, nsupers)]:
+        for nthreads in ngbxs_nsupers_nthreads[(ngbxs, nsupers)]:
+            for nrun in range(ngbxs_nsupers_runs[(ngbxs, nsupers)]):
                 binpath_run = ssv.get_run_binpath(
                     binpath, ngbxs, nsupers, nrun, nthreads=nthreads
                 )

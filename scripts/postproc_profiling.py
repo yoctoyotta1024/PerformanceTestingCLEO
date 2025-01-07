@@ -23,6 +23,8 @@ import sys
 import argparse
 from pathlib import Path
 
+import shared_script_variables as ssv
+
 path2src = (
     Path(__file__).resolve().parent.parent / "src" / "profilers"
 )  # for profilers module
@@ -65,45 +67,27 @@ if args.allow_overwrite == "TRUE":
     allow_overwrite = True
 else:
     allow_overwrite = False
+binpath = path2build / "bin" / executable
 
-ngbxs_nsupers_runs = {
-    (1, 1): 2,
-    (8, 1): 2,
-    (64, 1): 2,
-    (512, 1): 2,
-    (4096, 1): 2,
-    (32768, 1): 2,
-    (262144, 1): 2,
-    (1, 16): 2,
-    (64, 16): 2,
-    (4096, 16): 2,
-    (262144, 16): 2,
-}
-
-
-def get_binpath_onerun(
-    path2build: Path, executable: str, ngbxs: int, nsupers: int, nrun: int
-):
-    return (
-        path2build
-        / "bin"
-        / executable
-        / f"ngbxs{ngbxs}_nsupers{nsupers}"
-        / f"nrun{nrun}"
-    )
-
+ngbxs_nsupers_runs = ssv.get_ngbxs_nsupers_runs()
+ngbxs_nsupers_nthreads = ssv.get_ngbxs_nsupers_nthreads(
+    buildtype, ngbxs_nsupers_runs=ngbxs_nsupers_runs
+)
 
 for profiler_name in profilers:
     profiler = get_profiler(profiler_name, kokkos_tools_lib=kokkos_tools_lib)
     for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
         for nrun in range(ngbxs_nsupers_runs[(ngbxs, nsupers)]):
-            binpath_run = get_binpath_onerun(
-                path2build, executable, ngbxs, nsupers, nrun
-            )
-            datfiles = profiler.postprocess(
-                filespath=binpath_run, to_dataset=True, allow_overwrite=allow_overwrite
-            )
-            if len(datfiles) > 0:
-                print(
-                    f"{profiler.name} postproccesing complete for ngbxs={ngbxs}, nsupers={nsupers}, nrun={nrun}"
+            for nthreads in ngbxs_nsupers_nthreads[(ngbxs, nsupers)]:
+                binpath_run = ssv.get_run_binpath(
+                    binpath, ngbxs, nsupers, nrun, nthreads=nthreads
                 )
+                datfiles = profiler.postprocess(
+                    filespath=binpath_run,
+                    to_dataset=True,
+                    allow_overwrite=allow_overwrite,
+                )
+                if len(datfiles) > 0:
+                    print(
+                        f"{profiler.name} postproccesing complete for ngbxs={ngbxs}, nsupers={nsupers}, nrun={nrun}, nthreads={nthreads}"
+                    )

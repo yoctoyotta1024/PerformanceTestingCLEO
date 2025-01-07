@@ -24,7 +24,9 @@ import argparse
 import sys
 import shutil
 from pathlib import Path
-from typing import Optional
+
+sys.path.append(str(Path(__file__).parent.parent))  # scripts directory
+import shared_script_variables as ssv
 
 parser = argparse.ArgumentParser()
 parser.add_argument("path2CLEO", type=Path, help="Absolute path to CLEO (for pySD)")
@@ -57,34 +59,11 @@ from pySD import editconfigfile
 
 ### ----- create temporary config file for simulation(s) ----- ###
 src_config_filename = path2src / "collisions0d" / "config_colls0d.yaml"
-ngbxs_nsupers_runs = {
-    (1, 128): 5,
-    (16, 128): 5,
-    (64, 128): 5,
-    (128, 128): 5,
-    (256, 128): 2,
-    (512, 128): 2,
-    (1024, 128): 2,
-    (2048, 128): 2,
-    (4096, 128): 2,
-}
 
-if buildtype == "serial":
-    ngbxs_nsupers_nthreads = {
-        (ngbxs, nsupers): [1] for ngbxs, nsupers in ngbxs_nsupers_runs.keys()
-    }
-else:
-    ngbxs_nsupers_nthreads = {
-        (1, 128): [256, 128, 64, 16, 8, 1],
-        (16, 128): [256, 128, 64, 16, 8, 1],
-        (64, 128): [256, 128, 64, 16, 8, 1],
-        (128, 128): [256, 128, 64, 16, 8, 1],
-        (256, 128): [256, 128, 64, 16, 8, 1],
-        (512, 128): [256, 128, 64, 16, 8],
-        (1024, 128): [256, 128, 64, 16, 8],
-        (2048, 128): [256, 128, 64, 16, 8],
-        (4096, 128): [256, 128, 64, 16, 8],
-    }
+ngbxs_nsupers_runs = ssv.get_ngbxs_nsupers_runs()
+ngbxs_nsupers_nthreads = ssv.get_ngbxs_nsupers_nthreads(
+    buildtype, ngbxs_nsupers_runs=ngbxs_nsupers_runs
+)
 
 savefigpath = path2builds / "bin" / "colls0d"
 sharepath = path2builds / "share" / "colls0d"
@@ -98,35 +77,12 @@ params = {
 }
 
 
-def get_config_filename(
-    tmppath: Path, ngbxs: int, nsupers: int, nrun: int, nthreads: Optional[int] = None
-):
-    if nthreads is not None:
-        return tmppath / f"config_{ngbxs}_{nsupers}_{nthreads}_{nrun}.yaml"
-    else:
-        return tmppath / f"config_{ngbxs}_{nsupers}_{nrun}.yaml"
-
-
 def get_grid_filename(sharepath: Path, ngbxs: int):
     return str(sharepath / f"dimlessGBxboundaries_{ngbxs}.dat")
 
 
 def get_initsupers_filename(sharepath: Path, ngbxs: int, nsupers: int, nrun: int):
     return sharepath / f"dimlessSDsinit_{ngbxs}_{nsupers}_{nrun}.dat"
-
-
-def get_binpath_onerun(
-    binpath: Path, ngbxs: int, nsupers: int, nrun: int, nthreads: Optional[int] = None
-):
-    if nthreads is not None:
-        return (
-            binpath
-            / f"ngbxs{ngbxs}_nsupers{nsupers}"
-            / f"nthreads{nthreads}"
-            / f"nrun{nrun}"
-        )
-    else:
-        return binpath / f"ngbxs{ngbxs}_nsupers{nsupers}" / f"nrun{nrun}"
 
 
 ### --- ensure build, share and bin directories exist --- ###
@@ -142,10 +98,10 @@ for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
     ### ----- Copy config to temporary file and edit specific parameters ----- ###
     for nrun in range(ngbxs_nsupers_runs[(ngbxs, nsupers)]):
         for nthreads in ngbxs_nsupers_nthreads[(ngbxs, nsupers)]:
-            config_filename = get_config_filename(
+            config_filename = ssv.get_config_filename(
                 tmppath, ngbxs, nsupers, nrun, nthreads=nthreads
             )
-            binpath_run = get_binpath_onerun(
+            binpath_run = ssv.get_run_binpath(
                 binpath, ngbxs, nsupers, nrun, nthreads=nthreads
             )
 
@@ -182,7 +138,7 @@ if gen_initconds == "TRUE":
         ]  # all nthreads use same initial conditions
         ### ----- write initial gridbox boundaries binary file ----- ###
         nrun_dummy = 0  # all runs use same init gbxs
-        config_filename = get_config_filename(
+        config_filename = ssv.get_config_filename(
             tmppath, ngbxs, nsupers, nrun=nrun_dummy, nthreads=nthreads_dummy
         )
         shutil.rmtree(get_grid_filename(sharepath, ngbxs), ignore_errors=True)
@@ -192,7 +148,7 @@ if gen_initconds == "TRUE":
 
         ### ----- write initial superdroplets binary files ----- ###
         for nrun in range(ngbxs_nsupers_runs[(ngbxs, nsupers)]):
-            config_filename = get_config_filename(
+            config_filename = ssv.get_config_filename(
                 tmppath, ngbxs, nsupers, nrun, nthreads=nthreads_dummy
             )
             shutil.rmtree(

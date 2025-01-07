@@ -24,7 +24,8 @@ import sys
 from pathlib import Path
 import subprocess
 import random
-from typing import Optional
+
+import shared_script_variables as ssv
 
 executable_paths = {
     "colls0d": Path("collisions0d") / "colls0d",
@@ -77,98 +78,18 @@ else:
     bash_script = Path(__file__).resolve().parent / "bash" / "run_cleo.sh"
 
 executable_path = path2build / executable_paths[executable]
-ngbxs_nsupers_runs = {
-    (1, 128): 5,
-    (16, 128): 5,
-    (64, 128): 5,
-    (128, 128): 5,
-    (256, 128): 2,
-    (512, 128): 2,
-    (1024, 128): 2,
-    (2048, 128): 2,
-    (4096, 128): 2,
-}
 
-if buildtype == "serial":
-    ngbxs_nsupers_nthreads = {
-        (ngbxs, nsupers): [1] for ngbxs, nsupers in ngbxs_nsupers_runs.keys()
-    }
-else:
-    ngbxs_nsupers_nthreads = {
-        (1, 128): [256, 128, 64, 16, 8, 1],
-        (16, 128): [256, 128, 64, 16, 8, 1],
-        (64, 128): [256, 128, 64, 16, 8, 1],
-        (128, 128): [256, 128, 64, 16, 8, 1],
-        (256, 128): [256, 128, 64, 16, 8, 1],
-        (512, 128): [256, 128, 64, 16, 8],
-        (1024, 128): [256, 128, 64, 16, 8],
-        (2048, 128): [256, 128, 64, 16, 8],
-        (4096, 128): [256, 128, 64, 16, 8],
-    }
-
-
-def get_config_filenames(
-    path2build: Path,
-    executable: str,
-    ngbxs: int,
-    nsupers: int,
-    nrun: int,
-    all_nthreads: Optional[list[int]] = None,
-):
-    if all_nthreads is None:
-        return [
-            path2build / "tmp" / executable / f"config_{ngbxs}_{nsupers}_{nrun}.yaml"
-        ]
-    else:
-        configfiles = []
-        for nthreads in all_nthreads:
-            file = (
-                path2build
-                / "tmp"
-                / executable
-                / f"config_{ngbxs}_{nsupers}_{nthreads}_{nrun}.yaml"
-            )
-            configfiles.append(file)
-        return configfiles
-
-
-def get_binpaths_onerun(
-    path2build: Path,
-    executable: str,
-    ngbxs: int,
-    nsupers: int,
-    nrun: int,
-    all_nthreads: Optional[list[int]] = None,
-):
-    if all_nthreads is None:
-        return [
-            path2build
-            / "bin"
-            / executable
-            / f"ngbxs{ngbxs}_nsupers{nsupers}"
-            / f"nrun{nrun}"
-        ]
-    else:
-        binpaths = []
-        for nthreads in all_nthreads:
-            bpath = (
-                path2build
-                / "bin"
-                / executable
-                / f"ngbxs{ngbxs}_nsupers{nsupers}"
-                / f"nthreads{nthreads}"
-                / f"nrun{nrun}"
-            )
-            binpaths.append(bpath)
-        return binpaths
-
+ngbxs_nsupers_runs = ssv.get_ngbxs_nsupers_runs()
+ngbxs_nsupers_nthreads = ssv.get_ngbxs_nsupers_nthreads(
+    buildtype, ngbxs_nsupers_runs=ngbxs_nsupers_runs
+)
 
 for profiler_name in profilers:
     profiler = get_profiler(profiler_name, kokkos_tools_lib=kokkos_tools_lib)
     for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
         for nrun in range(ngbxs_nsupers_runs[(ngbxs, nsupers)]):
             all_nthreads = ngbxs_nsupers_nthreads[(ngbxs, nsupers)]
-            binpaths_run = get_binpaths_onerun(
+            run_binpaths = ssv.get_all_nthreads_run_binpaths(
                 path2build,
                 executable,
                 ngbxs,
@@ -176,9 +97,9 @@ for profiler_name in profilers:
                 nrun,
                 all_nthreads=all_nthreads,
             )
-            for bpath in binpaths_run:
+            for bpath in run_binpaths:
                 bpath.mkdir(exist_ok=True, parents=True)
-            config_filenames = get_config_filenames(
+            config_filenames = ssv.get_all_nthreads_config_filenames(
                 path2build,
                 executable,
                 ngbxs,
@@ -188,7 +109,7 @@ for profiler_name in profilers:
             )
             files_tag = str(random.randint(100, 999))
 
-            outpaths_cmd = " ".join(str(b) for b in binpaths_run)
+            outpaths_cmd = " ".join(str(b) for b in run_binpaths)
             config_filenames_cmd = " ".join(str(c) for c in config_filenames)
             cmd = [
                 str(bash_script),

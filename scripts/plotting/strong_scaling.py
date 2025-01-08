@@ -159,6 +159,7 @@ def plot_strong_scaling_speedup(
     path2builds: Path,
     buildtypes: list[str],
     buildtype_reference: str,
+    nthreads_reference: int,
     executable: str,
     ngbxs_nsupers_runs: dict,
 ):
@@ -188,7 +189,9 @@ def plot_strong_scaling_speedup(
                     executable,
                     nsupers,
                 )
-                total_time_ref = ref[var].sel(ngbxs=ngbxs).sel(nthreads=1)[:, 0]
+                total_time_ref = (
+                    ref[var].sel(ngbxs=ngbxs).sel(nthreads=nthreads_reference)[:, 0]
+                )
 
                 try:
                     ds = hfuncs.open_kerneltimer_dataset(
@@ -247,6 +250,7 @@ def plot_strong_scaling_nthreads_efficiency(
     path2builds: Path,
     buildtypes: list[str],
     buildtype_reference: str,
+    nthreads_reference: int,
     executable: str,
     ngbxs_nsupers_runs: dict,
 ):
@@ -276,7 +280,9 @@ def plot_strong_scaling_nthreads_efficiency(
                     executable,
                     nsupers,
                 )
-                total_time_ref = ref[var].sel(ngbxs=ngbxs).sel(nthreads=1)[:, 0]
+                total_time_ref = (
+                    ref[var].sel(ngbxs=ngbxs).sel(nthreads=nthreads_reference)[:, 0]
+                )
 
                 try:
                     ds = hfuncs.open_kerneltimer_dataset(
@@ -360,6 +366,7 @@ fig, axs = plot_strong_scaling_speedup(
     path2builds,
     buildtypes,
     buildtype_reference,
+    nthreads_reference,
     executable,
     ngbxs_nsupers_runs,
 )
@@ -371,6 +378,7 @@ fig, axs = plot_strong_scaling_nthreads_efficiency(
     path2builds,
     buildtypes,
     buildtype_reference,
+    nthreads_reference,
     executable,
     ngbxs_nsupers_runs,
 )

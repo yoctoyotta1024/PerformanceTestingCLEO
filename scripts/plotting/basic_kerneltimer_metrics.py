@@ -55,7 +55,9 @@ args, unknown = parser.parse_known_args()
 
 buildtype = args.buildtype
 buildtype_references = "serial"
+nthreads_reference = 1
 nsupers_per_gbx = [128]
+
 lstyles = hfuncs.buildtype_lstyles
 markers = hfuncs.buildtype_markers
 
@@ -64,7 +66,11 @@ savedir = Path("/home/m/m300950/performance_testing_cleo/plots/")
 
 # %% funtion definitions for kernel timer plots
 def plot_speedup_scaling(
-    datasets: dict, references: dict, buildtype: str, buildtype_references: str
+    datasets: dict,
+    references: dict,
+    buildtype: str,
+    buildtype_references: str,
+    nthreads_ref: int,
 ):
     fig, axs = hfuncs.subplots(figsize=(12, 20), nrows=3, logx=True)
     fig.suptitle(f"{buildtype} compared to {buildtype_references}")
@@ -74,7 +80,7 @@ def plot_speedup_scaling(
         ref = references[nsupers]
         for nthreads in ds.nthreads:
             total_time = ds.summary.sel(nthreads=nthreads)[:, 0, 0]
-            total_time_ref = ref.summary.sel(nthreads=1)[:, 0, 0]
+            total_time_ref = ref.summary.sel(nthreads=nthreads_ref)[:, 0, 0]
             speedup = hfuncs.calculate_speedup(
                 total_time,
                 total_time_ref,
@@ -95,7 +101,7 @@ def plot_speedup_scaling(
         ref = references[nsupers]
         for nthreads in ds.nthreads:
             total_time = ds.init.sel(nthreads=nthreads)[:, 0, 0]
-            total_time_ref = ref.init.sel(nthreads=1)[:, 0, 0]
+            total_time_ref = ref.init.sel(nthreads=nthreads_ref)[:, 0, 0]
             speedup = hfuncs.calculate_speedup(
                 total_time,
                 total_time_ref,
@@ -117,7 +123,7 @@ def plot_speedup_scaling(
 
         for nthreads in ds.nthreads:
             total_time = ds.timestep.sel(nthreads=nthreads)[:, 0, 0]
-            total_time_ref = ref.timestep.sel(nthreads=1)[:, 0, 0]
+            total_time_ref = ref.timestep.sel(nthreads=nthreads_ref)[:, 0, 0]
             speedup = hfuncs.calculate_speedup(
                 total_time,
                 total_time_ref,
@@ -153,7 +159,11 @@ def plot_speedup_scaling(
 
 
 def plot_nthreads_efficiency_scaling(
-    datasets: dict, references: dict, buildtype: str, buildtype_references: str
+    datasets: dict,
+    references: dict,
+    buildtype: str,
+    buildtype_references: str,
+    nthreads_ref: int,
 ):
     fig, axs = hfuncs.subplots(figsize=(12, 20), nrows=3, logx=True)
     fig.suptitle(f"{buildtype} compared to {buildtype_references}")
@@ -163,7 +173,7 @@ def plot_nthreads_efficiency_scaling(
         ref = references[nsupers]
         for nthreads in ds.nthreads:
             total_time = ds.summary.sel(nthreads=nthreads)[:, 0, 0]
-            total_time_ref = ref.summary.sel(nthreads=1)[:, 0, 0]
+            total_time_ref = ref.summary.sel(nthreads=nthreads_ref)[:, 0, 0]
             efficiency = hfuncs.calculate_efficiency(
                 total_time,
                 total_time_ref,
@@ -185,7 +195,7 @@ def plot_nthreads_efficiency_scaling(
         ref = references[nsupers]
         for nthreads in ds.nthreads:
             total_time = ds.init.sel(nthreads=nthreads)[:, 0, 0]
-            total_time_ref = ref.init.sel(nthreads=1)[:, 0, 0]
+            total_time_ref = ref.init.sel(nthreads=nthreads_ref)[:, 0, 0]
             efficiency = hfuncs.calculate_efficiency(
                 total_time,
                 total_time_ref,
@@ -207,7 +217,7 @@ def plot_nthreads_efficiency_scaling(
         ref = references[nsupers]
         for nthreads in ds.nthreads:
             total_time = ds.timestep.sel(nthreads=nthreads)[:, 0, 0]
-            total_time_ref = ref.timestep.sel(nthreads=1)[:, 0, 0]
+            total_time_ref = ref.timestep.sel(nthreads=nthreads_ref)[:, 0, 0]
             efficiency = hfuncs.calculate_efficiency(
                 total_time,
                 total_time_ref,
@@ -255,13 +265,15 @@ for nsupers in nsupers_per_gbx:
     )
 
 # %%
-fig, axs = plot_speedup_scaling(datasets, references, buildtype, buildtype_references)
+fig, axs = plot_speedup_scaling(
+    datasets, references, buildtype, buildtype_references, nthreads_reference
+)
 savename = savedir / f"speedup_{buildtype}.png"
 hfuncs.savefig(savename, tight=False)
 
 # %%
 fig, axs = plot_nthreads_efficiency_scaling(
-    datasets, references, buildtype, buildtype_references
+    datasets, references, buildtype, buildtype_references, nthreads_reference
 )
 savename = savedir / f"efficiency_nthreads_{buildtype}.png"
 hfuncs.savefig(savename, tight=False)

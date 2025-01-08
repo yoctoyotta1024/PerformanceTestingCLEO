@@ -263,5 +263,5 @@ hfuncs.savefig(savename, tight=False)
 fig, axs = plot_nthreads_efficiency_scaling(
     datasets, references, buildtype, buildtype_references
 )
-savename = savedir / f"efficiency_{buildtype}.png"
+savename = savedir / f"efficiency_nthreads_{buildtype}.png"
 hfuncs.savefig(savename, tight=False)

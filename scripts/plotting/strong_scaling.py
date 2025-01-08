@@ -374,7 +374,7 @@ fig, axs = plot_strong_scaling_nthreads_efficiency(
     executable,
     ngbxs_nsupers_runs,
 )
-savename = savedir / "strong_scaling_nthreads_efficiency.png"
+savename = savedir / "strong_scaling_efficiency_nthreads.png"
 hfuncs.savefig(savename, tight=False)
 
 # %%

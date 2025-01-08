@@ -37,12 +37,8 @@ def open_kerneltimer_dataset(
     buildtype: str,
     executable: str,
     nsupers: int,
-    nthreads: Optional[int] = None,
 ):
     import xarray as xr
-
-    if nthreads is not None:
-        path2builds = path2builds / f"builds_threads_{nthreads}"
 
     path2ds = (
         path2builds
@@ -77,13 +73,21 @@ def subplots(
     sharey: Optional[bool] = False,
     logx: Optional[bool] = False,
     logy: Optional[bool] = False,
+    hratios: Optional[list[float]] = None,
+    wratios: Optional[list[float]] = None,
 ):
     import matplotlib.pyplot as plt
     from matplotlib.axes import Axes
     import numpy as np
 
     fig, axes = plt.subplots(
-        figsize=figsize, nrows=nrows, ncols=ncols, sharex=sharex, sharey=sharey
+        figsize=figsize,
+        nrows=nrows,
+        ncols=ncols,
+        sharex=sharex,
+        sharey=sharey,
+        height_ratios=hratios,
+        width_ratios=wratios,
     )
 
     if isinstance(axes, Axes):

@@ -21,13 +21,18 @@ from zarr xarray datasets for kokkos profiling data. Note: standard data format 
 
 # %%
 import argparse
-import numpy as np
 from pathlib import Path
 import sys
+import matplotlib.pyplot as plt
+from matplotlib.cm import ScalarMappable
+from matplotlib.colors import LogNorm
 
 path2src = Path(__file__).resolve().parent.parent.parent / "src"
-sys.path.append(str(path2src))  # for imports for input files generation
+sys.path.append(str(path2src))  # for helperfuncs module
 from plotting import helperfuncs as hfuncs
+
+sys.path.append(str(Path(__file__).parent.parent))  # scripts directory
+import shared_script_variables as ssv
 
 # e.g. ipykernel_launcher.py [path2builds] [executable]
 parser = argparse.ArgumentParser()
@@ -35,7 +40,7 @@ parser.add_argument(
     "--path2builds",
     type=Path,
     help="Absolute path to builds",
-    default="/work/bm1183/m300950/performance_testing_cleo/thirdattempt_strongscaling",
+    default="/work/bm1183/m300950/performance_testing_cleo/builds/",
 )
 parser.add_argument(
     "--executable",
@@ -53,24 +58,17 @@ buildtypes = ["openmp", "threads", "cuda"]
 buildtype_reference = "serial"
 nthreads_reference = 1
 
-nthreads = [1, 8, 16, 64, 128, 256]
-
-ngbxs_nsupers_runs = {
-    (4096, 16): 1,
-    (8192, 16): 1,
-    (16384, 16): 1,
-    (262144, 16): 1,
-}
+ngbxs_nsupers_runs = ssv.get_ngbxs_nsupers_runs()
 
 lstyles = hfuncs.buildtype_lstyles
 markers = hfuncs.buildtype_markers
 
-ngbxs_nsupers_colours = {
-    (4096, 16): "firebrick",
-    (8192, 16): "orange",
-    (16384, 16): "gold",
-    (262144, 16): "limegreen",
-}
+cmap = plt.get_cmap("plasma")
+norm = LogNorm(vmin=1, vmax=1e6)
+ngbxs_nsupers_colors = {}
+for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
+    color = cmap(norm(ngbxs * nsupers))
+    ngbxs_nsupers_colors[(ngbxs, nsupers)] = color
 
 savedir = Path("/home/m/m300950/performance_testing_cleo/plots/")
 
@@ -81,60 +79,77 @@ def plot_strong_scaling_wallclock(
     buildtypes: list[str],
     executable: str,
     ngbxs_nsupers_runs: dict,
-    nthreads2plt: list[int],
 ):
-    fig, axs = hfuncs.subplots(
-        figsize=(12, 20), nrows=3, sharex=True, logx=True, logy=True
+    fig, axes = hfuncs.subplots(
+        figsize=(12, 20), nrows=4, ncols=1, hratios=[0.25] + [7] * 3
+    )
+    cax = axes[0]
+    axs = axes[1:]
+    for ax in axs:
+        ax.set_xscale("log")
+        ax.set_yscale("log")
+
+    fig.suptitle("Strong Scaling: Wall Clock Time")
+    fig.colorbar(
+        ScalarMappable(cmap=cmap, norm=norm),
+        cax=cax,
+        location="top",
+        label="total nsupers",
     )
 
     variables = ["summary", "init", "timestep"]
 
     for ax, var in zip(axs, variables):
         for buildtype in buildtypes:
+            a = 0
             for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
-                x, yarr = [], []
-                for nthreads in nthreads2plt:
-                    try:
-                        ds = hfuncs.open_kerneltimer_dataset(
-                            path2builds,
-                            buildtype,
-                            executable,
-                            nsupers,
-                            nthreads=nthreads,
-                        )
-                    except FileNotFoundError:
-                        msg = f"warning: skipping buildtype={buildtype} nsupers={nsupers}, nthreads={nthreads}"
-                        print(msg)
-                        continue
-                    try:
-                        total_time = ds[var].sel(ngbxs=ngbxs)[:, 0]
-                    except KeyError:
-                        msg = f"warning: skipping buildtype={buildtype} ngbxs={ngbxs}, nsupers={nsupers}, nthreads={nthreads}"
-                        print(msg)
-                        continue
-                    x.append(nthreads)
-                    yarr.append(total_time)
-                if x != []:
-                    x = np.asarray(x)
-                    yarr = np.asarray(yarr)
-                    y = yarr[:, 0]
-                    lq = yarr[:, 2]
-                    uq = yarr[:, 3]
-                    lab = f"{buildtype} ngbxs={ngbxs} nsupers={nsupers}"
-                    c = ngbxs_nsupers_colours[(ngbxs, nsupers)]
+                try:
+                    ds = hfuncs.open_kerneltimer_dataset(
+                        path2builds,
+                        buildtype,
+                        executable,
+                        nsupers,
+                    )
+                except FileNotFoundError:
+                    msg = f"warning: skipping buildtype={buildtype} nsupers={nsupers}"
+                    print(msg)
+                    continue
+                try:
+                    total_time = ds[var].sel(ngbxs=ngbxs)[:, :, 0]
+                except KeyError:
+                    msg = f"warning: skipping buildtype={buildtype} ngbxs={ngbxs}, nsupers={nsupers}"
+                    print(msg)
+                    total_time = None
+                    continue
+                if total_time is not None:
+                    x = ds.nthreads
+                    y = total_time[:, 0]
+                    lq = total_time[:, 2]
+                    uq = total_time[:, 3]
+
+                    llab = None
+                    if a == 0:
+                        llab = f"{buildtype}"
+                    c = ngbxs_nsupers_colors[(ngbxs, nsupers)]
                     ax.plot(
                         x,
                         y,
                         color=c,
                         marker=markers[buildtype],
                         linestyle=lstyles[buildtype],
-                        label=lab,
+                        label=llab,
                     )
                     hfuncs.add_shading(ax, x, lq, uq, c, lstyles[buildtype])
-        ax.legend()
+                    a += 1
         ax.set_title(var)
         ax.set_ylabel("wall clock time /s")
+    axs[0].legend()
+    for ax in axs[:-1]:
+        ax.set_xticklabels([])
     axs[-1].set_xlabel("number of CPU threads")
+
+    fig.tight_layout()
+    fig.subplots_adjust(top=0.94)
 
     return fig, axs
 
@@ -146,82 +161,93 @@ def plot_strong_scaling_speedup(
     buildtype_reference: str,
     executable: str,
     ngbxs_nsupers_runs: dict,
-    nthreads2plt: list[int],
-    nthreads_reference: int,
 ):
-    fig, axs = hfuncs.subplots(
-        figsize=(12, 20), nrows=3, sharex=True, logx=False, logy=False
+    fig, axes = hfuncs.subplots(
+        figsize=(12, 20), nrows=4, ncols=1, hratios=[0.25] + [7] * 3
+    )
+    cax = axes[0]
+    axs = axes[1:]
+
+    fig.suptitle("Strong Scaling: Speedup")
+    fig.colorbar(
+        ScalarMappable(cmap=cmap, norm=norm),
+        cax=cax,
+        location="top",
+        label="total nsupers",
     )
 
     variables = ["summary", "init", "timestep"]
 
     for ax, var in zip(axs, variables):
         for buildtype in buildtypes:
+            a = 0
             for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
                 ref = hfuncs.open_kerneltimer_dataset(
                     path2builds,
                     buildtype_reference,
                     executable,
                     nsupers,
-                    nthreads=nthreads_reference,
                 )
-                total_time_ref = ref[var].sel(ngbxs=ngbxs)[:, 0]
+                total_time_ref = ref[var].sel(ngbxs=ngbxs).sel(nthreads=1)[:, 0]
 
-                x, y, lq, uq = [], [], [], []
-                for nthreads in nthreads2plt:
-                    try:
-                        ds = hfuncs.open_kerneltimer_dataset(
-                            path2builds,
-                            buildtype,
-                            executable,
-                            nsupers,
-                            nthreads=nthreads,
-                        )
-                    except FileNotFoundError:
-                        msg = f"warning: skipping buildtype={buildtype} nsupers={nsupers}, nthreads={nthreads}"
-                        print(msg)
-                        continue
-                    try:
-                        total_time = ds[var].sel(ngbxs=ngbxs)[:, 0]
-                    except KeyError:
-                        msg = f"warning: skipping buildtype={buildtype} ngbxs={ngbxs}, nsupers={nsupers}, nthreads={nthreads}"
-                        print(msg)
-                        continue
-
-                    x.append(nthreads)
-                    y.append(hfuncs.calculate_speedup(total_time[0], total_time_ref[0]))
-                    lq.append(
-                        hfuncs.calculate_speedup(total_time[3], total_time_ref[2])
+                try:
+                    ds = hfuncs.open_kerneltimer_dataset(
+                        path2builds,
+                        buildtype,
+                        executable,
+                        nsupers,
                     )
-                    uq.append(
-                        hfuncs.calculate_speedup(total_time[2], total_time_ref[3])
-                    )
+                except FileNotFoundError:
+                    msg = f"warning: skipping buildtype={buildtype} nsupers={nsupers}"
+                    print(msg)
+                    continue
+                try:
+                    total_time = ds[var].sel(ngbxs=ngbxs)[:, :, 0]
+                except KeyError:
+                    msg = f"warning: skipping buildtype={buildtype} ngbxs={ngbxs}, nsupers={nsupers}"
+                    print(msg)
+                    total_time = None
+                    continue
 
-                if x != []:
-                    lab = f"{buildtype} ngbxs={ngbxs} nsupers={nsupers}"
-                    c = ngbxs_nsupers_colours[(ngbxs, nsupers)]
+                if total_time is not None:
+                    x = ds.nthreads
+                    y = hfuncs.calculate_speedup(total_time[:, 0], total_time_ref[0])
+                    lq = hfuncs.calculate_speedup(total_time[:, 3], total_time_ref[2])
+                    uq = hfuncs.calculate_speedup(total_time[:, 2], total_time_ref[3])
+
+                    llab = None
+                    if a == 0:
+                        llab = f"{buildtype}"
+                    c = ngbxs_nsupers_colors[(ngbxs, nsupers)]
                     ax.plot(
                         x,
                         y,
                         color=c,
                         marker=markers[buildtype],
                         linestyle=lstyles[buildtype],
-                        label=lab,
+                        label=llab,
                     )
                     hfuncs.add_shading(ax, x, lq, uq, c, lstyles[buildtype])
-        ax.legend()
+                    a += 1
         ax.set_title(var)
         ax.set_ylabel("speedup")
+    axs[0].legend()
+    for ax in axs[:-1]:
+        ax.set_xticklabels([])
     axs[-1].set_xlabel("number of CPU threads")
+
+    fig.tight_layout()
+    fig.subplots_adjust(top=0.94)
+
     return fig, axs
 
 
 # %%
 fig, axs = plot_strong_scaling_wallclock(
-    path2builds, all_buildtypes, executable, ngbxs_nsupers_runs, nthreads
+    path2builds, all_buildtypes, executable, ngbxs_nsupers_runs
 )
 savename = savedir / "strong_scaling_wallclock.png"
-hfuncs.savefig(savename)
+hfuncs.savefig(savename, tight=False)
 
 # %%
 fig, axs = plot_strong_scaling_speedup(
@@ -230,10 +256,8 @@ fig, axs = plot_strong_scaling_speedup(
     buildtype_reference,
     executable,
     ngbxs_nsupers_runs,
-    nthreads,
-    nthreads_reference,
 )
 savename = savedir / "strong_scaling_speedup.png"
-hfuncs.savefig(savename)
+hfuncs.savefig(savename, tight=False)
 
 # %%

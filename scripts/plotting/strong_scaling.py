@@ -242,6 +242,112 @@ def plot_strong_scaling_speedup(
     return fig, axs
 
 
+# %% funtion definitions for strong scaling plots
+def plot_strong_scaling_nthreads_efficiency(
+    path2builds: Path,
+    buildtypes: list[str],
+    buildtype_reference: str,
+    executable: str,
+    ngbxs_nsupers_runs: dict,
+):
+    fig, axes = hfuncs.subplots(
+        figsize=(12, 20), nrows=4, ncols=1, hratios=[0.25] + [7] * 3
+    )
+    cax = axes[0]
+    axs = axes[1:]
+
+    fig.suptitle("Strong Scaling: Efficiency")
+    fig.colorbar(
+        ScalarMappable(cmap=cmap, norm=norm),
+        cax=cax,
+        location="top",
+        label="total nsupers",
+    )
+
+    variables = ["summary", "init", "timestep"]
+
+    for ax, var in zip(axs, variables):
+        for buildtype in buildtypes:
+            a = 0
+            for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
+                ref = hfuncs.open_kerneltimer_dataset(
+                    path2builds,
+                    buildtype_reference,
+                    executable,
+                    nsupers,
+                )
+                total_time_ref = ref[var].sel(ngbxs=ngbxs).sel(nthreads=1)[:, 0]
+
+                try:
+                    ds = hfuncs.open_kerneltimer_dataset(
+                        path2builds,
+                        buildtype,
+                        executable,
+                        nsupers,
+                    )
+                except FileNotFoundError:
+                    msg = f"warning: skipping buildtype={buildtype} nsupers={nsupers}"
+                    print(msg)
+                    continue
+                try:
+                    total_time = ds[var].sel(ngbxs=ngbxs)[:, :, 0]
+                except KeyError:
+                    msg = f"warning: skipping buildtype={buildtype} ngbxs={ngbxs}, nsupers={nsupers}"
+                    print(msg)
+                    total_time = None
+                    continue
+
+                if total_time is not None:
+                    x = ds.nthreads
+                    y = hfuncs.calculate_efficiency(
+                        total_time[:, 0], total_time_ref[0], ds.nthreads
+                    )
+                    lq = hfuncs.calculate_efficiency(
+                        total_time[:, 3], total_time_ref[2], ds.nthreads
+                    )
+                    uq = hfuncs.calculate_efficiency(
+                        total_time[:, 2], total_time_ref[3], ds.nthreads
+                    )
+
+                    llab = None
+                    if a == 0:
+                        llab = f"{buildtype}"
+                    c = ngbxs_nsupers_colors[(ngbxs, nsupers)]
+                    ax.plot(
+                        x,
+                        y,
+                        color=c,
+                        marker=markers[buildtype],
+                        linestyle=lstyles[buildtype],
+                        label=llab,
+                    )
+                    hfuncs.add_shading(ax, x, lq, uq, c, lstyles[buildtype])
+                    a += 1
+        ax.set_title(var)
+        ax.set_ylabel("efficiency")
+    for ax in axs:
+        ax.set_xlim([0, None])
+        ax.hlines(
+            1.0,
+            ax.get_xlim()[0],
+            ax.get_xlim()[1],
+            color="grey",
+            linewidth=0.8,
+            label="benchmark",
+        )
+        ax.set_ylim([0.0, 1.0])
+
+    axs[0].legend()
+    for ax in axs[:-1]:
+        ax.set_xticklabels([])
+    axs[-1].set_xlabel("number of CPU threads")
+
+    fig.tight_layout()
+    fig.subplots_adjust(top=0.94)
+
+    return fig, axs
+
+
 # %%
 fig, axs = plot_strong_scaling_wallclock(
     path2builds, all_buildtypes, executable, ngbxs_nsupers_runs
@@ -258,6 +364,17 @@ fig, axs = plot_strong_scaling_speedup(
     ngbxs_nsupers_runs,
 )
 savename = savedir / "strong_scaling_speedup.png"
+hfuncs.savefig(savename, tight=False)
+
+# %%
+fig, axs = plot_strong_scaling_nthreads_efficiency(
+    path2builds,
+    buildtypes,
+    buildtype_reference,
+    executable,
+    ngbxs_nsupers_runs,
+)
+savename = savedir / "strong_scaling_nthreads_efficiency.png"
 hfuncs.savefig(savename, tight=False)
 
 # %%

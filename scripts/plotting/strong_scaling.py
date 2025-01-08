@@ -119,28 +119,27 @@ def plot_strong_scaling_wallclock(
                 except KeyError:
                     msg = f"warning: skipping buildtype={buildtype} ngbxs={ngbxs}, nsupers={nsupers}"
                     print(msg)
-                    total_time = None
                     continue
-                if total_time is not None:
-                    x = ds.nthreads
-                    y = total_time[:, 0]
-                    lq = total_time[:, 2]
-                    uq = total_time[:, 3]
 
-                    llab = None
-                    if a == 0:
-                        llab = f"{buildtype}"
-                    c = ngbxs_nsupers_colors[(ngbxs, nsupers)]
-                    ax.plot(
-                        x,
-                        y,
-                        color=c,
-                        marker=markers[buildtype],
-                        linestyle=lstyles[buildtype],
-                        label=llab,
-                    )
-                    hfuncs.add_shading(ax, x, lq, uq, c, lstyles[buildtype])
-                    a += 1
+                x = ds.nthreads
+                y = total_time[:, 0]
+                lq = total_time[:, 2]
+                uq = total_time[:, 3]
+
+                llab = None
+                if a == 0:
+                    llab = f"{buildtype}"
+                c = ngbxs_nsupers_colors[(ngbxs, nsupers)]
+                ax.plot(
+                    x,
+                    y,
+                    color=c,
+                    marker=markers[buildtype],
+                    linestyle=lstyles[buildtype],
+                    label=llab,
+                )
+                hfuncs.add_shading(ax, x, lq, uq, c, lstyles[buildtype])
+                a += 1
         ax.set_title(var)
         ax.set_ylabel("wall clock time /s")
     axs[0].legend()
@@ -209,29 +208,27 @@ def plot_strong_scaling_speedup(
                 except KeyError:
                     msg = f"warning: skipping buildtype={buildtype} ngbxs={ngbxs}, nsupers={nsupers}"
                     print(msg)
-                    total_time = None
                     continue
 
-                if total_time is not None:
-                    x = ds.nthreads
-                    y = hfuncs.calculate_speedup(total_time[:, 0], total_time_ref[0])
-                    lq = hfuncs.calculate_speedup(total_time[:, 3], total_time_ref[2])
-                    uq = hfuncs.calculate_speedup(total_time[:, 2], total_time_ref[3])
+                x = ds.nthreads
+                y = hfuncs.calculate_speedup(total_time[:, 0], total_time_ref[0])
+                lq = hfuncs.calculate_speedup(total_time[:, 3], total_time_ref[2])
+                uq = hfuncs.calculate_speedup(total_time[:, 2], total_time_ref[3])
 
-                    llab = None
-                    if a == 0:
-                        llab = f"{buildtype}"
-                    c = ngbxs_nsupers_colors[(ngbxs, nsupers)]
-                    ax.plot(
-                        x,
-                        y,
-                        color=c,
-                        marker=markers[buildtype],
-                        linestyle=lstyles[buildtype],
-                        label=llab,
-                    )
-                    hfuncs.add_shading(ax, x, lq, uq, c, lstyles[buildtype])
-                    a += 1
+                llab = None
+                if a == 0:
+                    llab = f"{buildtype}"
+                c = ngbxs_nsupers_colors[(ngbxs, nsupers)]
+                ax.plot(
+                    x,
+                    y,
+                    color=c,
+                    marker=markers[buildtype],
+                    linestyle=lstyles[buildtype],
+                    label=llab,
+                )
+                hfuncs.add_shading(ax, x, lq, uq, c, lstyles[buildtype])
+                a += 1
         ax.set_title(var)
         ax.set_ylabel("speedup")
     axs[0].legend()
@@ -303,32 +300,31 @@ def plot_strong_scaling_nthreads_efficiency(
                     total_time = None
                     continue
 
-                if total_time is not None:
-                    x = ds.nthreads
-                    y = hfuncs.calculate_efficiency(
-                        total_time[:, 0], total_time_ref[0], ds.nthreads
-                    )
-                    lq = hfuncs.calculate_efficiency(
-                        total_time[:, 3], total_time_ref[2], ds.nthreads
-                    )
-                    uq = hfuncs.calculate_efficiency(
-                        total_time[:, 2], total_time_ref[3], ds.nthreads
-                    )
+                x = ds.nthreads
+                y = hfuncs.calculate_efficiency(
+                    total_time[:, 0], total_time_ref[0], ds.nthreads
+                )
+                lq = hfuncs.calculate_efficiency(
+                    total_time[:, 3], total_time_ref[2], ds.nthreads
+                )
+                uq = hfuncs.calculate_efficiency(
+                    total_time[:, 2], total_time_ref[3], ds.nthreads
+                )
 
-                    llab = None
-                    if a == 0:
-                        llab = f"{buildtype}"
-                    c = ngbxs_nsupers_colors[(ngbxs, nsupers)]
-                    ax.plot(
-                        x,
-                        y,
-                        color=c,
-                        marker=markers[buildtype],
-                        linestyle=lstyles[buildtype],
-                        label=llab,
-                    )
-                    hfuncs.add_shading(ax, x, lq, uq, c, lstyles[buildtype])
-                    a += 1
+                llab = None
+                if a == 0:
+                    llab = f"{buildtype}"
+                c = ngbxs_nsupers_colors[(ngbxs, nsupers)]
+                ax.plot(
+                    x,
+                    y,
+                    color=c,
+                    marker=markers[buildtype],
+                    linestyle=lstyles[buildtype],
+                    label=llab,
+                )
+                hfuncs.add_shading(ax, x, lq, uq, c, lstyles[buildtype])
+                a += 1
         ax.set_title(var)
         ax.set_ylabel("efficiency")
     for ax in axs:

@@ -104,10 +104,12 @@ def subplots(
     return fig, axes
 
 
-def savefig(savename: Path, dpi: Optional[int] = 128):
+def savefig(savename: Path, dpi: Optional[int] = 128, tight: Optional[bool] = True):
     import matplotlib.pyplot as plt
 
-    plt.tight_layout()
+    if tight:
+        plt.tight_layout()
+
     plt.savefig(savename, dpi=dpi, bbox_inches="tight")
     print(f"figure saved as {str(savename)}")
 
@@ -152,9 +154,8 @@ def calculate_speedup(
 def calculate_efficiency(
     time: xr.DataArray,
     time_reference: xr.DataArray,
-    buildtype: str,
-    processing_units: dict,
+    num_processing_units: dict,
     extrapolate: Optional[bool] = False,
 ):
     speedup = calculate_speedup(time, time_reference, extrapolate=extrapolate)
-    return speedup / processing_units[buildtype]
+    return speedup / num_processing_units

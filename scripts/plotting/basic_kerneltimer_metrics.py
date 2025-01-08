@@ -26,7 +26,7 @@ from pathlib import Path
 import sys
 
 path2src = Path(__file__).resolve().parent.parent.parent / "src"
-sys.path.append(str(path2src))  # for imports for input files generation
+sys.path.append(str(path2src))  # for helperfuncs module
 from plotting import helperfuncs as hfuncs
 
 # e.g. ipykernel_launcher.py [path2builds] [executable]

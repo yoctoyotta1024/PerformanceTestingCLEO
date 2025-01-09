@@ -28,7 +28,7 @@ import sys
 from typing import Optional
 
 path2src = Path(__file__).resolve().parent.parent.parent / "src"
-sys.path.append(str(path2src))  # for imports for input files generation
+sys.path.append(str(path2src))  # for helperfuncs module
 from plotting import helperfuncs as hfuncs
 
 # e.g. ipykernel_launcher.py [path2builds] [executable]
@@ -52,7 +52,7 @@ executable = args.executable
 
 buildtypes = ["serial", "openmp", "threads", "cuda"]
 
-nsupers_per_gbx = [1, 16]
+nsupers_per_gbx = [128]
 
 lstyles = hfuncs.buildtype_lstyles
 markers = hfuncs.buildtype_markers
@@ -62,6 +62,7 @@ savedir = Path("/home/m/m300950/performance_testing_cleo/plots/")
 skip = {
     1: 3,
     16: 1,
+    128: 0,
 }
 
 
@@ -92,27 +93,33 @@ def plot_overall_wallclock_scaling(datasets: dict):
     c1 = "k"
     a = 0
     for lab, data in datasets.items():
-        x = data.attrs["nsupers"] * data.ngbxs
-        y = data.summary[:, 0, 0]
-        lq, uq = data.summary[:, 2, 0], data.summary[:, 3, 0]
-        slab = None
-        if a == 0:
-            slab = "IQR"
-        hfuncs.add_shading(axs, x, lq, uq, c1, lstyles[lab], label=slab)
+        for nthreads in data.nthreads:
+            x = data.attrs["nsupers"] * data.ngbxs
+            summary = data.summary.sel(nthreads=nthreads)
+            y = summary[:, 0, 0]
+            lq, uq = summary[:, 2, 0], summary[:, 3, 0]
+            slab = None
+            if a == 0:
+                slab = "IQR"
+            hfuncs.add_shading(axs, x, lq, uq, c1, lstyles[lab], label=slab)
 
-        axs.plot(
-            x,
-            y,
-            color=c1,
-            marker=markers[lab],
-            linestyle=lstyles[lab],
-            label=lab,
-        )
+            llab = None
+            if nthreads == data.nthreads[0]:
+                llab = lab
+            axs.plot(
+                x,
+                y,
+                color=c1,
+                marker=markers[lab],
+                linestyle=lstyles[lab],
+                label=llab,
+            )
 
-        # c2 = "purple"
-        # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip[nsupers], logaxs=True)
-        # axs.plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
-        a += 1
+            # c2 = "purple"
+            # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip[nsupers], logaxs=True)
+            # axs.plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
+
+            a += 1
     axs.legend()
     axs.set_title("Entire Program")
     axs.set_ylabel("Wall Clock Time /s")
@@ -128,75 +135,96 @@ def plot_simple_wallclock_scaling(datasets: dict):
     c1 = "k"
     a = 0
     for lab, data in datasets.items():
-        x = data.attrs["nsupers"] * data.ngbxs
-        y = data.summary[:, 0, 0]
-        lq, uq = data.summary[:, 2, 0], data.summary[:, 3, 0]
-        slab = None
-        if a == 0:
-            slab = "IQR"
-        hfuncs.add_shading(axs[0], x, lq, uq, c1, lstyles[lab], label=slab)
+        for nthreads in data.nthreads:
+            x = data.attrs["nsupers"] * data.ngbxs
+            summary = data.summary.sel(nthreads=nthreads)
+            y = summary[:, 0, 0]
+            lq, uq = summary[:, 2, 0], summary[:, 3, 0]
+            slab = None
+            if a == 0:
+                slab = "IQR"
+            hfuncs.add_shading(axs[0], x, lq, uq, c1, lstyles[lab], label=slab)
 
-        axs[0].plot(
-            x,
-            y,
-            color=c1,
-            marker=markers[lab],
-            linestyle=lstyles[lab],
-            label=lab,
-        )
+            llab = None
+            if nthreads == data.nthreads[0]:
+                llab = lab
 
-        # c2 = "purple"
-        # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip[nsupers], logaxs=True)
-        # axs[0].plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
-        a += 1
+            axs[0].plot(
+                x,
+                y,
+                color=c1,
+                marker=markers[lab],
+                linestyle=lstyles[lab],
+                label=llab,
+            )
+
+            # c2 = "purple"
+            # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip[nsupers], logaxs=True)
+            # axs[0].plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
+
+            a += 1
     axs[0].set_title("Entire Program")
 
     for lab, data in datasets.items():
-        x = data.attrs["nsupers"] * data.ngbxs
-        y = data.runcleo[:, 0, 0]
-        lq, uq = data.runcleo[:, 2, 0], data.runcleo[:, 3, 0]
-        slab = None
-        if a == 0:
-            slab = "IQR"
-        hfuncs.add_shading(axs[1], x, lq, uq, c1, lstyles[lab], label=slab)
+        for nthreads in data.nthreads:
+            x = data.attrs["nsupers"] * data.ngbxs
+            runcleo = data.runcleo.sel(nthreads=nthreads)
+            y = runcleo[:, 0, 0]
+            lq, uq = runcleo[:, 2, 0], runcleo[:, 3, 0]
+            slab = None
+            if a == 0:
+                slab = "IQR"
+            hfuncs.add_shading(axs[1], x, lq, uq, c1, lstyles[lab], label=slab)
 
-        axs[1].plot(
-            x,
-            y,
-            color=c1,
-            marker=markers[lab],
-            linestyle=lstyles[lab],
-            label=lab,
-        )
+            llab = None
+            if nthreads == data.nthreads[0]:
+                llab = lab
 
-        # c2 = "purple"
-        # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip[nsupers], logaxs=True)
-        # axs[1].plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
-        a += 1
+            axs[1].plot(
+                x,
+                y,
+                color=c1,
+                marker=markers[lab],
+                linestyle=lstyles[lab],
+                label=llab,
+            )
+
+            # c2 = "purple"
+            # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip[nsupers], logaxs=True)
+            # axs[1].plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
+
+            a += 1
     axs[1].set_title("RunCLEO")
 
     for lab, data in datasets.items():
-        x = data.attrs["nsupers"] * data.ngbxs
-        y = data.timestep[:, 0, 0]
-        lq, uq = data.timestep[:, 2, 0], data.timestep[:, 3, 0]
-        slab = None
-        if a == 0:
-            slab = "IQR"
-        hfuncs.add_shading(axs[2], x, lq, uq, c1, lstyles[lab], label=slab)
+        for nthreads in data.nthreads:
+            x = data.attrs["nsupers"] * data.ngbxs
+            timestep = data.timestep.sel(nthreads=nthreads)
+            y = timestep[:, 0, 0]
+            lq, uq = timestep[:, 2, 0], timestep[:, 3, 0]
+            slab = None
+            if a == 0:
+                slab = "IQR"
+            hfuncs.add_shading(axs[2], x, lq, uq, c1, lstyles[lab], label=slab)
 
-        axs[2].plot(
-            x,
-            y,
-            color=c1,
-            marker=markers[lab],
-            linestyle=lstyles[lab],
-            label=lab,
-        )
+            llab = None
+            if nthreads == data.nthreads[0]:
+                llab = lab
 
-        # c2 = "purple"
-        # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip[nsupers], logaxs=True)
-        # axs[1].plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
-        a += 1
+            axs[2].plot(
+                x,
+                y,
+                color=c1,
+                marker=markers[lab],
+                linestyle=lstyles[lab],
+                label=llab,
+            )
+
+            # c2 = "purple"
+            # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip[nsupers], logaxs=True)
+            # axs[2].plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
+
+            a += 1
     axs[2].set_title("Timestepping")
 
     for ax in axs:
@@ -212,60 +240,78 @@ def plot_simple_wallclock_timeinkernels_scaling(datasets: dict):
     fig, axs = hfuncs.subplots(figsize=(12, 20), nrows=3, ncols=1, sharex=True)
     c1 = "k"
     for lab, data in datasets.items():
-        x = data.attrs["nsupers"] * data.ngbxs
-        y = data.summary[:, 0, 3]
-        axs[0].plot(
-            x,
-            y,
-            color=c1,
-            marker=markers[lab],
-            linestyle=lstyles[lab],
-            label=lab,
-        )
-        lq, uq = data.summary[:, 2, 3], data.summary[:, 3, 3]
-        hfuncs.add_shading(axs[0], x, lq, uq, c1, lstyles[lab])
-        axs[0].set_ylabel("% of Total Wall Clock Time in Kernels")
+        for nthreads in data.nthreads:
+            x = data.attrs["nsupers"] * data.ngbxs
+            summary = data.summary.sel(nthreads=nthreads)
+            y = summary[:, 0, 3]
+            lq, uq = summary[:, 2, 3], summary[:, 3, 3]
+
+            llab = None
+            if nthreads == data.nthreads[0]:
+                llab = lab
+            axs[0].plot(
+                x,
+                y,
+                color=c1,
+                marker=markers[lab],
+                linestyle=lstyles[lab],
+                label=llab,
+            )
+            hfuncs.add_shading(axs[0], x, lq, uq, c1, lstyles[lab])
+    axs[0].set_ylabel("% of Total Wall Clock Time in Kernels")
     axs[0].legend()
 
     c1 = "tab:blue"
     a = 0
     for lab, data in datasets.items():
-        x = data.attrs["nsupers"] * data.ngbxs
-        y = data.summary[:, 0, 1]
-        label = lab
-        if a == 0:
-            label = lab + " in kernels"
-        axs[1].plot(
-            x,
-            y,
-            color=c1,
-            marker=markers[lab],
-            linestyle=lstyles[lab],
-            label=label,
-        )
-        lq, uq = data.summary[:, 2, 1], data.summary[:, 3, 1]
-        hfuncs.add_shading(axs[1], x, lq, uq, c1, lstyles[lab])
-        a += 1
+        for nthreads in data.nthreads:
+            x = data.attrs["nsupers"] * data.ngbxs
+            summary = data.summary.sel(nthreads=nthreads)
+            y = summary[:, 0, 1]
+            lq, uq = summary[:, 2, 1], summary[:, 3, 1]
+
+            llab = None
+            if nthreads == data.nthreads[0]:
+                llab = lab
+                if a == 0:
+                    llab += " in kernels"
+
+            axs[1].plot(
+                x,
+                y,
+                color=c1,
+                marker=markers[lab],
+                linestyle=lstyles[lab],
+                label=llab,
+            )
+            hfuncs.add_shading(axs[1], x, lq, uq, c1, lstyles[lab])
+            a += 1
 
     c2 = "tab:green"
     a = 0
     for lab, data in datasets.items():
-        x = data.attrs["nsupers"] * data.ngbxs
-        y = data.summary[:, 0, 2]
-        label = lab
-        if a == 0:
-            label = lab + " outside kernels"
-        axs[1].plot(
-            x,
-            y,
-            color=c2,
-            marker=markers[lab],
-            linestyle=lstyles[lab],
-            label=label,
-        )
-        lq, uq = data.summary[:, 2, 2], data.summary[:, 3, 2]
-        hfuncs.add_shading(axs[1], x, lq, uq, c2, lstyles[lab])
-        a += 1
+        for nthreads in data.nthreads:
+            x = data.attrs["nsupers"] * data.ngbxs
+            summary = data.summary.sel(nthreads=nthreads)
+            y = summary[:, 0, 2]
+            lq, uq = summary[:, 2, 2], summary[:, 3, 2]
+
+            llab = None
+            if nthreads == data.nthreads[0]:
+                llab = lab
+                if a == 0:
+                    llab += " outside kernels"
+
+            axs[1].plot(
+                x,
+                y,
+                color=c2,
+                marker=markers[lab],
+                linestyle=lstyles[lab],
+                label=llab,
+            )
+            hfuncs.add_shading(axs[1], x, lq, uq, c2, lstyles[lab])
+            a += 1
 
     axs[1].set_yscale("log")
     axs[1].set_ylabel("Total Wall Clock Time /s")
@@ -273,19 +319,25 @@ def plot_simple_wallclock_timeinkernels_scaling(datasets: dict):
 
     c1 = "k"
     for lab, data in datasets.items():
-        x = data.attrs["nsupers"] * data.ngbxs
-        y = data.summary[:, 0, 4]
-        axs[2].plot(
-            x,
-            y,
-            color=c1,
-            marker=markers[lab],
-            linestyle=lstyles[lab],
-            label=lab,
-        )
-        lq, uq = data.summary[:, 2, 4], data.summary[:, 3, 4]
-        hfuncs.add_shading(axs[2], x, lq, uq, c1, lstyles[lab])
-        axs[2].set_ylabel("Total Number of Calls to Kernels")
+        for nthreads in data.nthreads:
+            x = data.attrs["nsupers"] * data.ngbxs
+            summary = data.summary.sel(nthreads=nthreads)
+            y = summary[:, 0, 4]
+            lq, uq = summary[:, 2, 4], summary[:, 3, 4]
+
+            llab = None
+            if nthreads == data.nthreads[0]:
+                llab = lab
+            axs[2].plot(
+                x,
+                y,
+                color=c1,
+                marker=markers[lab],
+                linestyle=lstyles[lab],
+                label=llab,
+            )
+            hfuncs.add_shading(axs[2], x, lq, uq, c1, lstyles[lab])
+            axs[2].set_ylabel("Total Number of Calls to Kernels")
     axs[2].legend()
 
     axs[0].set_xscale("log")
@@ -304,22 +356,27 @@ def plot_wallclock_decomposition_scaling(datasets: dict):
     for v, var in enumerate(vars):
         a = 0
         for lab, data in datasets.items():
-            x = data.attrs["nsupers"] * data.ngbxs
-            y = data[var][:, 0, 0]
-            lq, uq = data[var][:, 2, 0], data[var][:, 3, 0]
-            label = lab
-            if a == 0:
-                label = lab + f" in {var}"
-            axs[0].plot(
-                x,
-                y,
-                color=colors[v],
-                marker=markers[lab],
-                linestyle=lstyles[lab],
-                label=label,
-            )
-            hfuncs.add_shading(axs[0], x, lq, uq, colors[v], lstyles[lab])
-            a += 1
+            for nthreads in data.nthreads:
+                x = data.attrs["nsupers"] * data.ngbxs
+                datavar = data[var].sel(nthreads=nthreads)
+                y = datavar[:, 0, 0]
+                lq, uq = datavar[:, 2, 0], datavar[:, 3, 0]
+
+                llab = None
+                if nthreads == data.nthreads[0]:
+                    llab = lab
+                    if a == 0:
+                        llab += f" in {var}"
+                axs[0].plot(
+                    x,
+                    y,
+                    color=colors[v],
+                    marker=markers[lab],
+                    linestyle=lstyles[lab],
+                    label=llab,
+                )
+                hfuncs.add_shading(axs[0], x, lq, uq, colors[v], lstyles[lab])
+                a += 1
     axs[0].set_title("total runtime")
 
     vars = ["init_gbxs", "init_supers"]
@@ -327,22 +384,27 @@ def plot_wallclock_decomposition_scaling(datasets: dict):
     for v, var in enumerate(vars):
         a = 0
         for lab, data in datasets.items():
-            x = data.attrs["nsupers"] * data.ngbxs
-            y = data[var][:, 0, 0]
-            lq, uq = data[var][:, 2, 0], data[var][:, 3, 0]
-            label = lab
-            if a == 0:
-                label = lab + f" in {var}"
-            axs[1].plot(
-                x,
-                y,
-                color=colors[v],
-                marker=markers[lab],
-                linestyle=lstyles[lab],
-                label=label,
-            )
-            hfuncs.add_shading(axs[1], x, lq, uq, colors[v], lstyles[lab])
-            a += 1
+            for nthreads in data.nthreads:
+                x = data.attrs["nsupers"] * data.ngbxs
+                datavar = data[var].sel(nthreads=nthreads)
+                y = datavar[:, 0, 0]
+                lq, uq = datavar[:, 2, 0], datavar[:, 3, 0]
+
+                llab = None
+                if nthreads == data.nthreads[0]:
+                    llab = lab
+                    if a == 0:
+                        llab += f" in {var}"
+                axs[1].plot(
+                    x,
+                    y,
+                    color=colors[v],
+                    marker=markers[lab],
+                    linestyle=lstyles[lab],
+                    label=llab,
+                )
+                hfuncs.add_shading(axs[1], x, lq, uq, colors[v], lstyles[lab])
+                a += 1
     axs[1].set_title("initialisation")
 
     vars = [
@@ -355,22 +417,27 @@ def plot_wallclock_decomposition_scaling(datasets: dict):
     for v, var in enumerate(vars):
         a = 0
         for lab, data in datasets.items():
-            x = data.attrs["nsupers"] * data.ngbxs
-            y = data[var][:, 0, 0]
-            lq, uq = data[var][:, 2, 0], data[var][:, 3, 0]
-            label = lab
-            if a == 0:
-                label = lab + f" in {var}"
-            axs[2].plot(
-                x,
-                y,
-                color=colors[v],
-                marker=markers[lab],
-                linestyle=lstyles[lab],
-                label=label,
-            )
-            hfuncs.add_shading(axs[2], x, lq, uq, colors[v], lstyles[lab])
-            a += 1
+            for nthreads in data.nthreads:
+                x = data.attrs["nsupers"] * data.ngbxs
+                datavar = data[var].sel(nthreads=nthreads)
+                y = datavar[:, 0, 0]
+                lq, uq = datavar[:, 2, 0], datavar[:, 3, 0]
+
+                llab = None
+                if nthreads == data.nthreads[0]:
+                    llab = lab
+                    if a == 0:
+                        llab += f" in {var}"
+                axs[2].plot(
+                    x,
+                    y,
+                    color=colors[v],
+                    marker=markers[lab],
+                    linestyle=lstyles[lab],
+                    label=llab,
+                )
+                hfuncs.add_shading(axs[2], x, lq, uq, colors[v], lstyles[lab])
+                a += 1
     axs[2].set_title("timestepping")
 
     for ax in axs:
@@ -389,19 +456,26 @@ def plot_simple_memory_scaling(datasets: xr.Dataset):
 
     c1 = "k"
     for lab, data in datasets.items():
-        yarr = data.host_high_water_memory_consumption / 1000  # [MB]
-        x = data.attrs["nsupers"] * data.ngbxs
-        y = yarr[:, 0]
-        axs[0].plot(
-            x,
-            y,
-            color=c1,
-            marker=markers[lab],
-            linestyle=lstyles[lab],
-            label=lab,
-        )
-        lq, uq = yarr[:, 2], yarr[:, 3]
-        hfuncs.add_shading(axs[0], x, lq, uq, c1, lstyles[lab])
+        for nthreads in data.nthreads:
+            yarr = (
+                data.host_high_water_memory_consumption.sel(nthreads=nthreads) / 1000
+            )  # [MB]
+            x = data.attrs["nsupers"] * data.ngbxs
+            y = yarr[:, 0]
+            lq, uq = yarr[:, 2], yarr[:, 3]
+
+            llab = None
+            if nthreads == data.nthreads[0]:
+                llab = lab
+            axs[0].plot(
+                x,
+                y,
+                color=c1,
+                marker=markers[lab],
+                linestyle=lstyles[lab],
+                label=llab,
+            )
+            hfuncs.add_shading(axs[0], x, lq, uq, c1, lstyles[lab])
     axs[0].legend()
     axs[0].set_ylabel("host high water memory consumption / MB")
 
@@ -410,23 +484,26 @@ def plot_simple_memory_scaling(datasets: xr.Dataset):
     for i in range(2):
         a = 0
         for lab, data in datasets.items():
-            x = data.attrs["nsupers"] * data.ngbxs
-            yarr = data.max_memory_allocation / 1000  # [MB]
-            y = yarr[:, 0, i]
-            label = lab
-            if a == 0:
-                label = lab + f" in {spaces[i]}"
-            axs[1].plot(
-                x,
-                y,
-                color=colors[i],
-                marker=markers[lab],
-                linestyle=lstyles[lab],
-                label=label,
-            )
-            lq, uq = yarr[:, 2, i], yarr[:, 3, i]
-            hfuncs.add_shading(axs[1], x, lq, uq, c1, lstyles[lab])
-            a += 1
+            for nthreads in data.nthreads:
+                x = data.attrs["nsupers"] * data.ngbxs
+                yarr = data.max_memory_allocation.sel(nthreads=nthreads) / 1000  # [MB]
+                y = yarr[:, 0, i]
+                llab = None
+                if nthreads == data.nthreads[0]:
+                    llab = lab
+                    if a == 0:
+                        llab += f" in {spaces[i]}"
+                axs[1].plot(
+                    x,
+                    y,
+                    color=colors[i],
+                    marker=markers[lab],
+                    linestyle=lstyles[lab],
+                    label=llab,
+                )
+                lq, uq = yarr[:, 2, i], yarr[:, 3, i]
+                hfuncs.add_shading(axs[1], x, lq, uq, c1, lstyles[lab])
+                a += 1
     axs[1].legend()
     axs[1].set_ylabel("max memory allocation / MB")
 
@@ -434,9 +511,9 @@ def plot_simple_memory_scaling(datasets: xr.Dataset):
     return fig, axs
 
 
-# % make kernel timer plots for each nsupers
+# %% make kernel timer plots for each nsupers
 for nsupers in nsupers_per_gbx:
-    # %% load data
+    # load data
     datasets_time = {}
     for buildtype in buildtypes:
         datasets_time[buildtype] = hfuncs.open_kerneltimer_dataset(
@@ -460,9 +537,9 @@ for nsupers in nsupers_per_gbx:
     savename = savedir / f"wallclock_decomposition_nsupers{nsupers}.png"
     hfuncs.savefig(savename)
 
-# % make spacetimestack plots for each nsupers
+# %% make spacetimestack plots for each nsupers
 for nsupers in nsupers_per_gbx:
-    # %% load data
+    # load data
     datasets_mem = {}
     for buildtype in buildtypes:
         datasets_mem[buildtype] = hfuncs.open_spacetimestack_dataset(
@@ -473,3 +550,5 @@ for nsupers in nsupers_per_gbx:
     fig, axs = plot_simple_memory_scaling(datasets_mem)
     savename = savedir / f"memory_consumption_nsupers{nsupers}.png"
     hfuncs.savefig(savename)
+
+# %%

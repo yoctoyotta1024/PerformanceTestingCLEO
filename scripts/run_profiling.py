@@ -20,11 +20,12 @@ using an executable for a given build.
 """
 
 import argparse
-import os
 import sys
 from pathlib import Path
 import subprocess
 import random
+
+import shared_script_variables as ssv
 
 executable_paths = {
     "colls0d": Path("collisions0d") / "colls0d",
@@ -77,71 +78,62 @@ else:
     bash_script = Path(__file__).resolve().parent / "bash" / "run_cleo.sh"
 
 executable_path = path2build / executable_paths[executable]
-ngbxs_nsupers_runs = {
-    (1, 1): 2,
-    (8, 1): 2,
-    (64, 1): 2,
-    (512, 1): 2,
-    (4096, 1): 2,
-    (32768, 1): 2,
-    (262144, 1): 2,
-    (1, 16): 2,
-    (64, 16): 2,
-    (4096, 16): 2,
-    (262144, 16): 2,
-}
 
-
-def get_config_filename(
-    path2build: Path, executable: str, ngbxs: int, nsupers: int, nrun: int
-):
-    return path2build / "tmp" / executable / f"config_{ngbxs}_{nsupers}_{nrun}.yaml"
-
-
-def get_binpath_onerun(
-    path2build: Path, executable: str, ngbxs: int, nsupers: int, nrun: int
-):
-    return (
-        path2build
-        / "bin"
-        / executable
-        / f"ngbxs{ngbxs}_nsupers{nsupers}"
-        / f"nrun{nrun}"
-    )
-
+ngbxs_nsupers_runs = ssv.get_ngbxs_nsupers_runs()
+ngbxs_nsupers_nthreads = ssv.get_ngbxs_nsupers_nthreads(
+    buildtype, ngbxs_nsupers_runs=ngbxs_nsupers_runs
+)
 
 for profiler_name in profilers:
     profiler = get_profiler(profiler_name, kokkos_tools_lib=kokkos_tools_lib)
     for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
         for nrun in range(ngbxs_nsupers_runs[(ngbxs, nsupers)]):
-            binpath_run = get_binpath_onerun(
-                path2build, executable, ngbxs, nsupers, nrun
+            all_nthreads = ngbxs_nsupers_nthreads[(ngbxs, nsupers)]
+            run_binpaths = ssv.get_all_nthreads_run_binpaths(
+                path2build,
+                executable,
+                ngbxs,
+                nsupers,
+                nrun,
+                all_nthreads=all_nthreads,
             )
-            binpath_run.mkdir(exist_ok=True, parents=True)
-            os.chdir(binpath_run)
+            for bpath in run_binpaths:
+                bpath.mkdir(exist_ok=True, parents=True)
+            config_filenames = ssv.get_all_nthreads_config_filenames(
+                path2build,
+                executable,
+                ngbxs,
+                nsupers,
+                nrun,
+                all_nthreads=all_nthreads,
+            )
+            files_tag = str(random.randint(100, 999))
 
-            config_filename = get_config_filename(
-                path2build, executable, ngbxs, nsupers, nrun
-            )
+            outpaths_cmd = " ".join(str(b) for b in run_binpaths)
+            config_filenames_cmd = " ".join(str(c) for c in config_filenames)
             cmd = [
                 str(bash_script),
                 buildtype,
                 str(executable_path),
-                str(config_filename),
+                outpaths_cmd,
+                config_filenames_cmd,
+                files_tag,
             ]
-            print(Path.cwd())
             if sbatch == "TRUE":
                 cmd.insert(0, "sbatch")
+                print(" ".join(cmd) + "\n")
                 subprocess.run(cmd)
             else:
-                fileid = f"terminalpipe{random.randint(10000, 99999)}"
-                out = binpath_run / Path(
-                    f"run_cleo_out.{fileid}.out"
+                out = (
+                    Path.cwd()
+                    / "tmp_jobs"
+                    / f"run_cleo_job_out.terminal{files_tag}.out"
                 )  # see similarity to SBATCH --output in run_cleo.sh
-                err = binpath_run / Path(
-                    f"run_cleo_err.{fileid}.out"
+                err = (
+                    Path.cwd()
+                    / "tmp_jobs"
+                    / f"run_cleo_job_err.terminal{files_tag}.out"
                 )  # see similarity to SBATCH --error in run_cleo.sh
+                print(" ".join(cmd) + "\n")
                 with open(out, "w") as outfile, open(err, "w") as errfile:
                     subprocess.run(cmd, stdout=outfile, stderr=errfile)
-            print(" ".join(cmd))
-            print("\n")

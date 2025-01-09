@@ -26,7 +26,7 @@ from pathlib import Path
 import sys
 
 path2src = Path(__file__).resolve().parent.parent.parent / "src"
-sys.path.append(str(path2src))  # for imports for input files generation
+sys.path.append(str(path2src))  # for helperfuncs module
 from plotting import helperfuncs as hfuncs
 
 # e.g. ipykernel_launcher.py [path2builds] [executable]
@@ -55,25 +55,22 @@ args, unknown = parser.parse_known_args()
 
 buildtype = args.buildtype
 buildtype_references = "serial"
-nsupers_per_gbx = [1, 16]
+nthreads_reference = 1
+nsupers_per_gbx = [128]
+
 lstyles = hfuncs.buildtype_lstyles
 markers = hfuncs.buildtype_markers
 
 savedir = Path("/home/m/m300950/performance_testing_cleo/plots/")
 
-processing_units = {
-    # TODO(CB): get from kokkos configuration statement during runtime so efficiency
-    # calculatin is not only a rough calculation
-    "serial": 1,
-    "threads": 1,
-    "openmp": 256,
-    "cuda": 6912,
-}
-
 
 # %% funtion definitions for kernel timer plots
 def plot_speedup_scaling(
-    datasets: dict, references: dict, buildtype: str, buildtype_references: str
+    datasets: dict,
+    references: dict,
+    buildtype: str,
+    buildtype_references: str,
+    nthreads_ref: int,
 ):
     fig, axs = hfuncs.subplots(figsize=(12, 20), nrows=3, logx=True)
     fig.suptitle(f"{buildtype} compared to {buildtype_references}")
@@ -81,64 +78,65 @@ def plot_speedup_scaling(
     for nsupers in datasets.keys():
         ds = datasets[nsupers]
         ref = references[nsupers]
+        for nthreads in ds.nthreads:
+            total_time = ds.summary.sel(nthreads=nthreads)[:, 0, 0]
+            total_time_ref = ref.summary.sel(nthreads=nthreads_ref)[:, 0, 0]
+            speedup = hfuncs.calculate_speedup(
+                total_time,
+                total_time_ref,
+                extrapolate=True,
+            )
 
-        total_time = ds.summary[:, 0, 0]
-        total_time_ref = ref.summary[:, 0, 0]
-        speedup = hfuncs.calculate_speedup(
-            total_time,
-            total_time_ref,
-            extrapolate=True,
-        )
-
-        axs[0].plot(
-            ds.ngbxs,
-            speedup,
-            marker=markers[buildtype],
-            linestyle=lstyles[buildtype],
-            label=f"nsupers={nsupers}",
-        )
+            axs[0].plot(
+                ds.ngbxs,
+                speedup,
+                marker=markers[buildtype],
+                linestyle=lstyles[buildtype],
+                label=f"nsupers={nsupers}, nthreads={nthreads.values}",
+            )
     axs[0].set_title("total runtime")
 
     for nsupers in datasets.keys():
         ds = datasets[nsupers]
         ref = references[nsupers]
+        for nthreads in ds.nthreads:
+            total_time = ds.init.sel(nthreads=nthreads)[:, 0, 0]
+            total_time_ref = ref.init.sel(nthreads=nthreads_ref)[:, 0, 0]
+            speedup = hfuncs.calculate_speedup(
+                total_time,
+                total_time_ref,
+                extrapolate=True,
+            )
 
-        total_time = ds.init[:, 0, 0]
-        total_time_ref = ref.init[:, 0, 0]
-        speedup = hfuncs.calculate_speedup(
-            total_time,
-            total_time_ref,
-            extrapolate=True,
-        )
-
-        axs[1].plot(
-            ds.ngbxs,
-            speedup,
-            marker=markers[buildtype],
-            linestyle=lstyles[buildtype],
-            label=f"nsupers={nsupers}",
-        )
+            axs[1].plot(
+                ds.ngbxs,
+                speedup,
+                marker=markers[buildtype],
+                linestyle=lstyles[buildtype],
+                label=f"nsupers={nsupers}, nthreads={nthreads.values}",
+            )
     axs[1].set_title("initialisation")
 
     for nsupers in datasets.keys():
         ds = datasets[nsupers]
         ref = references[nsupers]
 
-        total_time = ds.timestep[:, 0, 0]
-        total_time_ref = ref.timestep[:, 0, 0]
-        speedup = hfuncs.calculate_speedup(
-            total_time,
-            total_time_ref,
-            extrapolate=True,
-        )
+        for nthreads in ds.nthreads:
+            total_time = ds.timestep.sel(nthreads=nthreads)[:, 0, 0]
+            total_time_ref = ref.timestep.sel(nthreads=nthreads_ref)[:, 0, 0]
+            speedup = hfuncs.calculate_speedup(
+                total_time,
+                total_time_ref,
+                extrapolate=True,
+            )
 
-        axs[2].plot(
-            ds.ngbxs,
-            speedup,
-            marker=markers[buildtype],
-            linestyle=lstyles[buildtype],
-            label=f"nsupers={nsupers}",
-        )
+            axs[2].plot(
+                ds.ngbxs,
+                speedup,
+                marker=markers[buildtype],
+                linestyle=lstyles[buildtype],
+                label=f"nsupers={nsupers}, nthreads={nthreads.values}",
+            )
     axs[2].set_title("timestepping")
 
     for ax in axs:
@@ -154,11 +152,18 @@ def plot_speedup_scaling(
     axs[0].legend()
     axs[-1].set_xlabel("number of gridboxes")
 
+    fig.tight_layout()
+    fig.subplots_adjust(top=0.95)
+
     return fig, axs
 
 
-def plot_rough_efficiency_scaling(
-    datasets: dict, references: dict, buildtype: str, buildtype_references: str
+def plot_nthreads_efficiency_scaling(
+    datasets: dict,
+    references: dict,
+    buildtype: str,
+    buildtype_references: str,
+    nthreads_ref: int,
 ):
     fig, axs = hfuncs.subplots(figsize=(12, 20), nrows=3, logx=True)
     fig.suptitle(f"{buildtype} compared to {buildtype_references}")
@@ -166,70 +171,67 @@ def plot_rough_efficiency_scaling(
     for nsupers in datasets.keys():
         ds = datasets[nsupers]
         ref = references[nsupers]
+        for nthreads in ds.nthreads:
+            total_time = ds.summary.sel(nthreads=nthreads)[:, 0, 0]
+            total_time_ref = ref.summary.sel(nthreads=nthreads_ref)[:, 0, 0]
+            efficiency = hfuncs.calculate_efficiency(
+                total_time,
+                total_time_ref,
+                nthreads,
+                extrapolate=True,
+            )
 
-        total_time = ds.summary[:, 0, 0]
-        total_time_ref = ref.summary[:, 0, 0]
-        efficiency = hfuncs.calculate_efficiency(
-            total_time,
-            total_time_ref,
-            buildtype,
-            processing_units,
-            extrapolate=True,
-        )
-
-        axs[0].plot(
-            ds.ngbxs,
-            efficiency,
-            marker=markers[buildtype],
-            linestyle=lstyles[buildtype],
-            label=f"nsupers={nsupers}",
-        )
+            axs[0].plot(
+                ds.ngbxs,
+                efficiency,
+                marker=markers[buildtype],
+                linestyle=lstyles[buildtype],
+                label=f"nsupers={nsupers}, nthreads={nthreads.values}",
+            )
     axs[0].set_title("total runtime")
 
     for nsupers in datasets.keys():
         ds = datasets[nsupers]
         ref = references[nsupers]
+        for nthreads in ds.nthreads:
+            total_time = ds.init.sel(nthreads=nthreads)[:, 0, 0]
+            total_time_ref = ref.init.sel(nthreads=nthreads_ref)[:, 0, 0]
+            efficiency = hfuncs.calculate_efficiency(
+                total_time,
+                total_time_ref,
+                nthreads,
+                extrapolate=True,
+            )
 
-        total_time = ds.init[:, 0, 0]
-        total_time_ref = ref.init[:, 0, 0]
-        efficiency = hfuncs.calculate_efficiency(
-            total_time,
-            total_time_ref,
-            buildtype,
-            processing_units,
-            extrapolate=True,
-        )
-
-        axs[1].plot(
-            ds.ngbxs,
-            efficiency,
-            marker=markers[buildtype],
-            linestyle=lstyles[buildtype],
-            label=f"nsupers={nsupers}",
-        )
+            axs[1].plot(
+                ds.ngbxs,
+                efficiency,
+                marker=markers[buildtype],
+                linestyle=lstyles[buildtype],
+                label=f"nsupers={nsupers}, nthreads={nthreads.values}",
+            )
     axs[1].set_title("initialisation")
 
     for nsupers in datasets.keys():
         ds = datasets[nsupers]
         ref = references[nsupers]
+        for nthreads in ds.nthreads:
+            total_time = ds.timestep.sel(nthreads=nthreads)[:, 0, 0]
+            total_time_ref = ref.timestep.sel(nthreads=nthreads_ref)[:, 0, 0]
+            efficiency = hfuncs.calculate_efficiency(
+                total_time,
+                total_time_ref,
+                nthreads,
+                extrapolate=True,
+            )
 
-        total_time = ds.timestep[:, 0, 0]
-        total_time_ref = ref.timestep[:, 0, 0]
-        efficiency = hfuncs.calculate_efficiency(
-            total_time,
-            total_time_ref,
-            buildtype,
-            processing_units,
-            extrapolate=True,
-        )
-
-        axs[2].plot(
-            ds.ngbxs,
-            efficiency,
-            marker=markers[buildtype],
-            linestyle=lstyles[buildtype],
-            label=f"nsupers={nsupers}",
-        )
+            axs[2].plot(
+                ds.ngbxs,
+                efficiency,
+                marker=markers[buildtype],
+                linestyle=lstyles[buildtype],
+                label=f"nsupers={nsupers}, nthreads={nthreads.values}",
+            )
     axs[2].set_title("timestepping")
 
     for ax in axs:
@@ -244,6 +246,9 @@ def plot_rough_efficiency_scaling(
         ax.set_ylabel("wallclock time efficiency")
     axs[0].legend()
     axs[-1].set_xlabel("number of gridboxes")
+
+    fig.tight_layout()
+    fig.subplots_adjust(top=0.95)
 
     return fig, axs
 
@@ -260,13 +265,15 @@ for nsupers in nsupers_per_gbx:
     )
 
 # %%
-fig, axs = plot_speedup_scaling(datasets, references, buildtype, buildtype_references)
+fig, axs = plot_speedup_scaling(
+    datasets, references, buildtype, buildtype_references, nthreads_reference
+)
 savename = savedir / f"speedup_{buildtype}.png"
-hfuncs.savefig(savename)
+hfuncs.savefig(savename, tight=False)
 
 # %%
-fig, axs = plot_rough_efficiency_scaling(
-    datasets, references, buildtype, buildtype_references
+fig, axs = plot_nthreads_efficiency_scaling(
+    datasets, references, buildtype, buildtype_references, nthreads_reference
 )
-savename = savedir / f"efficiency_{buildtype}.png"
-hfuncs.savefig(savename)
+savename = savedir / f"efficiency_nthreads_{buildtype}.png"
+hfuncs.savefig(savename, tight=False)

@@ -37,12 +37,8 @@ def open_kerneltimer_dataset(
     buildtype: str,
     executable: str,
     nsupers: int,
-    nthreads: Optional[int] = None,
 ):
     import xarray as xr
-
-    if nthreads is not None:
-        path2builds = path2builds / f"builds_threads_{nthreads}"
 
     path2ds = (
         path2builds
@@ -77,13 +73,21 @@ def subplots(
     sharey: Optional[bool] = False,
     logx: Optional[bool] = False,
     logy: Optional[bool] = False,
+    hratios: Optional[list[float]] = None,
+    wratios: Optional[list[float]] = None,
 ):
     import matplotlib.pyplot as plt
     from matplotlib.axes import Axes
     import numpy as np
 
     fig, axes = plt.subplots(
-        figsize=figsize, nrows=nrows, ncols=ncols, sharex=sharex, sharey=sharey
+        figsize=figsize,
+        nrows=nrows,
+        ncols=ncols,
+        sharex=sharex,
+        sharey=sharey,
+        height_ratios=hratios,
+        width_ratios=wratios,
     )
 
     if isinstance(axes, Axes):
@@ -104,10 +108,12 @@ def subplots(
     return fig, axes
 
 
-def savefig(savename: Path, dpi: Optional[int] = 128):
+def savefig(savename: Path, dpi: Optional[int] = 128, tight: Optional[bool] = True):
     import matplotlib.pyplot as plt
 
-    plt.tight_layout()
+    if tight:
+        plt.tight_layout()
+
     plt.savefig(savename, dpi=dpi, bbox_inches="tight")
     print(f"figure saved as {str(savename)}")
 
@@ -152,9 +158,8 @@ def calculate_speedup(
 def calculate_efficiency(
     time: xr.DataArray,
     time_reference: xr.DataArray,
-    buildtype: str,
-    processing_units: dict,
+    num_processing_units: dict,
     extrapolate: Optional[bool] = False,
 ):
     speedup = calculate_speedup(time, time_reference, extrapolate=extrapolate)
-    return speedup / processing_units[buildtype]
+    return speedup / num_processing_units

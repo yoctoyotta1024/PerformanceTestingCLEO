@@ -240,9 +240,23 @@ def plot_weak_scaling_speedup(
                             total_time = ds[var].sel(nthreads=nthreads, ngbxs=ngbxs)[
                                 :, 0
                             ]
-                            total_time_ref = ref[var].sel(
-                                nthreads=nthreads_reference, ngbxs=ngbxs
-                            )[:, 0]
+                        except KeyError:
+                            total_time = None
+                            msg = f"warning: skipping buildtype={buildtype} nsupers={nsupers} ngbxs={ngbxs} nthreads={nthreads}"
+                            print(msg)
+                        if total_time is not None:
+                            if ngbxs in ref.ngbxs:
+                                total_time_ref = ref[var].sel(
+                                    nthreads=nthreads_reference, ngbxs=ngbxs
+                                )[:, 0]
+                            else:
+                                total_time_ref = ref[var].sel(
+                                    nthreads=nthreads_reference
+                                )[:, :, 0]
+                                total_time_ref = hfuncs.extrapolate_ngbxs_coord(
+                                    total_time_ref, ds.ngbxs
+                                )
+                                total_time_ref = total_time_ref.sel(ngbxs=ngbxs)
                             c.append(ngbxs * nsupers)
                             x.append(nthreads)
                             y.append(
@@ -260,9 +274,6 @@ def plot_weak_scaling_speedup(
                                     total_time[2].values, total_time_ref[3]
                                 )
                             )
-                        except KeyError:
-                            msg = f"warning: skipping buildtype={buildtype} nsupers={nsupers} ngbxs={ngbxs} nthreads={nthreads}"
-                            print(msg)
                         nthreads = nthreads / 2
                         ngbxs = ngbxs / 2
                     llab = None
@@ -363,9 +374,23 @@ def plot_weak_scaling_efficiency(
                             total_time = ds[var].sel(nthreads=nthreads, ngbxs=ngbxs)[
                                 :, 0
                             ]
-                            total_time_ref = ref[var].sel(
-                                nthreads=nthreads_reference, ngbxs=ngbxs
-                            )[:, 0]
+                        except KeyError:
+                            total_time = None
+                            msg = f"warning: skipping buildtype={buildtype} nsupers={nsupers} ngbxs={ngbxs} nthreads={nthreads}"
+                            print(msg)
+                        if total_time is not None:
+                            if ngbxs in ref.ngbxs:
+                                total_time_ref = ref[var].sel(
+                                    nthreads=nthreads_reference, ngbxs=ngbxs
+                                )[:, 0]
+                            else:
+                                total_time_ref = ref[var].sel(
+                                    nthreads=nthreads_reference
+                                )[:, :, 0]
+                                total_time_ref = hfuncs.extrapolate_ngbxs_coord(
+                                    total_time_ref, ds.ngbxs
+                                )
+                                total_time_ref = total_time_ref.sel(ngbxs=ngbxs)
                             c.append(ngbxs * nsupers)
                             x.append(nthreads)
                             y.append(
@@ -383,9 +408,6 @@ def plot_weak_scaling_efficiency(
                                     total_time[2], total_time_ref[3], nthreads
                                 )
                             )
-                        except KeyError:
-                            msg = f"warning: skipping buildtype={buildtype} nsupers={nsupers} ngbxs={ngbxs} nthreads={nthreads}"
-                            print(msg)
                         nthreads = nthreads / 2
                         ngbxs = ngbxs / 2
                     llab = None

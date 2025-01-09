@@ -137,6 +137,11 @@ def add_shading(
     )
 
 
+def extrapolate_ngbxs_coord(data, new_ngbxs):
+    extrapolated = data.interp(ngbxs=new_ngbxs, kwargs={"fill_value": "extrapolate"})
+    return extrapolated
+
+
 def calculate_speedup(
     time: xr.DataArray,
     time_reference: xr.DataArray,
@@ -149,9 +154,10 @@ def calculate_speedup(
             time.coords["ngbxs"].values != time_reference.coords["ngbxs"].values
         ):
             print("warning: speedup calculation extrapolating reference")
-            time_reference = time_reference.interp(
-                ngbxs=time.coords["ngbxs"], kwargs={"fill_value": "extrapolate"}
+            time_reference = extrapolate_ngbxs_coord(
+                time_reference, time.coords["ngbxs"]
             )
+
     return time_reference / time
 
 

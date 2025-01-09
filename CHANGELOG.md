@@ -2,6 +2,34 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v2.0.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/ba05be09efa3320c7aacb8e927bfdf07f9f9e160..v2.0.0) - 2025-01-09
+#### Features
+- new file for plotting weak scaling - ([c584642](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/c584642048f5170ba3caa945ddec4fc67d5bc90b)) - clara.bayley
+#### Miscellaneous Chores
+- update cleo version - ([2f7a9a1](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/2f7a9a1bcda02d01469ff41bd307a91ee918a410)) - clara.bayley
+- update cleo version - ([ba05be0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/ba05be09efa3320c7aacb8e927bfdf07f9f9e160)) - clara.bayley
+#### Performance Improvements
+- delete redundant bool - ([53a73f3](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/53a73f302c503e6aa6d1c8f767143b370e0407ef)) - clara.bayley
+- correct note on imports - ([a209e74](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/a209e7417171c84af326c4b5b5792e7f616cf752)) - clara.bayley
+#### Refactoring
+- add individual strong scaling plots - ([d3e12df](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/d3e12dfb7abbaae28f610a0c2823280e744d86fc)) - clara.bayley
+- make num threads of reference for speedup a variable - ([2f3e66c](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/2f3e66c8416aeca087ace5c55bb995e5e7821ba7)) - clara.bayley
+- specify nthreads in figure names for efficiency - ([6133c6d](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/6133c6d6e305865f95208856ad61fe8347b7e182)) - clara.bayley
+- add efficiency strong scaling plot - ([468e9ce](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/468e9ce7be84bf59c4c205b9b2fff575a1218f3f)) - clara.bayley
+- make strong scaling plotting script compatible with running more than one nthreads config - ([1a713e9](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/1a713e9ce1fcc9e1f0c5e734541be3a580d62e0a)) - clara.bayley
+- make kerneltimer metrics plotting script compatible with running more than one nthreads config - ([09ad4d1](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/09ad4d19846ad4cafedb7dbc85ece4530567b227)) - clara.bayley
+- make quickplots script compatible with running more than one nthreads config - ([066140f](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/066140fef34e01c234a655a38ba2832df774ccef)) - clara.bayley
+- make grand datasets script compatible with running more than one nthreads config - ([47f36fb](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/47f36fb069c603cb48393c2807328b905fbe0744)) - clara.bayley
+- make postproc script compatible with running more than one nthreads config - ([47f3e5a](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/47f3e5ac9369a5662ab7e956e1ebc39ad93f535e)) - clara.bayley
+- move variable/functions from run_profiling into seperate file to avoid future repetition - ([3362619](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/3362619318196d3a4e780c6c28307b8afde59ee0)) - clara.bayley
+- change destination of sbatch and terminal piped output - ([4f743df](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/4f743df5caf3f3548cf5815792bbf677c40c08f9)) - clara.bayley
+- make run scripts compatible with running more than one nthreads config - ([8c7914b](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/8c7914be225bc932dedf87dc5fef6d5c3f0f3027)) - clara.bayley
+- new setup for strong and weak scaling data test run with nsupers=128 - ([3f6d3a8](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/3f6d3a81d33a173902d098f818b1881984112b73)) - clara.bayley
+- setup colls with setting of nthreads variable for each run - ([7a5735f](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/7a5735f2a02999fa5b728e59263f1ed7082fd9cf)) - clara.bayley
+- set kokkos nthreads and device mappign from config file - ([e78e230](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/e78e230f9e2beda54a05b08477a3a666c19512a0)) - clara.bayley
+
+- - -
+
 ## [v1.7.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/3a679cd1332e077650c01d912b70a8560f56fbf7..v1.7.0) - 2024-12-19
 #### Features
 - new file to plot strong scaling - ([3a679cd](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/3a679cd1332e077650c01d912b70a8560f56fbf7)) - clara.bayley

@@ -60,7 +60,7 @@ nthreads_reference = 1
 
 ngbxs_nsupers_runs = ssv.get_ngbxs_nsupers_runs()
 
-nsupers_per_gbx = [128]
+nsupers_per_gbx = [8, 128]
 
 lstyles = hfuncs.buildtype_lstyles
 markers = hfuncs.buildtype_markers
@@ -196,7 +196,7 @@ def plot_weak_scaling_speedup(
     for ax in axs:
         ax.set_aspect("equal")
 
-    fig.suptitle("Weak Scaling: Wall Clock Time")
+    fig.suptitle("Weak Scaling: Speedup")
     fig.colorbar(
         ScalarMappable(cmap=cmap, norm=norm),
         cax=cax,
@@ -299,7 +299,7 @@ def plot_weak_scaling_speedup(
                 ngbxs_start = ngbxs_start / 2
                 nthreads_start = nthreads_max
         ax.set_title(var)
-        ax.set_ylabel("wall clock time /s")
+        ax.set_ylabel("speedup")
     axs[0].legend()
     for ax in axs[:-1]:
         ax.set_xticklabels([])
@@ -330,7 +330,7 @@ def plot_weak_scaling_efficiency(
     cax = axes[0]
     axs = axes[1:]
 
-    fig.suptitle("Weak Scaling: Wall Clock Time")
+    fig.suptitle("Weak Scaling: Efficiency")
     fig.colorbar(
         ScalarMappable(cmap=cmap, norm=norm),
         cax=cax,
@@ -433,7 +433,7 @@ def plot_weak_scaling_efficiency(
                 ngbxs_start = ngbxs_start / 2
                 nthreads_start = nthreads_max
         ax.set_title(var)
-        ax.set_ylabel("wall clock time /s")
+        ax.set_ylabel("efficiency")
     for ax in axs:
         ax.set_xlim([0, None])
         ax.hlines(

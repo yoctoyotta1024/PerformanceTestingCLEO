@@ -66,7 +66,7 @@ else:
     allow_overwrite = False
 binpath = path2build / "bin" / executable
 
-nsupers_grand_datasets = [128]
+nsupers_grand_datasets = [8]
 
 ngbxs_nsupers_runs = ssv.get_ngbxs_nsupers_runs()
 ngbxs_nsupers_nthreads = ssv.get_ngbxs_nsupers_nthreads(

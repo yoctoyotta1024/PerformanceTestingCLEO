@@ -68,8 +68,8 @@ markers = hfuncs.buildtype_markers
 savedir = Path("/home/m/m300950/performance_testing_cleo/plots/")
 
 cmap = plt.get_cmap("plasma")
-norm = LogNorm(vmin=1, vmax=1e6)
-ngbxs_max = 4096
+norm = LogNorm(vmin=1, vmax=1e9)
+ngbxs_max = 1048576
 nthreads_max = 256
 
 

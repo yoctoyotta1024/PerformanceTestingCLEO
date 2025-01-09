@@ -128,7 +128,7 @@ def plot_strong_scaling_wallclock(
 
                 llab = None
                 if a == 0:
-                    llab = f"{buildtype}"
+                    llab = f"{buildtype}, nsupers={nsupers}"
                 c = ngbxs_nsupers_colors[(ngbxs, nsupers)]
                 ax.plot(
                     x,
@@ -163,10 +163,12 @@ def plot_strong_scaling_speedup(
     ngbxs_nsupers_runs: dict,
 ):
     fig, axes = hfuncs.subplots(
-        figsize=(12, 20), nrows=4, ncols=1, hratios=[0.25] + [7] * 3
+        figsize=(10, 20), nrows=4, ncols=1, hratios=[0.25] + [7] * 3
     )
     cax = axes[0]
     axs = axes[1:]
+    for ax in axs:
+        ax.set_aspect("equal")
 
     fig.suptitle("Strong Scaling: Speedup")
     fig.colorbar(
@@ -217,7 +219,7 @@ def plot_strong_scaling_speedup(
 
                 llab = None
                 if a == 0:
-                    llab = f"{buildtype}"
+                    llab = f"{buildtype}, nsupers={nsupers}"
                 c = ngbxs_nsupers_colors[(ngbxs, nsupers)]
                 ax.plot(
                     x,
@@ -254,6 +256,7 @@ def plot_strong_scaling_nthreads_efficiency(
     fig, axes = hfuncs.subplots(
         figsize=(12, 20), nrows=4, ncols=1, hratios=[0.25] + [7] * 3
     )
+
     cax = axes[0]
     axs = axes[1:]
 
@@ -313,7 +316,7 @@ def plot_strong_scaling_nthreads_efficiency(
 
                 llab = None
                 if a == 0:
-                    llab = f"{buildtype}"
+                    llab = f"{buildtype}, nsupers={nsupers}"
                 c = ngbxs_nsupers_colors[(ngbxs, nsupers)]
                 ax.plot(
                     x,
@@ -380,5 +383,35 @@ fig, axs = plot_strong_scaling_nthreads_efficiency(
 )
 savename = savedir / "strong_scaling_efficiency_nthreads.png"
 hfuncs.savefig(savename, tight=False)
+
+# %%
+for b in buildtypes:
+    fig, axs = plot_strong_scaling_wallclock(
+        path2builds, [b], executable, ngbxs_nsupers_runs
+    )
+    savename = savedir / f"strong_scaling_wallclock_{b}.png"
+    hfuncs.savefig(savename, tight=False)
+
+    fig, axs = plot_strong_scaling_speedup(
+        path2builds,
+        [b],
+        buildtype_reference,
+        nthreads_reference,
+        executable,
+        ngbxs_nsupers_runs,
+    )
+    savename = savedir / f"strong_scaling_speedup_{b}.png"
+    hfuncs.savefig(savename, tight=False)
+
+    fig, axs = plot_strong_scaling_nthreads_efficiency(
+        path2builds,
+        [b],
+        buildtype_reference,
+        nthreads_reference,
+        executable,
+        ngbxs_nsupers_runs,
+    )
+    savename = savedir / f"strong_scaling_efficiency_nthreads_{b}.png"
+    hfuncs.savefig(savename, tight=False)
 
 # %%

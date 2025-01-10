@@ -51,7 +51,10 @@ path2src = Path(__file__).resolve().parent.parent.parent / "src"
 path2CLEO = args.path2CLEO
 path2builds = args.path2builds
 buildtype = args.buildtype
-gen_initconds = args.gen_initconds
+if args.gen_initconds == "TRUE":
+    gen_initconds = True
+else:
+    gen_initconds = False
 
 sys.path.append(str(path2CLEO))  # for imports for editing a config file
 sys.path.append(str(path2src))  # for imports for input files generation
@@ -82,12 +85,12 @@ def get_grid_filename(sharepath: Path, ngbxs: int):
     return str(sharepath / f"dimlessGBxboundaries_{ngbxs}.dat")
 
 
-def get_thermodynamics_filenames(sharepath: Path, ngbxs: int):
-    return str(sharepath / f"dimlessthermo_{ngbxs}.dat")
-
-
 def get_initsupers_filename(sharepath: Path, ngbxs: int, nsupers: int, nrun: int):
     return sharepath / f"dimlessSDsinit_{ngbxs}_{nsupers}_{nrun}.dat"
+
+
+def get_thermodynamics_filenames(sharepath: Path, ngbxs: int) -> Path:
+    return sharepath / f"dimlessthermo_{ngbxs}.dat"
 
 
 ### --- ensure build, share and bin directories exist --- ###
@@ -121,7 +124,11 @@ for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
             params["zgrid"] = [0, 1500, 1500 / ndim_z]
             params["xgrid"] = [0, 1500, 1500 / ndim_x]
 
-            params["thermofiles"] = get_thermodynamics_filenames(sharepath, ngbxs)
+            thermofiles = get_thermodynamics_filenames(sharepath, ngbxs)
+            params["thermofiles"] = str(thermofiles)
+            for var in ["press", "temp", "qvap", "qcond", "wvel", "uvel"]:
+                var_filename = f"{thermofiles.stem}_{var}{thermofiles.suffix}"
+                params[var] = str(thermofiles.parent / var_filename)
 
             params["maxnsupers"] = nsupers * ngbxs
             params["initsupers_filename"] = str(

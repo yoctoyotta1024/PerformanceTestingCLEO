@@ -39,6 +39,8 @@
 #include "initialise/initialconditions.hpp"
 #include "initialise/timesteps.hpp"
 #include "observers/gbxindex_observer.hpp"
+#include "observers/massmoments_observer.hpp"
+#include "observers/nsupers_observer.hpp"
 #include "observers/observers.hpp"
 #include "observers/streamout_observer.hpp"
 #include "observers/superdrops_observer.hpp"

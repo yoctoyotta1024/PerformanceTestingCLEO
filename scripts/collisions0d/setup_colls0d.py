@@ -50,7 +50,10 @@ path2src = Path(__file__).resolve().parent.parent.parent / "src"
 path2CLEO = args.path2CLEO
 path2builds = args.path2builds
 buildtype = args.buildtype
-gen_initconds = args.gen_initconds
+if args.gen_initconds == "TRUE":
+    gen_initconds = True
+else:
+    gen_initconds = False
 
 sys.path.append(str(path2CLEO))  # for imports for editing a config file
 sys.path.append(str(path2src))  # for imports for input files generation

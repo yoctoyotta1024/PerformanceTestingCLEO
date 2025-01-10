@@ -53,7 +53,7 @@ def gridbox_boundaries(path2CLEO, config_filename, isfigures=[False, False]):
     ### --- settings for 0-D Model gridbox boundaries --- ###
     zgrid = pyconfig["grid"]["zgrid"]
     xgrid = pyconfig["grid"]["xgrid"]
-    ygrid = pyconfig["grid"]["ygrid"]
+    ygrid = [0, 100, 100]  # [max, min, spacing]
     ### ---------------------------------------------------------------- ###
 
     ### -------------------- INPUT FILES GENERATION -------------------- ###
@@ -154,7 +154,7 @@ def thermodynamic_conditions(path2CLEO, config_filename, isfigures=[False, False
 
     ### ----------------------- INPUT PARAMETERS ----------------------- ###
     ### --- essential paths and filenames --- ###
-    thermofiles = pyconfig["thermo"]["thermofiles"]
+    thermofiles = Path(pyconfig["thermo"]["thermofiles"])
     constants_filename = config["inputfiles"]["constants_filename"]
     grid_filename = config["inputfiles"]["grid_filename"]
     savefigpath = Path(pyconfig["paths"]["savefigpath"])
@@ -164,6 +164,7 @@ def thermodynamic_conditions(path2CLEO, config_filename, isfigures=[False, False
     savelabel = f"_{ngbxs}"
 
     # thermodynamics generator
+    VVEL = None
     thermodyngen = thermogen.ConstDryHydrostaticAdiabat(
         config_filename,
         constants_filename,
@@ -172,11 +173,11 @@ def thermodynamic_conditions(path2CLEO, config_filename, isfigures=[False, False
         pyconfig["thermo"]["qvapmethod"],
         pyconfig["thermo"]["sratios"],
         pyconfig["thermo"]["Zbase"],
-        pyconfig["thermo"]["qcond"],
+        pyconfig["thermo"]["qcond_init"],
         pyconfig["thermo"]["WMAX"],
         pyconfig["thermo"]["Zlength"],
         pyconfig["thermo"]["Xlength"],
-        pyconfig["thermo"]["VVEL"],
+        VVEL,
         pyconfig["thermo"]["moistlayer"],
     )
     ### ---------------------------------------------------------------- ###

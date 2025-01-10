@@ -74,7 +74,10 @@ path2build = args.path2builds / args.buildtype
 buildtype = args.buildtype
 executable = args.executable
 profilers = args.profilers
-sbatch = args.sbatch
+if args.sbatch == "TRUE":
+    sbatch = True
+else:
+    sbatch = False
 
 if buildtype == "cuda":
     bash_script = Path(__file__).resolve().parent / "bash" / "run_cleo_gpu.sh"
@@ -123,7 +126,7 @@ for profiler_name in profilers:
                 config_filenames_cmd,
                 files_tag,
             ]
-            if sbatch == "TRUE":
+            if sbatch:
                 cmd.insert(0, "sbatch")
                 print(" ".join(cmd) + "\n")
                 subprocess.run(cmd)

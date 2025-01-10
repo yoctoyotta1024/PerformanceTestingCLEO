@@ -27,10 +27,9 @@ python_initconds:
   grid:
     zgrid: [0, 1500, X]                                      # [max, min, spacing] of gridbox boundaries in z direction
     xgrid: [0, 1500, X]                                      # [max, min, spacing] of gridbox boundaries in x direction
-    ygrid: [0, 100, 1]                                       # [max, min, spacing] of gridbox boundaries in y direction
   supers:
     dryradius_sf: 1.0                                         # dry radius = radius * dry adius_sf
-    rspan: [1.0e-8, 1.0e-6]                                   # max and min range of radii to sample [m]
+    rspan: [5.0e-9, 1.0e-6]                                   # max and min range of radii to sample [m]
     xi_min: 10                                                # minimum value of initial multiplicities
     geomeans: [0.02e-6, 0.15e-6]                              # means of bi-modal lognormal distribution [m]
     geosigs: [1.4, 1.6]                                       # stddev of bi-modal lognormal distribution
@@ -41,9 +40,8 @@ python_initconds:
     PRESS0: 101315                                            # surface pressure[Pa]
     Zbase: 750                                                # height of cloud layer [m]
     THETA: 288.15                                             # potential temperature below Zbase [K]
-    qcond: 0.0                                                # initial non-superdroplet qcond [Kg/Kg]
+    qcond_init: 0.0                                           # initial non-superdroplet qcond [Kg/Kg]
     WMAX: 1.0                                                 # maximum updraught velocity [m/s]
-    VVEL: None                                                # constant coord2 (y) velocity [m/s]
     Zlength: 1500                                             # divergent flow coord3 (z) lengthscale [m]
     Xlength: 1500                                             # divergent flow coord1 (x) lengthscale [m]
     sratios: [0.99, 1.0025]                                   # supersaturation ratios [below, above] Zbase

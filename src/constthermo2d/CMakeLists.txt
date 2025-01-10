@@ -15,7 +15,7 @@ set(exec thermo2d)
 add_executable(${exec} EXCLUDE_FROM_ALL "main_thermo2d.cpp")
 
 # Add directories and link libraries to target
-target_link_libraries(${exec} PRIVATE cartesiandomain "${CLEOLIBS}")
+target_link_libraries(${exec} PRIVATE coupldyn_fromfile cartesiandomain "${CLEOLIBS}")
 target_link_libraries(${exec} PUBLIC Kokkos::kokkos)
 target_include_directories(${exec} PRIVATE "${CLEO_SOURCE_DIR}/libs") # CLEO libs directory
 

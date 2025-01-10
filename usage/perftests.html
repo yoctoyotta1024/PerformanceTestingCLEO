@@ -255,16 +255,15 @@ in a build directory of your choice.</p>
 <h2>Example: Collisions0d Performance Test in Serial<a class="headerlink" href="#example-collisions0d-performance-test-in-serial" title="Link to this heading">¶</a></h2>
 <p>You can build and compile this example from the root of your performance_testing_cleo directory first
 by building and compiling the exectuabel for a build of your choice (serial, openmp, cuda or threads).</p>
-<p>E.g. For a serial build;
-#. Build and compile:</p>
-<blockquote>
-<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mkdir<span class="w"> </span>/work/bm1183/m300950/performance_testing_cleo/builds
+<p>E.g. For a serial build of the colls0d example (see also thermo2d):</p>
+<ol class="arabic">
+<li><p>Build and compile:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mkdir<span class="w"> </span>/work/bm1183/m300950/performance_testing_cleo/builds
 <span class="gp">$ </span>./scripts/bash/builds.sh<span class="w"> </span>./src<span class="w"> </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda<span class="w"> </span>threads
 <span class="gp">$ </span>./scripts/bash/compiles.sh<span class="w"> </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span>colls0d<span class="w"> </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda<span class="w"> </span>threads
 </pre></div>
 </div>
-</div></blockquote>
-<ol class="arabic">
+</li>
 <li><p>Setup the example:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/collisions0d/setup_colls0d.sh<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/work/bm1183/m300950/bin/envs/perftests/bin/python<span class="w"> </span><span class="se">\</span>
@@ -272,6 +271,15 @@ by building and compiling the exectuabel for a build of your choice (serial, ope
 <span class="w">  </span>/home/m/m300950/performance_testing_cleo<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda<span class="w"> </span>threads
+</pre></div>
+</div>
+</li>
+<li><p>(Or) If setting up thermo2d:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/constthermo2d/setup_thermo2d.sh \</span>
+<span class="go">  /work/bm1183/m300950/bin/envs/perftests/bin/python \</span>
+<span class="go">  /home/m/m300950/CLEO \</span>
+<span class="go">  /home/m/m300950/performance_testing_cleo \</span>
+<span class="go">  /work/bm1183/m300950/performance_testing_cleo/builds openmp</span>
 </pre></div>
 </div>
 </li>

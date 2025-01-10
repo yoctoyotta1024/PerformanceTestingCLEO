@@ -64,7 +64,7 @@ lstyles = hfuncs.buildtype_lstyles
 markers = hfuncs.buildtype_markers
 
 cmap = plt.get_cmap("plasma")
-norm = LogNorm(vmin=1, vmax=1e6)
+norm = LogNorm(vmin=1, vmax=1e9)
 ngbxs_nsupers_colors = {}
 for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
     color = cmap(norm(ngbxs * nsupers))
@@ -184,16 +184,6 @@ def plot_strong_scaling_speedup(
         for buildtype in buildtypes:
             a = 0
             for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
-                ref = hfuncs.open_kerneltimer_dataset(
-                    path2builds,
-                    buildtype_reference,
-                    executable,
-                    nsupers,
-                )
-                total_time_ref = (
-                    ref[var].sel(ngbxs=ngbxs).sel(nthreads=nthreads_reference)[:, 0]
-                )
-
                 try:
                     ds = hfuncs.open_kerneltimer_dataset(
                         path2builds,
@@ -211,6 +201,23 @@ def plot_strong_scaling_speedup(
                     msg = f"warning: skipping buildtype={buildtype} ngbxs={ngbxs}, nsupers={nsupers}"
                     print(msg)
                     continue
+
+                ref = hfuncs.open_kerneltimer_dataset(
+                    path2builds,
+                    buildtype_reference,
+                    executable,
+                    nsupers,
+                )
+                if ngbxs in ref.ngbxs:
+                    total_time_ref = ref[var].sel(
+                        ngbxs=ngbxs, nthreads=nthreads_reference
+                    )[:, 0]
+                else:
+                    total_time_ref = ref[var].sel(nthreads=nthreads_reference)[:, :, 0]
+                    total_time_ref = hfuncs.extrapolate_ngbxs_coord(
+                        total_time_ref, ds.ngbxs
+                    )
+                    total_time_ref = total_time_ref.sel(ngbxs=ngbxs)
 
                 x = ds.nthreads
                 y = hfuncs.calculate_speedup(total_time[:, 0], total_time_ref[0])
@@ -274,16 +281,6 @@ def plot_strong_scaling_nthreads_efficiency(
         for buildtype in buildtypes:
             a = 0
             for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
-                ref = hfuncs.open_kerneltimer_dataset(
-                    path2builds,
-                    buildtype_reference,
-                    executable,
-                    nsupers,
-                )
-                total_time_ref = (
-                    ref[var].sel(ngbxs=ngbxs).sel(nthreads=nthreads_reference)[:, 0]
-                )
-
                 try:
                     ds = hfuncs.open_kerneltimer_dataset(
                         path2builds,
@@ -302,6 +299,23 @@ def plot_strong_scaling_nthreads_efficiency(
                     print(msg)
                     total_time = None
                     continue
+
+                ref = hfuncs.open_kerneltimer_dataset(
+                    path2builds,
+                    buildtype_reference,
+                    executable,
+                    nsupers,
+                )
+                if ngbxs in ref.ngbxs:
+                    total_time_ref = ref[var].sel(
+                        ngbxs=ngbxs, nthreads=nthreads_reference
+                    )[:, 0]
+                else:
+                    total_time_ref = ref[var].sel(nthreads=nthreads_reference)[:, :, 0]
+                    total_time_ref = hfuncs.extrapolate_ngbxs_coord(
+                        total_time_ref, ds.ngbxs
+                    )
+                    total_time_ref = total_time_ref.sel(ngbxs=ngbxs)
 
                 x = ds.nthreads
                 y = hfuncs.calculate_efficiency(
@@ -413,5 +427,3 @@ for b in buildtypes:
     )
     savename = savedir / f"strong_scaling_efficiency_nthreads_{b}.png"
     hfuncs.savefig(savename, tight=False)
-
-# %%

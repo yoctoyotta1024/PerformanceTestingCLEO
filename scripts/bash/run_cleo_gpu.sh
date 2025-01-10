@@ -6,8 +6,8 @@
 #SBATCH --cpus-per-task=256
 #SBATCH --gpus-per-task=4
 #SBATCH --exclusive
-#SBATCH --mem=10G
-#SBATCH --time=02:00:00
+#SBATCH --mem=100G
+#SBATCH --time=08:00:00
 #SBATCH --mail-user=clara.bayley@mpimet.mpg.de
 #SBATCH --mail-type=FAIL
 #SBATCH --account=bm1183

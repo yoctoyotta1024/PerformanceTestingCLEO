@@ -68,8 +68,8 @@ markers = hfuncs.buildtype_markers
 savedir = Path("/home/m/m300950/performance_testing_cleo/plots/")
 
 cmap = plt.get_cmap("plasma")
-norm = LogNorm(vmin=1, vmax=1e6)
-ngbxs_max = 4096
+norm = LogNorm(vmin=1, vmax=1e9)
+ngbxs_max = 1048576
 nthreads_max = 256
 
 
@@ -196,7 +196,7 @@ def plot_weak_scaling_speedup(
     for ax in axs:
         ax.set_aspect("equal")
 
-    fig.suptitle("Weak Scaling: Wall Clock Time")
+    fig.suptitle("Weak Scaling: Speedup")
     fig.colorbar(
         ScalarMappable(cmap=cmap, norm=norm),
         cax=cax,
@@ -240,9 +240,23 @@ def plot_weak_scaling_speedup(
                             total_time = ds[var].sel(nthreads=nthreads, ngbxs=ngbxs)[
                                 :, 0
                             ]
-                            total_time_ref = ref[var].sel(
-                                nthreads=nthreads_reference, ngbxs=ngbxs
-                            )[:, 0]
+                        except KeyError:
+                            total_time = None
+                            msg = f"warning: skipping buildtype={buildtype} nsupers={nsupers} ngbxs={ngbxs} nthreads={nthreads}"
+                            print(msg)
+                        if total_time is not None:
+                            if ngbxs in ref.ngbxs:
+                                total_time_ref = ref[var].sel(
+                                    nthreads=nthreads_reference, ngbxs=ngbxs
+                                )[:, 0]
+                            else:
+                                total_time_ref = ref[var].sel(
+                                    nthreads=nthreads_reference
+                                )[:, :, 0]
+                                total_time_ref = hfuncs.extrapolate_ngbxs_coord(
+                                    total_time_ref, ds.ngbxs
+                                )
+                                total_time_ref = total_time_ref.sel(ngbxs=ngbxs)
                             c.append(ngbxs * nsupers)
                             x.append(nthreads)
                             y.append(
@@ -260,9 +274,6 @@ def plot_weak_scaling_speedup(
                                     total_time[2].values, total_time_ref[3]
                                 )
                             )
-                        except KeyError:
-                            msg = f"warning: skipping buildtype={buildtype} nsupers={nsupers} ngbxs={ngbxs} nthreads={nthreads}"
-                            print(msg)
                         nthreads = nthreads / 2
                         ngbxs = ngbxs / 2
                     llab = None
@@ -288,7 +299,7 @@ def plot_weak_scaling_speedup(
                 ngbxs_start = ngbxs_start / 2
                 nthreads_start = nthreads_max
         ax.set_title(var)
-        ax.set_ylabel("wall clock time /s")
+        ax.set_ylabel("speedup")
     axs[0].legend()
     for ax in axs[:-1]:
         ax.set_xticklabels([])
@@ -319,7 +330,7 @@ def plot_weak_scaling_efficiency(
     cax = axes[0]
     axs = axes[1:]
 
-    fig.suptitle("Weak Scaling: Wall Clock Time")
+    fig.suptitle("Weak Scaling: Efficiency")
     fig.colorbar(
         ScalarMappable(cmap=cmap, norm=norm),
         cax=cax,
@@ -363,9 +374,23 @@ def plot_weak_scaling_efficiency(
                             total_time = ds[var].sel(nthreads=nthreads, ngbxs=ngbxs)[
                                 :, 0
                             ]
-                            total_time_ref = ref[var].sel(
-                                nthreads=nthreads_reference, ngbxs=ngbxs
-                            )[:, 0]
+                        except KeyError:
+                            total_time = None
+                            msg = f"warning: skipping buildtype={buildtype} nsupers={nsupers} ngbxs={ngbxs} nthreads={nthreads}"
+                            print(msg)
+                        if total_time is not None:
+                            if ngbxs in ref.ngbxs:
+                                total_time_ref = ref[var].sel(
+                                    nthreads=nthreads_reference, ngbxs=ngbxs
+                                )[:, 0]
+                            else:
+                                total_time_ref = ref[var].sel(
+                                    nthreads=nthreads_reference
+                                )[:, :, 0]
+                                total_time_ref = hfuncs.extrapolate_ngbxs_coord(
+                                    total_time_ref, ds.ngbxs
+                                )
+                                total_time_ref = total_time_ref.sel(ngbxs=ngbxs)
                             c.append(ngbxs * nsupers)
                             x.append(nthreads)
                             y.append(
@@ -383,9 +408,6 @@ def plot_weak_scaling_efficiency(
                                     total_time[2], total_time_ref[3], nthreads
                                 )
                             )
-                        except KeyError:
-                            msg = f"warning: skipping buildtype={buildtype} nsupers={nsupers} ngbxs={ngbxs} nthreads={nthreads}"
-                            print(msg)
                         nthreads = nthreads / 2
                         ngbxs = ngbxs / 2
                     llab = None
@@ -411,7 +433,7 @@ def plot_weak_scaling_efficiency(
                 ngbxs_start = ngbxs_start / 2
                 nthreads_start = nthreads_max
         ax.set_title(var)
-        ax.set_ylabel("wall clock time /s")
+        ax.set_ylabel("efficiency")
     for ax in axs:
         ax.set_xlim([0, None])
         ax.hlines(

@@ -115,6 +115,9 @@ for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
                 ndim_x = ndim_y = 8
                 assert ngbxs % 64 == 0, "ngbxs > 64 must also be a multiple of 64"
             ndim_z = ngbxs / ndim_x / ndim_y
+            assert (
+                ndim_x * ndim_z * ndim_y == ngbxs
+            ), "product of ndims must equal ngbxs"
             params["zgrid"] = [0, 10000, 10000 / ndim_z]
             params["xgrid"] = [0, 10000, 10000 / ndim_x]
             params["ygrid"] = [0, 10000, 10000 / ndim_y]

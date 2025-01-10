@@ -2,6 +2,33 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v2.1.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/1a7c40bcdde48bc419d7c792d87b3d8c32a70cd3..v2.1.0) - 2025-01-10
+#### Bug Fixes
+- minor fixes to paths, rspan etc. - ([d10d6eb](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/d10d6eb835f18c4c0ce5dde32083b950c01abb25)) - clara.bayley
+- change name of executable and include subdir and linked dirs - ([d5fa639](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/d5fa639be48433cec08d23872fe47cb8b01fa728)) - clara.bayley
+- change name of executable and include subdir - ([83e46e9](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/83e46e924cdb9d35adeb526be6743745f2d9d4c8)) - clara.bayley
+- clearer than entire x,y and zgrid is set up setup script not config - ([42aa014](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/42aa01466b0eb5d219f8d75fbd05a436d7bf1131)) - clara.bayley
+#### Documentation
+- include thermo2d setup in docs - ([aa9a687](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/aa9a687dc84c1f1a448886f0cf5ac621a5a91fd4)) - clara.bayley
+#### Features
+- new scripts to setup constthermo2d example - ([18da24c](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/18da24c618352beb956b23320f7cd8520d32188b)) - clara.bayley
+- new executable and setup based on constthermo2d example - ([6b22b5a](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/6b22b5a37b5c0317c5844ce566e11d2a396bed22)) - clara.bayley
+#### Miscellaneous Chores
+- add to gitignore - ([a81cf2b](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/a81cf2b2f95b684262345b26235b1f20f962712f)) - clara.bayley
+- file renaming - ([ed9d7cb](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/ed9d7cb8b9b51333b729686388890d9757b5624e)) - clara.bayley
+#### Refactoring
+- add thermo2d to choices in python scripts - ([6527ca3](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/6527ca3ce8914fc57e32639769b840b0d6322a40)) - clara.bayley
+- add extra assert to check ndims - ([470d160](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/470d160a891c383cf2714eb425ae4e73d256cf35)) - clara.bayley
+- use alias for more generic script - ([7d7604e](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/7d7604ed2e6aaccd93fbae04a2033bfc86dd57e6)) - clara.bayley
+- setup for nsupers=2048 - ([967da4b](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/967da4bb720670c4ceebcca566d71b0d4b94c623)) - clara.bayley
+- setup for nsupers=128 with more gbxs - ([1c553fa](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/1c553fa47bd9d3d8269fd190ed40d92b994cadf4)) - clara.bayley
+- setup for nsupers=8 - ([deb4e99](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/deb4e995e055720dfc70482ceb87c81984b8c82e)) - clara.bayley
+- run cleo with more time and memory for SLURM jobs - ([d91798f](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/d91798f128d09aa2e620691b3ffd32144c43f41a)) - clara.bayley
+- extrapolate data for scaling plots when ngbxs is not present - ([ffac745](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/ffac7454e03585ca52158bcab3617ffaa185538e)) - clara.bayley
+- modify colourbar normalisation for larger total nsupers in scaling plots - ([1a7c40b](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/1a7c40bcdde48bc419d7c792d87b3d8c32a70cd3)) - clara.bayley
+
+- - -
+
 ## [v2.0.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/ba05be09efa3320c7aacb8e927bfdf07f9f9e160..v2.0.0) - 2025-01-09
 #### Features
 - new file for plotting weak scaling - ([c584642](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/c584642048f5170ba3caa945ddec4fc67d5bc90b)) - clara.bayley

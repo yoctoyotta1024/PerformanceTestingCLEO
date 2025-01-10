@@ -11,7 +11,7 @@ message("PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
 set(CLEOLIBS gridboxes initialise observers runcleo superdrops zarr)
 
 # create primary executable
-set(exec const2d)
+set(exec thermo2d)
 add_executable(${exec} EXCLUDE_FROM_ALL "main_const2d.cpp")
 
 # Add directories and link libraries to target

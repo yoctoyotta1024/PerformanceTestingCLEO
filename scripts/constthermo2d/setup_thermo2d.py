@@ -2,7 +2,7 @@
 Copyright (c) 2024 MPI-M, Clara Bayley
 
 -----  PerformanceTestingCLEO -----
-File: setup_const2d.py
+File: setup_thermo2d.py
 Project: constthermo2d
 Created Date: Thursday 5th December 2024
 Author: Clara Bayley (CB)
@@ -55,21 +55,21 @@ gen_initconds = args.gen_initconds
 
 sys.path.append(str(path2CLEO))  # for imports for editing a config file
 sys.path.append(str(path2src))  # for imports for input files generation
-from constthermo2d import initconds_const2d as initconds
+from constthermo2d import initconds_thermo2d as initconds
 from pySD import editconfigfile
 
 ### ----- create temporary config file for simulation(s) ----- ###
-src_config_filename = path2src / "constthermo2d" / "config_const2d.yaml"
+src_config_filename = path2src / "constthermo2d" / "config_thermo2d.yaml"
 
 ngbxs_nsupers_runs = ssv.get_ngbxs_nsupers_runs()
 ngbxs_nsupers_nthreads = ssv.get_ngbxs_nsupers_nthreads(
     buildtype, ngbxs_nsupers_runs=ngbxs_nsupers_runs
 )
 
-savefigpath = path2builds / "bin" / "const2d"
-sharepath = path2builds / "share" / "const2d"
-binpath = path2builds / buildtype / "bin" / "const2d"
-tmppath = path2builds / buildtype / "tmp" / "const2d"
+savefigpath = path2builds / "bin" / "thermo2d"
+sharepath = path2builds / "share" / "thermo2d"
+binpath = path2builds / buildtype / "bin" / "thermo2d"
+tmppath = path2builds / buildtype / "tmp" / "thermo2d"
 constants_filepath = path2builds / buildtype / "_deps" / "cleo-src" / "libs"
 params = {
     "constants_filename": str(constants_filepath / "cleoconstants.hpp"),

@@ -11,7 +11,8 @@ Example: Collisions0d Performance Test in Serial
 You can build and compile this example from the root of your performance_testing_cleo directory first
 by building and compiling the exectuabel for a build of your choice (serial, openmp, cuda or threads).
 
-E.g. For a serial build;
+E.g. For a serial build of the colls0d example (see also thermo2d):
+
 #. Build and compile:
 
    .. code-block:: console

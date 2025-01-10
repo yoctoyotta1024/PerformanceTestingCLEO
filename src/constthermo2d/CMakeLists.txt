@@ -12,7 +12,7 @@ set(CLEOLIBS gridboxes initialise observers runcleo superdrops zarr)
 
 # create primary executable
 set(exec thermo2d)
-add_executable(${exec} EXCLUDE_FROM_ALL "main_const2d.cpp")
+add_executable(${exec} EXCLUDE_FROM_ALL "main_thermo2d.cpp")
 
 # Add directories and link libraries to target
 target_link_libraries(${exec} PRIVATE cartesiandomain "${CLEOLIBS}")

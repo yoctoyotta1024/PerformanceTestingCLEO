@@ -3,7 +3,7 @@ Copyright (c) 2024 MPI-M, Clara Bayley
 
 
 -----  PerformanceTestingCLEO -----
-File: initconds_const2d.py
+File: initconds_thermo2d.py
 Project: constthermo2d
 Created Date: Thursday 5th December 2024
 Author: Clara Bayley (CB)

@@ -1,5 +1,5 @@
 # ----- CLEO -----
-# File: config_const2d.yaml
+# File: config_thermo2d.yaml
 # Project: config
 # Created Date: Thursday 5th December 2024
 # Author: Clara Bayley (CB)
@@ -16,7 +16,7 @@
 # File Description:
 # Configuration file for 2D domain with condensation/evaporation, collisions and motion using CLEO.
 # Note: The inital superdroplets data read from file "initsupers_filename" can be made with
-# CLEO's pySD module (see Python script "scripts/constthermo2d0d/setup_const2d.py" for usage) and likewise
+# CLEO's pySD module (see Python script "scripts/constthermo2d0d/setup_thermo2d.py" for usage) and likewise
 # for "grid_filename".
 
 ### Initial Conditions Parameters for Python Script ###

@@ -29,6 +29,7 @@ import shared_script_variables as ssv
 
 executable_paths = {
     "colls0d": Path("collisions0d") / "colls0d",
+    "thermo2d": Path("constthermo2d") / "thermo2d",
 }
 
 path2src = (
@@ -47,7 +48,10 @@ parser.add_argument(
     help="Type of build: serial, openmp, cuda or threads",
 )
 parser.add_argument(
-    "executable", type=str, choices=["colls0d"], help="Executable name, e.g. colls0d"
+    "executable",
+    type=str,
+    choices=["colls0d", "thermo2d"],
+    help="Executable name, e.g. colls0d",
 )
 parser.add_argument(
     "profilers",

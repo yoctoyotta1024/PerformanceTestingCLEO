@@ -37,7 +37,10 @@ parser.add_argument(
     help="Type of build: serial, openmp, cuda or threads",
 )
 parser.add_argument(
-    "executable", type=str, choices=["colls0d"], help="Executable name, e.g. colls0d"
+    "executable",
+    type=str,
+    choices=["colls0d", "thermo2d"],
+    help="Executable name, e.g. colls0d",
 )
 parser.add_argument(
     "profiler",

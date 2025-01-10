@@ -54,7 +54,7 @@ gen_initconds = args.gen_initconds
 
 sys.path.append(str(path2CLEO))  # for imports for editing a config file
 sys.path.append(str(path2src))  # for imports for input files generation
-from collisions0d import initconds_colls0d
+from collisions0d import initconds_colls0d as initconds
 from pySD import editconfigfile
 
 ### ----- create temporary config file for simulation(s) ----- ###
@@ -142,9 +142,7 @@ if gen_initconds == "TRUE":
             tmppath, ngbxs, nsupers, nrun=nrun_dummy, nthreads=nthreads_dummy
         )
         shutil.rmtree(get_grid_filename(sharepath, ngbxs), ignore_errors=True)
-        initconds_colls0d.gridbox_boundaries(
-            path2CLEO, config_filename, isfigures=isfigures
-        )
+        initconds.gridbox_boundaries(path2CLEO, config_filename, isfigures=isfigures)
 
         ### ----- write initial superdroplets binary files ----- ###
         for nrun in range(ngbxs_nsupers_runs[(ngbxs, nsupers)]):
@@ -155,7 +153,7 @@ if gen_initconds == "TRUE":
                 get_initsupers_filename(sharepath, ngbxs, nsupers, nrun),
                 ignore_errors=True,
             )
-            initconds_colls0d.initial_superdroplet_conditions(
+            initconds.initial_superdroplet_conditions(
                 path2CLEO, config_filename, isfigures=isfigures
             )
             isfigures = [False, False]  # only plot SD figures once

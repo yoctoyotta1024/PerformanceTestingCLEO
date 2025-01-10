@@ -4,6 +4,7 @@ builds
 bin
 *.dat
 *.png
+*.gif
 
 ##### Documentation Build Artifacts #####
 docs/source/_autosummary

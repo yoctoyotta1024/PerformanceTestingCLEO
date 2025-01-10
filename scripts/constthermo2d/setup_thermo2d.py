@@ -2,8 +2,8 @@
 Copyright (c) 2024 MPI-M, Clara Bayley
 
 -----  PerformanceTestingCLEO -----
-File: setup_colls0d.py
-Project: collisions0d
+File: setup_thermo2d.py
+Project: constthermo2d
 Created Date: Thursday 5th December 2024
 Author: Clara Bayley (CB)
 Additional Contributors:
@@ -15,14 +15,15 @@ License: BSD 3-Clause "New" or "Revised" License
 https://opensource.org/licenses/BSD-3-Clause
 -----
 File Description:
-Script calls src module to generate input files for CLEO 0-D box model
-with volume exponential distribution as in Shima et al. 2009.
-for a given build for nruns of nsupers superdroplets
+Script calls src module to generate input files for CLEO 2-D model
+with constant divergence free flow and thermodynamics for a given build
+for nruns of nsupers superdroplets using nthreads
 """
 
 import argparse
 import sys
 import shutil
+import numpy as np
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent.parent))  # scripts directory
@@ -57,21 +58,21 @@ else:
 
 sys.path.append(str(path2CLEO))  # for imports for editing a config file
 sys.path.append(str(path2src))  # for imports for input files generation
-from collisions0d import initconds_colls0d as initconds
+from constthermo2d import initconds_thermo2d as initconds
 from pySD import editconfigfile
 
 ### ----- create temporary config file for simulation(s) ----- ###
-src_config_filename = path2src / "collisions0d" / "config_colls0d.yaml"
+src_config_filename = path2src / "constthermo2d" / "config_thermo2d.yaml"
 
 ngbxs_nsupers_runs = ssv.get_ngbxs_nsupers_runs()
 ngbxs_nsupers_nthreads = ssv.get_ngbxs_nsupers_nthreads(
     buildtype, ngbxs_nsupers_runs=ngbxs_nsupers_runs
 )
 
-savefigpath = path2builds / "bin" / "colls0d"
-sharepath = path2builds / "share" / "colls0d"
-binpath = path2builds / buildtype / "bin" / "colls0d"
-tmppath = path2builds / buildtype / "tmp" / "colls0d"
+savefigpath = path2builds / "bin" / "thermo2d"
+sharepath = path2builds / "share" / "thermo2d"
+binpath = path2builds / buildtype / "bin" / "thermo2d"
+tmppath = path2builds / buildtype / "tmp" / "thermo2d"
 constants_filepath = path2builds / buildtype / "_deps" / "cleo-src" / "libs"
 params = {
     "constants_filename": str(constants_filepath / "cleoconstants.hpp"),
@@ -86,6 +87,10 @@ def get_grid_filename(sharepath: Path, ngbxs: int):
 
 def get_initsupers_filename(sharepath: Path, ngbxs: int, nsupers: int, nrun: int):
     return sharepath / f"dimlessSDsinit_{ngbxs}_{nsupers}_{nrun}.dat"
+
+
+def get_thermodynamics_filenames(sharepath: Path, ngbxs: int) -> Path:
+    return sharepath / f"dimlessthermo_{ngbxs}.dat"
 
 
 ### --- ensure build, share and bin directories exist --- ###
@@ -112,18 +117,18 @@ for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
 
             params["ngbxs"] = ngbxs
             params["grid_filename"] = str(get_grid_filename(sharepath, ngbxs))
-            if ngbxs < 64:
-                ndim_x = ndim_y = 1
-            else:
-                ndim_x = ndim_y = 8
-                assert ngbxs % 64 == 0, "ngbxs > 64 must also be a multiple of 64"
-            ndim_z = ngbxs / ndim_x / ndim_y
-            assert (
-                ndim_x * ndim_z * ndim_y == ngbxs
-            ), "product of ndims must equal ngbxs"
-            params["zgrid"] = [0, 10000, 10000 / ndim_z]
-            params["xgrid"] = [0, 10000, 10000 / ndim_x]
-            params["ygrid"] = [0, 10000, 10000 / ndim_y]
+            assert np.log2(ngbxs) % 1 == 0.0, "ngbxs must be an integer power of 2"
+            ndim_x = 2 ** int(np.floor(np.log2(ngbxs) / 2))
+            ndim_z = 2 ** int(np.ceil(np.log2(ngbxs) / 2))
+            assert ndim_x * ndim_z == ngbxs, "product of ndims must equal ngbxs"
+            params["zgrid"] = [0, 1500, 1500 / ndim_z]
+            params["xgrid"] = [0, 1500, 1500 / ndim_x]
+
+            thermofiles = get_thermodynamics_filenames(sharepath, ngbxs)
+            params["thermofiles"] = str(thermofiles)
+            for var in ["press", "temp", "qvap", "qcond", "wvel", "uvel"]:
+                var_filename = f"{thermofiles.stem}_{var}{thermofiles.suffix}"
+                params[var] = str(thermofiles.parent / var_filename)
 
             params["maxnsupers"] = nsupers * ngbxs
             params["initsupers_filename"] = str(
@@ -149,6 +154,13 @@ if gen_initconds == "TRUE":
         )
         shutil.rmtree(get_grid_filename(sharepath, ngbxs), ignore_errors=True)
         initconds.gridbox_boundaries(path2CLEO, config_filename, isfigures=isfigures)
+
+        thermofiles = get_thermodynamics_filenames(sharepath, ngbxs)
+        all_thermofiles = thermofiles.parent / Path(
+            f"{thermofiles.stem}*{thermofiles.suffix}"
+        )
+        shutil.rmtree(all_thermofiles, ignore_errors=True)
+        initconds.thermodynamic_conditions(path2CLEO, config_filename, isfigures)
 
         ### ----- write initial superdroplets binary files ----- ###
         for nrun in range(ngbxs_nsupers_runs[(ngbxs, nsupers)]):

@@ -40,7 +40,7 @@ parser.add_argument(
 parser.add_argument(
     "--executable",
     type=str,
-    choices=["colls0d"],
+    choices=["colls0d", "thermo2d"],
     help="Executable name, e.g. colls0d",
     default="colls0d",
 )

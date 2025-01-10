@@ -25,9 +25,9 @@ python_initconds:
     savefigpath: XXX
     sharepath: XXX
   grid:
-    zgrid: [0, 10000, X]                                      # [max, min, spacing] of gridbox boundaries in z direction
-    xgrid: [0, 10000, X]                                      # [max, min, spacing] of gridbox boundaries in x direction
-    ygrid: [0, 10000, X]                                      # [max, min, spacing] of gridbox boundaries in y direction
+    zgrid: X                                                  # [max, min, spacing] of gridbox boundaries in z direction
+    xgrid: X                                                  # [max, min, spacing] of gridbox boundaries in x direction
+    ygrid: X                                                  # [max, min, spacing] of gridbox boundaries in y direction
   supers:
     dryradius: 1.0e-16                                        # all SDs have negligible solute [m]
     rspan: [1.0e-6, 7.5e-5]                                   # max and min range of radii to sample [m]

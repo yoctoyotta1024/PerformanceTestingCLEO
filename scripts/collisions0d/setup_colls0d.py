@@ -136,7 +136,7 @@ for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
             shutil.copy(Path(src_config_filename), config_filename)
             editconfigfile.edit_config_params(config_filename, params)
 
-if gen_initconds == "TRUE":
+if gen_initconds:
     for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
         isfigures = [True, True]
         nthreads_dummy = ngbxs_nsupers_nthreads[(ngbxs, nsupers)][

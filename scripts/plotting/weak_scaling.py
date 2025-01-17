@@ -47,7 +47,7 @@ parser.add_argument(
     type=str,
     choices=["colls0d", "thermo2d"],
     help="Executable name, e.g. colls0d",
-    default="colls0d",
+    default="thermo2d",
 )
 args, unknown = parser.parse_known_args()
 path2builds = args.path2builds
@@ -60,7 +60,7 @@ nthreads_reference = 1
 
 ngbxs_nsupers_runs = ssv.get_ngbxs_nsupers_runs()
 
-nsupers_per_gbx = [128]
+nsupers_per_gbx = [2048]
 
 lstyles = hfuncs.buildtype_lstyles
 markers = hfuncs.buildtype_markers

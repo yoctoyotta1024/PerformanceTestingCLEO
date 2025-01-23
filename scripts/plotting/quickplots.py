@@ -52,7 +52,7 @@ executable = args.executable
 
 buildtypes = ["serial", "openmp", "cuda"]
 
-nsupers_per_gbx = [2048]
+nsupers_per_gbx = [128]
 
 lstyles = hfuncs.buildtype_lstyles
 markers = hfuncs.buildtype_markers

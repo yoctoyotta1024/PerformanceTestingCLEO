@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v2.1.1](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/100eeb93c9d543fb3553cad2f3b622a2d2d19a4f..v2.1.1) - 2025-02-12
+#### Bug Fixes
+- fix boolean and example in docs - ([100eeb9](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/100eeb93c9d543fb3553cad2f3b622a2d2d19a4f)) - clara.bayley
+#### Refactoring
+- setup for nsupers=128 thermo2d exec - ([331c7c5](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/331c7c519ba908a62a3d054ca9180f84251015f5)) - clara.bayley
+- setup for nsupers=2048 thermo2d exec - ([a77f1bf](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/a77f1bf67ef576551e091f883306aaa1a6aec79b)) - clara.bayley
+- update CLEO version to v0.33.0 - ([32af686](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/32af6869724538af6d606fb0757f5990bd540ab0)) - clara.bayley
+
+- - -
+
 ## [v2.1.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/1a7c40bcdde48bc419d7c792d87b3d8c32a70cd3..v2.1.0) - 2025-01-10
 #### Bug Fixes
 - minor fixes to paths, rspan etc. - ([d10d6eb](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/d10d6eb835f18c4c0ce5dde32083b950c01abb25)) - clara.bayley

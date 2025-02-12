@@ -139,7 +139,3 @@ def get_runsensemblestats_dataset_name(
             / f"ngbxs{ngbxs}_nsupers{nsupers}"
             / f"kp_{profiler}_runsensemblestats.zarr"
         )
-
-
-def get_grand_dataset_name(binpath: Path, nsupers: int, profiler: str) -> Path:
-    return binpath / f"kp_{profiler}_ngbxsensemble_nsupers{nsupers}.zarr"

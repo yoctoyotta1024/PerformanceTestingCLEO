@@ -22,11 +22,16 @@ type into mean over nruns for each build in one "grand" dataset.
 import argparse
 import os
 import glob
+import sys
 import xarray as xr
 from pathlib import Path
 from typing import Optional
 
 import shared_script_variables as ssv
+
+path2src = Path(__file__).resolve().parent.parent / "src"
+sys.path.append(str(path2src))  # for helperfuncs module
+from plotting import helperfuncs as hfuncs
 
 parser = argparse.ArgumentParser()
 parser.add_argument("path2builds", type=Path, help="Absolute path to builds")
@@ -62,14 +67,16 @@ buildtype = args.buildtype
 executable = args.executable
 profiler = args.profiler
 do_write_runs_datasets = True
-do_write_grand_dataset = True
+do_write_grand_gbxs_dataset = False
+do_write_grand_supers_dataset = True
 if args.allow_overwrite == "TRUE":
     allow_overwrite = True
 else:
     allow_overwrite = False
 binpath = path2build / "bin" / executable
 
-nsupers_grand_datasets = [128]
+nsupers_grand_gbxs_datasets = []
+ngbxs_grand_supers_datasets = [1]
 
 ngbxs_nsupers_runs = ssv.get_ngbxs_nsupers_runs()
 ngbxs_nsupers_nthreads = ssv.get_ngbxs_nsupers_nthreads(
@@ -224,8 +231,8 @@ if do_write_runs_datasets:
 # ------------------------------------------------------ #
 
 # -------- write ensemble of ngbxs datasets ---------- #
-if do_write_grand_dataset:
-    for nsupers_dataset in nsupers_grand_datasets:
+if do_write_grand_gbxs_dataset:
+    for nsupers_dataset in nsupers_grand_gbxs_datasets:
         grand_ds = []
         ngbxs_values = []
         for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
@@ -288,7 +295,81 @@ if do_write_grand_dataset:
             del_attrs=["ngbxs"],
         )
         if grand_ds is not None:
-            filename = ssv.get_grand_dataset_name(binpath, nsupers_dataset, profiler)
+            filename = hfuncs.get_grand_dataset_name(
+                binpath, profiler, "gbxs", nsupers_dataset
+            )
+            print(grand_ds)
+            write_zarr_dataset(grand_ds, filename, allow_overwrite)
+# ------------------------------------------------------ #
+
+# -------- write ensemble of superdrops per gridbox datasets ---------- #
+if do_write_grand_supers_dataset:
+    for ngbxs_dataset in ngbxs_grand_supers_datasets:
+        grand_ds = []
+        nsupers_values = []
+        for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
+            nthreads_ds = []
+            nthreads_values = []
+            for nthreads in ngbxs_nsupers_nthreads[(ngbxs, nsupers)]:
+                if ngbxs == ngbxs_dataset:
+                    filename = ssv.get_runsensemblestats_dataset_name(
+                        binpath, ngbxs_dataset, nsupers, profiler, nthreads=nthreads
+                    )
+                    try:
+                        runs_ds = xr.open_zarr(filename)
+                        stats_ds = statistics_of_ensemble_over_runs_dataset(runs_ds)
+                        nthreads_values.append(nthreads)
+                        nthreads_ds.append(stats_ds)
+                    except FileNotFoundError:
+                        msg = (
+                            f"Warning: No data found for nsupers={nsupers},"
+                            + f" nthreads={nthreads} member of {filename.parent.parent}"
+                            + f" ngbxs={ngbxs_dataset} grand dataset"
+                        )
+                        print(msg)
+                else:
+                    msg = f"skipping nsupers={nsupers} nthreads={nthreads} ngbxs={ngbxs}, not member of this grand dataset"
+                    print(msg)
+
+            og_filenames = str(
+                filename.parent.parent
+                / f"ngbxs{ngbxs_dataset}_nsupers{nsupers}"
+                / "ntheads*"
+                / filename.name
+            )
+            nthreads_ds = ensemble_grand_dataset_over_coord(
+                nthreads_ds,
+                "nthreads",
+                nthreads_values,
+                profiler,
+                og_filenames,
+                buildtype,
+                match_attrs={"nsupers": nsupers, "ngbxs": ngbxs_dataset},
+            )
+            if nthreads_ds is not None:
+                nsupers_values.append(nsupers)
+                grand_ds.append(nthreads_ds)
+
+        og_filenames = str(
+            filename.parent.parent
+            / f"ngbxs{ngbxs_dataset}_nsupers*"
+            / "ntheads*"
+            / filename.name
+        )
+        grand_ds = ensemble_grand_dataset_over_coord(
+            grand_ds,
+            "nsupers",
+            nsupers_values,
+            profiler,
+            og_filenames,
+            buildtype,
+            match_attrs={"ngbxs": ngbxs_dataset},
+            del_attrs=["nsupers"],
+        )
+        if grand_ds is not None:
+            filename = hfuncs.get_grand_dataset_name(
+                binpath, profiler, "supers", ngbxs_dataset
+            )
             print(grand_ds)
             write_zarr_dataset(grand_ds, filename, allow_overwrite)
 # ------------------------------------------------------ #

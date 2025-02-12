@@ -32,36 +32,38 @@ buildtype_lstyles = {
 buildtype_markers = {"serial": "o", "openmp": "s", "cuda": "x", "threads": "d"}
 
 
+def get_grand_dataset_name(
+    binpath: Path, profiler: str, ensembletype: str, n: int
+) -> Path:
+    if ensembletype == "gbxs":
+        return binpath / f"kp_{profiler}_ngbxsensemble_nsupers{n}.zarr"
+    elif ensembletype == "supers":
+        return binpath / f"kp_{profiler}_ngbxs{n}_nsupersensemble.zarr"
+    else:
+        raise ValueError("unknown ensemble type, please choose 'gbxs' or 'supers'")
+
+
 def open_kerneltimer_dataset(
     path2builds: Path,
     buildtype: str,
     executable: str,
-    nsupers: int,
+    ensembletype: str,
+    n: int,
 ):
     import xarray as xr
 
-    path2ds = (
-        path2builds
-        / buildtype
-        / "bin"
-        / executable
-        / f"kp_kerneltimer_ngbxsensemble_nsupers{nsupers}.zarr"
-    )
+    binpath = path2builds / buildtype / "bin" / executable
+    path2ds = get_grand_dataset_name(binpath, "kerneltimer", ensembletype, n)
     return xr.open_zarr(path2ds)
 
 
 def open_spacetimestack_dataset(
-    path2builds: Path, buildtype: str, executable: str, nsupers: int
+    path2builds: Path, buildtype: str, executable: str, ensembletype: str, n: int
 ):
     import xarray as xr
 
-    path2ds = (
-        path2builds
-        / buildtype
-        / "bin"
-        / executable
-        / f"kp_spacetimestack_ngbxsensemble_nsupers{nsupers}.zarr"
-    )
+    binpath = path2builds / buildtype / "bin" / executable
+    path2ds = get_grand_dataset_name(binpath, "spacetimestack", ensembletype, n)
     return xr.open_zarr(path2ds)
 
 

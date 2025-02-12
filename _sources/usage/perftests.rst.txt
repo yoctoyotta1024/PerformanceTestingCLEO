@@ -36,11 +36,12 @@ E.g. For a serial build of the colls0d example (see also thermo2d):
 
    .. code-block:: console
 
-     ./scripts/constthermo2d/setup_thermo2d.sh \
+     $ ./scripts/constthermo2d/setup_thermo2d.sh \
        /work/bm1183/m300950/bin/envs/perftests/bin/python \
        /home/m/m300950/CLEO \
        /home/m/m300950/performance_testing_cleo \
-       /work/bm1183/m300950/performance_testing_cleo/builds openmp
+       /work/bm1183/m300950/performance_testing_cleo/builds \
+       serial openmp cuda threads
 
 #. a) Then you could perform one normal run with e.g.
 ``./builds/serial/collisions0d/colls0d ./builds/serial/tmp/colls0d/config_8_0.yaml``

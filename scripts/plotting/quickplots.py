@@ -44,26 +44,23 @@ parser.add_argument(
     type=str,
     choices=["colls0d", "thermo2d"],
     help="Executable name, e.g. colls0d",
-    default="thermo2d",
+    default="colls0d",
 )
 args, unknown = parser.parse_known_args()
 path2builds = args.path2builds
 executable = args.executable
 
-buildtypes = ["serial", "openmp", "cuda"]
+buildtypes = ["serial", "openmp", "cuda", "threads"]
 
-nsupers_per_gbx = [128]
+ensembletype = "supers"
+fixed_ensemb_vals = [1]
 
 lstyles = hfuncs.buildtype_lstyles
 markers = hfuncs.buildtype_markers
 
 savedir = Path("/home/m/m300950/performance_testing_cleo/plots/")
 
-skip = {
-    1: 3,
-    16: 1,
-    128: 0,
-}
+skip = 1
 
 
 # %% funtion definitions for generic helper functions
@@ -88,13 +85,21 @@ def line_of_best_fit(
 
 
 # %% funtion definitions for kernel timer plots
+def domain_totnsupers(data):
+    try:
+        x = data.attrs["nsupers"] * data.ngbxs
+    except KeyError:
+        x = data.attrs["ngbxs"] * data.nsupers
+    return x
+
+
 def plot_overall_wallclock_scaling(datasets: dict):
     fig, axs = hfuncs.subplots(figsize=(12, 8), logx=True, logy=True)
     c1 = "k"
     a = 0
     for lab, data in datasets.items():
         for nthreads in data.nthreads:
-            x = data.attrs["nsupers"] * data.ngbxs
+            x = domain_totnsupers(data)
             summary = data.summary.sel(nthreads=nthreads)
             y = summary[:, 0, 0]
             lq, uq = summary[:, 2, 0], summary[:, 3, 0]
@@ -116,7 +121,7 @@ def plot_overall_wallclock_scaling(datasets: dict):
             )
 
             # c2 = "purple"
-            # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip[nsupers], logaxs=True)
+            # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip, logaxs=True)
             # axs.plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
 
             a += 1
@@ -136,7 +141,7 @@ def plot_simple_wallclock_scaling(datasets: dict):
     a = 0
     for lab, data in datasets.items():
         for nthreads in data.nthreads:
-            x = data.attrs["nsupers"] * data.ngbxs
+            x = domain_totnsupers(data)
             summary = data.summary.sel(nthreads=nthreads)
             y = summary[:, 0, 0]
             lq, uq = summary[:, 2, 0], summary[:, 3, 0]
@@ -159,7 +164,7 @@ def plot_simple_wallclock_scaling(datasets: dict):
             )
 
             # c2 = "purple"
-            # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip[nsupers], logaxs=True)
+            # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip, logaxs=True)
             # axs[0].plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
 
             a += 1
@@ -167,7 +172,7 @@ def plot_simple_wallclock_scaling(datasets: dict):
 
     for lab, data in datasets.items():
         for nthreads in data.nthreads:
-            x = data.attrs["nsupers"] * data.ngbxs
+            x = domain_totnsupers(data)
             runcleo = data.runcleo.sel(nthreads=nthreads)
             y = runcleo[:, 0, 0]
             lq, uq = runcleo[:, 2, 0], runcleo[:, 3, 0]
@@ -190,7 +195,7 @@ def plot_simple_wallclock_scaling(datasets: dict):
             )
 
             # c2 = "purple"
-            # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip[nsupers], logaxs=True)
+            # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip, logaxs=True)
             # axs[1].plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
 
             a += 1
@@ -198,7 +203,7 @@ def plot_simple_wallclock_scaling(datasets: dict):
 
     for lab, data in datasets.items():
         for nthreads in data.nthreads:
-            x = data.attrs["nsupers"] * data.ngbxs
+            x = domain_totnsupers(data)
             timestep = data.timestep.sel(nthreads=nthreads)
             y = timestep[:, 0, 0]
             lq, uq = timestep[:, 2, 0], timestep[:, 3, 0]
@@ -221,7 +226,7 @@ def plot_simple_wallclock_scaling(datasets: dict):
             )
 
             # c2 = "purple"
-            # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip[nsupers], logaxs=True)
+            # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip, logaxs=True)
             # axs[2].plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
 
             a += 1
@@ -241,7 +246,7 @@ def plot_simple_wallclock_timeinkernels_scaling(datasets: dict):
     c1 = "k"
     for lab, data in datasets.items():
         for nthreads in data.nthreads:
-            x = data.attrs["nsupers"] * data.ngbxs
+            x = domain_totnsupers(data)
             summary = data.summary.sel(nthreads=nthreads)
             y = summary[:, 0, 3]
             lq, uq = summary[:, 2, 3], summary[:, 3, 3]
@@ -265,7 +270,7 @@ def plot_simple_wallclock_timeinkernels_scaling(datasets: dict):
     a = 0
     for lab, data in datasets.items():
         for nthreads in data.nthreads:
-            x = data.attrs["nsupers"] * data.ngbxs
+            x = domain_totnsupers(data)
             summary = data.summary.sel(nthreads=nthreads)
             y = summary[:, 0, 1]
             lq, uq = summary[:, 2, 1], summary[:, 3, 1]
@@ -291,7 +296,7 @@ def plot_simple_wallclock_timeinkernels_scaling(datasets: dict):
     a = 0
     for lab, data in datasets.items():
         for nthreads in data.nthreads:
-            x = data.attrs["nsupers"] * data.ngbxs
+            x = domain_totnsupers(data)
             summary = data.summary.sel(nthreads=nthreads)
             y = summary[:, 0, 2]
             lq, uq = summary[:, 2, 2], summary[:, 3, 2]
@@ -320,7 +325,7 @@ def plot_simple_wallclock_timeinkernels_scaling(datasets: dict):
     c1 = "k"
     for lab, data in datasets.items():
         for nthreads in data.nthreads:
-            x = data.attrs["nsupers"] * data.ngbxs
+            x = domain_totnsupers(data)
             summary = data.summary.sel(nthreads=nthreads)
             y = summary[:, 0, 4]
             lq, uq = summary[:, 2, 4], summary[:, 3, 4]
@@ -357,7 +362,7 @@ def plot_wallclock_decomposition_scaling(datasets: dict):
         a = 0
         for lab, data in datasets.items():
             for nthreads in data.nthreads:
-                x = data.attrs["nsupers"] * data.ngbxs
+                x = domain_totnsupers(data)
                 datavar = data[var].sel(nthreads=nthreads)
                 y = datavar[:, 0, 0]
                 lq, uq = datavar[:, 2, 0], datavar[:, 3, 0]
@@ -385,7 +390,7 @@ def plot_wallclock_decomposition_scaling(datasets: dict):
         a = 0
         for lab, data in datasets.items():
             for nthreads in data.nthreads:
-                x = data.attrs["nsupers"] * data.ngbxs
+                x = domain_totnsupers(data)
                 datavar = data[var].sel(nthreads=nthreads)
                 y = datavar[:, 0, 0]
                 lq, uq = datavar[:, 2, 0], datavar[:, 3, 0]
@@ -418,7 +423,7 @@ def plot_wallclock_decomposition_scaling(datasets: dict):
         a = 0
         for lab, data in datasets.items():
             for nthreads in data.nthreads:
-                x = data.attrs["nsupers"] * data.ngbxs
+                x = domain_totnsupers(data)
                 datavar = data[var].sel(nthreads=nthreads)
                 y = datavar[:, 0, 0]
                 lq, uq = datavar[:, 2, 0], datavar[:, 3, 0]
@@ -451,7 +456,7 @@ def plot_wallclock_decomposition_scaling(datasets: dict):
 # %% funtion definitions for memory consumption plots
 def plot_simple_memory_scaling(datasets: xr.Dataset):
     fig, axs = hfuncs.subplots(
-        figsize=(12, 15), nrows=2, ncols=1, sharex=True, logx=True
+        figsize=(12, 15), nrows=2, ncols=1, sharex=True, logx=False, logy=False
     )
 
     c1 = "k"
@@ -460,7 +465,7 @@ def plot_simple_memory_scaling(datasets: xr.Dataset):
             yarr = (
                 data.host_high_water_memory_consumption.sel(nthreads=nthreads) / 1000
             )  # [MB]
-            x = data.attrs["nsupers"] * data.ngbxs
+            x = domain_totnsupers(data)
             y = yarr[:, 0]
             lq, uq = yarr[:, 2], yarr[:, 3]
 
@@ -485,7 +490,7 @@ def plot_simple_memory_scaling(datasets: xr.Dataset):
         a = 0
         for lab, data in datasets.items():
             for nthreads in data.nthreads:
-                x = data.attrs["nsupers"] * data.ngbxs
+                x = domain_totnsupers(data)
                 yarr = data.max_memory_allocation.sel(nthreads=nthreads) / 1000  # [MB]
                 y = yarr[:, 0, i]
                 llab = None
@@ -512,43 +517,43 @@ def plot_simple_memory_scaling(datasets: xr.Dataset):
 
 
 # %% make kernel timer plots for each nsupers
-for nsupers in nsupers_per_gbx:
+for n in fixed_ensemb_vals:
     # load data
     datasets_time = {}
     for buildtype in buildtypes:
         datasets_time[buildtype] = hfuncs.open_kerneltimer_dataset(
-            path2builds, buildtype, executable, nsupers
+            path2builds, buildtype, executable, ensembletype, n
         )
 
     # %% plot data
     fig, axs = plot_overall_wallclock_scaling(datasets_time)
-    savename = savedir / f"total_wallclock_nsupers{nsupers}.png"
+    savename = savedir / f"total_wallclock_{ensembletype}ensemble_n{n}.png"
     hfuncs.savefig(savename)
     # %%
     fig, axs = plot_simple_wallclock_scaling(datasets_time)
-    savename = savedir / f"simple_wallclock_nsupers{nsupers}.png"
+    savename = savedir / f"simple_wallclock_{ensembletype}ensemble_n{n}.png"
     hfuncs.savefig(savename)
     # %%
     fig, axs = plot_simple_wallclock_timeinkernels_scaling(datasets_time)
-    savename = savedir / f"wallclock_inkernels_nsupers{nsupers}.png"
+    savename = savedir / f"wallclock_inkernels_{ensembletype}ensemble_n{n}.png"
     hfuncs.savefig(savename)
     # %%
     fig, axs = plot_wallclock_decomposition_scaling(datasets_time)
-    savename = savedir / f"wallclock_decomposition_nsupers{nsupers}.png"
+    savename = savedir / f"wallclock_decomposition_{ensembletype}ensemble_n{n}.png"
     hfuncs.savefig(savename)
 
 # %% make spacetimestack plots for each nsupers
-for nsupers in nsupers_per_gbx:
+for n in fixed_ensemb_vals:
     # load data
     datasets_mem = {}
     for buildtype in buildtypes:
         datasets_mem[buildtype] = hfuncs.open_spacetimestack_dataset(
-            path2builds, buildtype, executable, nsupers
+            path2builds, buildtype, executable, ensembletype, n
         )
 
     # %% plot data
     fig, axs = plot_simple_memory_scaling(datasets_mem)
-    savename = savedir / f"memory_consumption_nsupers{nsupers}.png"
+    savename = savedir / f"memory_consumption_{ensembletype}ensemble_n{n}.png"
     hfuncs.savefig(savename)
 
 # %%

@@ -144,21 +144,38 @@ def extrapolate_ngbxs_coord(data, new_ngbxs):
     return extrapolated
 
 
+def extrapolate_nsupers_coord(data, new_nsupers):
+    extrapolated = data.interp(
+        nsupers=new_nsupers, kwargs={"fill_value": "extrapolate"}
+    )
+    return extrapolated
+
+
 def calculate_speedup(
     time: xr.DataArray,
     time_reference: xr.DataArray,
     extrapolate: Optional[bool] = False,
+    coord: Optional[str] = None,
 ):
     import numpy as np
 
     if extrapolate:
         if time.shape != time_reference.shape or np.any(
-            time.coords["ngbxs"].values != time_reference.coords["ngbxs"].values
+            time.coords[coord].values != time_reference.coords[coord].values
         ):
             print("warning: speedup calculation extrapolating reference")
-            time_reference = extrapolate_ngbxs_coord(
-                time_reference, time.coords["ngbxs"]
-            )
+            if coord == "ngbxs":
+                time_reference = extrapolate_ngbxs_coord(
+                    time_reference, time.coords["ngbxs"]
+                )
+            elif coord == "nsupers":
+                time_reference = extrapolate_nsupers_coord(
+                    time_reference, time.coords["nsupers"]
+                )
+            else:
+                raise ValueError(
+                    f"No extraploation function provided for coord={coord}"
+                )
 
     return time_reference / time
 
@@ -168,6 +185,9 @@ def calculate_efficiency(
     time_reference: xr.DataArray,
     num_processing_units: dict,
     extrapolate: Optional[bool] = False,
+    coord: Optional[str] = None,
 ):
-    speedup = calculate_speedup(time, time_reference, extrapolate=extrapolate)
+    speedup = calculate_speedup(
+        time, time_reference, extrapolate=extrapolate, coord=coord
+    )
     return speedup / num_processing_units

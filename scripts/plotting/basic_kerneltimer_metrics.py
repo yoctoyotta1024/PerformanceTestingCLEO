@@ -42,7 +42,7 @@ parser.add_argument(
     type=str,
     choices=["colls0d", "thermo2d"],
     help="Executable name, e.g. colls0d",
-    default="colls0d",
+    default="thermo2d",
 )
 parser.add_argument(
     "--buildtype",
@@ -56,7 +56,7 @@ args, unknown = parser.parse_known_args()
 buildtype = args.buildtype
 buildtype_references = "serial"
 nthreads_reference = 1
-nsupers_per_gbx = [8, 128]
+nsupers_per_gbx = [128]
 
 lstyles = hfuncs.buildtype_lstyles
 markers = hfuncs.buildtype_markers

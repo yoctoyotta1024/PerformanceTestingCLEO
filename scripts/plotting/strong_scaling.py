@@ -47,7 +47,7 @@ parser.add_argument(
     type=str,
     choices=["colls0d", "thermo2d"],
     help="Executable name, e.g. colls0d",
-    default="colls0d",
+    default="thermo2d",
 )
 args, unknown = parser.parse_known_args()
 path2builds = args.path2builds

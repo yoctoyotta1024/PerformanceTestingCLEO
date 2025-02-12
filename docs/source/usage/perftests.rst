@@ -71,7 +71,7 @@ E.g. For a serial build of the colls0d example (see also thermo2d):
       /home/m/m300950/performance_testing_cleo \
       /work/bm1183/m300950/performance_testing_cleo/builds \
       colls0d \
-      kerneltimer.spacetimestack \
+      kerneltimer \
       FALSE \
       serial openmp cuda threads
 

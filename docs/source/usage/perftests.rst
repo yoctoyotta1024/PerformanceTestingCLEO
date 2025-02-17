@@ -21,6 +21,8 @@ E.g. For a serial build of the colls0d example (see also thermo2d):
      $ ./scripts/bash/builds.sh ./src /work/bm1183/m300950/performance_testing_cleo/builds serial openmp cuda threads
      $ ./scripts/bash/compiles.sh /work/bm1183/m300950/performance_testing_cleo/builds colls0d serial openmp cuda threads
 
+  Note that you might want to change the team_size in the KokkosCleoSettings namespace before compilation.
+
 #. Setup the example:
 
    .. code-block:: console

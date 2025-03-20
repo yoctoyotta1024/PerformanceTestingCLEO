@@ -9,7 +9,7 @@ in a build directory of your choice.
 Example: Collisions0d Performance Test in Serial
 ------------------------------------------------
 You can build and compile this example from the root of your performance_testing_cleo directory first
-by building and compiling the exectuabel for a build of your choice (serial, openmp, cuda or threads).
+by building and compiling the exectuable for a build of your choice (serial, openmp, cuda or threads).
 
 E.g. For a serial build of the colls0d example (see also cond0d, motion2d and thermo3d):
 
@@ -68,9 +68,9 @@ E.g. For a serial build of the colls0d example (see also cond0d, motion2d and th
        serial openmp cuda threads
 
 #. a) Then you could perform one normal run with e.g.
-``./builds/serial/collisions0d/colls0d ./builds/serial/tmp/colls0d/config_8_0.yaml``
+``./builds/serial/collisions0d/colls0d ./builds/serial/tmp/colls0d/config_1_128_1_0.yaml``
 
-#. b) Or e.g. run the example with the Kokkos kernel timer performance tool:
+#. b) Or e.g. run the example with Kokkos performance tool(s):
 
    .. code-block:: console
 

@@ -29,6 +29,7 @@ import shared_script_variables as ssv
 
 executable_paths = {
     "colls0d": Path("collisions0d") / "colls0d",
+    "cond0d": Path("condensation0d") / "cond0d",
     "thermo3d": Path("constthermo3d") / "thermo3d",
 }
 
@@ -50,7 +51,7 @@ parser.add_argument(
 parser.add_argument(
     "executable",
     type=str,
-    choices=["colls0d", "thermo3d"],
+    choices=["colls0d", "cond0d", "thermo3d"],
     help="Executable name, e.g. colls0d",
 )
 parser.add_argument(

@@ -2,6 +2,24 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v2.1.2](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/0010d11e54d93d0d8bf0d8b282d53b5056d2e9a5..v2.1.2) - 2025-03-20
+#### Bug Fixes
+- make main programs compatible with v.36.0 of CLEO - ([566fca8](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/566fca80013451c7ceabe0fa465edbaab0560089)) - clara.bayley
+- fix example for how to use bash script - ([eae1e65](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/eae1e65f77be97925277f242edf86010581d6d5c)) - clara.bayley
+#### Documentation
+- add note on team_size variable - ([c87fb5a](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/c87fb5a8ab6ac5a9342bdb3583902b7adb1b1cd5)) - clara.bayley
+#### Miscellaneous Chores
+- update CLEO version - ([c0b0b60](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/c0b0b60b2ce9458add45aa4de0a2948638bbce6f)) - clara.bayley
+- update CLEO version - ([a048795](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/a04879556e206a4e0f5f784eed4ad304b5d8c347)) - clara.bayley
+- update CLEO version - ([0010d11](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/0010d11e54d93d0d8bf0d8b282d53b5056d2e9a5)) - clara.bayley
+#### Refactoring
+- colour lines in quickplot based on increasing nthreads - ([d63dc00](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/d63dc00e7171467f02b155ad8d63dcc385089143)) - clara.bayley
+- colls0d testing superdrops scaling setup - ([7bb3dcd](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/7bb3dcdc562b00b8ef69437d9c65ac11989978a3)) - clara.bayley
+- make plots compatible with supers ensemble datasets - ([d9fe965](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/d9fe96517e3a341d145682c4f67c68b0c78a000b)) - clara.bayley
+- allow creation of grand datasets with constant ngbxs and ensemble of supers (per gridbox) - ([a4ef860](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/a4ef860c4890cb204a31b194a25e81f7d65eb9e5)) - clara.bayley
+
+- - -
+
 ## [v2.1.1](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/100eeb93c9d543fb3553cad2f3b622a2d2d19a4f..v2.1.1) - 2025-02-12
 #### Bug Fixes
 - fix boolean and example in docs - ([100eeb9](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/100eeb93c9d543fb3553cad2f3b622a2d2d19a4f)) - clara.bayley

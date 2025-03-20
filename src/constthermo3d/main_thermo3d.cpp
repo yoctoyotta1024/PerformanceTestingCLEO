@@ -3,8 +3,8 @@
  *
  *
  * -----  PerformanceTestingCLEO -----
- * File: main_thermo2d.cpp
- * Project: constthermo2d
+ * File: main_thermo3d.cpp
+ * Project: constthermo3d
  * Created Date: Friday 21st June 2024
  * Author: Clara Bayley (CB)
  * Additional Contributors:

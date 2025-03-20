@@ -3,8 +3,8 @@ Copyright (c) 2024 MPI-M, Clara Bayley
 
 
 -----  PerformanceTestingCLEO -----
-File: initconds_thermo2d.py
-Project: constthermo2d
+File: initconds_thermo3d.py
+Project: constthermo3d
 Created Date: Thursday 5th December 2024
 Author: Clara Bayley (CB)
 Additional Contributors:
@@ -53,7 +53,7 @@ def gridbox_boundaries(path2CLEO, config_filename, isfigures=[False, False]):
     ### --- settings for 0-D Model gridbox boundaries --- ###
     zgrid = pyconfig["grid"]["zgrid"]
     xgrid = pyconfig["grid"]["xgrid"]
-    ygrid = [0, 100, 100]  # [max, min, spacing]
+    ygrid = pyconfig["grid"]["ygrid"]
     ### ---------------------------------------------------------------- ###
 
     ### -------------------- INPUT FILES GENERATION -------------------- ###
@@ -119,7 +119,7 @@ def initial_superdroplet_conditions(
     xiprobdist = probdists.MinXiDistrib(xiprobdist, xi_min)
     coord3gen = crdgens.SampleCoordGen(True)
     coord1gen = crdgens.SampleCoordGen(True)
-    coord2gen = None
+    coord2gen = crdgens.SampleCoordGen(True)
     initattrsgen = attrsgen.AttrsGenerator(
         radiigen, dryradiigen, xiprobdist, coord3gen, coord1gen, coord2gen
     )
@@ -164,7 +164,7 @@ def thermodynamic_conditions(path2CLEO, config_filename, isfigures=[False, False
     savelabel = f"_{ngbxs}"
 
     # thermodynamics generator
-    VVEL = None
+    VVEL = 0.0
     thermodyngen = thermogen.ConstDryHydrostaticAdiabat(
         config_filename,
         constants_filename,

@@ -1,5 +1,5 @@
 # ----- CLEO -----
-# File: config_thermo2d.yaml
+# File: config_thermo3d.yaml
 # Project: config
 # Created Date: Thursday 5th December 2024
 # Author: Clara Bayley (CB)
@@ -16,7 +16,7 @@
 # File Description:
 # Configuration file for 2D domain with condensation/evaporation, collisions and motion using CLEO.
 # Note: The inital superdroplets data read from file "initsupers_filename" can be made with
-# CLEO's pySD module (see Python script "scripts/constthermo2d0d/setup_thermo2d.py" for usage) and likewise
+# CLEO's pySD module (see Python script "scripts/constthermo3d0d/setup_thermo3d.py" for usage) and likewise
 # for "grid_filename".
 
 ### Initial Conditions Parameters for Python Script ###
@@ -27,6 +27,7 @@ python_initconds:
   grid:
     zgrid: [0, 1500, X]                                      # [max, min, spacing] of gridbox boundaries in z direction
     xgrid: [0, 1500, X]                                      # [max, min, spacing] of gridbox boundaries in x direction
+    ygrid: [0, 200, X]                                       # [max, min, spacing] of gridbox boundaries in y direction
   supers:
     dryradius_sf: 1.0                                         # dry radius = radius * dry adius_sf
     rspan: [5.0e-9, 1.0e-6]                                   # max and min range of radii to sample [m]
@@ -55,7 +56,7 @@ kokkos_settings:
 
 ### SDM Runtime Parameters ###
 domain:
-  nspacedims: 2                                                 # no. of spatial dimensions to model
+  nspacedims: 3                                                 # no. of spatial dimensions to model
   ngbxs: X                                                      # total number of Gbxs
   maxnsupers: X                                                 # maximum number of SDs
 
@@ -100,3 +101,4 @@ coupled_dynamics:
   qcond : X                                                   # binary filename for liquid mixing ratio
   wvel : X                                                    # binary filename for vertical (coord3) velocity
   uvel : X                                                    # binary filename for eastwards (coord1) velocity
+  vvel : X                                                    # binary filename for northwards (coord2) velocity

@@ -3,7 +3,7 @@ Copyright (c) 2024 MPI-M, Clara Bayley
 
 ----- PerformanceTestingCLEO -----
 File: __init__.py
-Project: constthermo2d
+Project: constthermo3d
 Created Date: Thursday 5th December 2024
 Author: Clara Bayley (CB)
 Additional Contributors:

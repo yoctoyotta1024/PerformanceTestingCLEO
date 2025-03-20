@@ -2,8 +2,8 @@
 Copyright (c) 2024 MPI-M, Clara Bayley
 
 -----  PerformanceTestingCLEO -----
-File: setup_thermo2d.py
-Project: constthermo2d
+File: setup_thermo3d.py
+Project: constthermo3d
 Created Date: Thursday 5th December 2024
 Author: Clara Bayley (CB)
 Additional Contributors:
@@ -58,21 +58,21 @@ else:
 
 sys.path.append(str(path2CLEO))  # for imports for editing a config file
 sys.path.append(str(path2src))  # for imports for input files generation
-from constthermo2d import initconds_thermo2d as initconds
+from constthermo3d import initconds_thermo3d as initconds
 from pySD import editconfigfile
 
 ### ----- create temporary config file for simulation(s) ----- ###
-src_config_filename = path2src / "constthermo2d" / "config_thermo2d.yaml"
+src_config_filename = path2src / "constthermo3d" / "config_thermo3d.yaml"
 
 ngbxs_nsupers_runs = ssv.get_ngbxs_nsupers_runs()
 ngbxs_nsupers_nthreads = ssv.get_ngbxs_nsupers_nthreads(
     buildtype, ngbxs_nsupers_runs=ngbxs_nsupers_runs
 )
 
-savefigpath = path2builds / "bin" / "thermo2d"
-sharepath = path2builds / "share" / "thermo2d"
-binpath = path2builds / buildtype / "bin" / "thermo2d"
-tmppath = path2builds / buildtype / "tmp" / "thermo2d"
+savefigpath = path2builds / "bin" / "thermo3d"
+sharepath = path2builds / "share" / "thermo3d"
+binpath = path2builds / buildtype / "bin" / "thermo3d"
+tmppath = path2builds / buildtype / "tmp" / "thermo3d"
 constants_filepath = path2builds / buildtype / "_deps" / "cleo-src" / "libs"
 params = {
     "constants_filename": str(constants_filepath / "cleoconstants.hpp"),
@@ -117,16 +117,25 @@ for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
 
             params["ngbxs"] = ngbxs
             params["grid_filename"] = str(get_grid_filename(sharepath, ngbxs))
-            assert np.log2(ngbxs) % 1 == 0.0, "ngbxs must be an integer power of 2"
-            ndim_x = 2 ** int(np.floor(np.log2(ngbxs) / 2))
-            ndim_z = 2 ** int(np.ceil(np.log2(ngbxs) / 2))
-            assert ndim_x * ndim_z == ngbxs, "product of ndims must equal ngbxs"
+            ndim_y = 2
+            if ngbxs < ndim_y:
+                ndim_y = ngbxs
+            assert ngbxs % ndim_y == 0.0, "ngbxs must be an integer multiple of ndim_y"
+            assert (
+                np.log2(ngbxs / ndim_y) % 1 == 0.0
+            ), "ngbxs must be an integer power of 2"
+            ndim_x = 2 ** int(np.floor(np.log2(ngbxs / ndim_y) / 2))
+            ndim_z = 2 ** int(np.ceil(np.log2(ngbxs / ndim_y) / 2))
+            assert (
+                ndim_x * ndim_z * ndim_y == ngbxs
+            ), "product of ndims must equal ngbxs"
             params["zgrid"] = [0, 1500, 1500 / ndim_z]
             params["xgrid"] = [0, 1500, 1500 / ndim_x]
+            params["ygrid"] = [0, 200, 200 / ndim_y]
 
             thermofiles = get_thermodynamics_filenames(sharepath, ngbxs)
             params["thermofiles"] = str(thermofiles)
-            for var in ["press", "temp", "qvap", "qcond", "wvel", "uvel"]:
+            for var in ["press", "temp", "qvap", "qcond", "wvel", "uvel", "vvel"]:
                 var_filename = f"{thermofiles.stem}_{var}{thermofiles.suffix}"
                 params[var] = str(thermofiles.parent / var_filename)
 

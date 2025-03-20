@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=setup_thermo2d
+#SBATCH --job-name=setup_thermo3d
 #SBATCH --partition=compute
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
@@ -8,8 +8,8 @@
 #SBATCH --mail-user=clara.bayley@mpimet.mpg.de
 #SBATCH --mail-type=FAIL
 #SBATCH --account=bm1183
-#SBATCH --output=./setup_thermo2d_out.%j.out
-#SBATCH --error=./setup_thermo2d_err.%j.out
+#SBATCH --output=./setup_thermo3d_out.%j.out
+#SBATCH --error=./setup_thermo3d_err.%j.out
 
 ### ------------------------------------------------------------------------ ###
 ### -------------- PLEASE NOTE: this script assumes you have --------------- ###
@@ -31,7 +31,7 @@ fi
 ### ----------------- run profiling --------------- ###
 gen_initconds=TRUE
 for buildtype in "${buildtypes[@]}"; do
-  runcmd="${python} ${path2src}/scripts/constthermo2d/setup_thermo2d.py \
+  runcmd="${python} ${path2src}/scripts/constthermo3d/setup_thermo3d.py \
     ${path2CLEO} ${path2builds} ${buildtype} --gen_initconds=${gen_initconds}"
   echo ${runcmd}
   ${runcmd}

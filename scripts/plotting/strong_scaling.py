@@ -108,6 +108,7 @@ def plot_strong_scaling_wallclock(
                         path2builds,
                         buildtype,
                         executable,
+                        "gbxs",
                         nsupers,
                     )
                 except FileNotFoundError:
@@ -189,6 +190,7 @@ def plot_strong_scaling_speedup(
                         path2builds,
                         buildtype,
                         executable,
+                        "gbxs",
                         nsupers,
                     )
                 except FileNotFoundError:
@@ -206,6 +208,7 @@ def plot_strong_scaling_speedup(
                     path2builds,
                     buildtype_reference,
                     executable,
+                    "gbxs",
                     nsupers,
                 )
                 if ngbxs in ref.ngbxs:
@@ -286,6 +289,7 @@ def plot_strong_scaling_nthreads_efficiency(
                         path2builds,
                         buildtype,
                         executable,
+                        "gbxs",
                         nsupers,
                     )
                 except FileNotFoundError:
@@ -304,6 +308,7 @@ def plot_strong_scaling_nthreads_efficiency(
                     path2builds,
                     buildtype_reference,
                     executable,
+                    "gbxs",
                     nsupers,
                 )
                 if ngbxs in ref.ngbxs:
@@ -371,7 +376,7 @@ def plot_strong_scaling_nthreads_efficiency(
 fig, axs = plot_strong_scaling_wallclock(
     path2builds, all_buildtypes, executable, ngbxs_nsupers_runs
 )
-savename = savedir / "strong_scaling_wallclock.png"
+savename = savedir / "strong_scaling_wallclock_gbxsensemble.png"
 hfuncs.savefig(savename, tight=False)
 
 # %%
@@ -383,7 +388,7 @@ fig, axs = plot_strong_scaling_speedup(
     executable,
     ngbxs_nsupers_runs,
 )
-savename = savedir / "strong_scaling_speedup.png"
+savename = savedir / "strong_scaling_speedup_gbxsensemble.png"
 hfuncs.savefig(savename, tight=False)
 
 # %%
@@ -395,7 +400,7 @@ fig, axs = plot_strong_scaling_nthreads_efficiency(
     executable,
     ngbxs_nsupers_runs,
 )
-savename = savedir / "strong_scaling_efficiency_nthreads.png"
+savename = savedir / "strong_scaling_efficiency_nthreads_gbxsensemble.png"
 hfuncs.savefig(savename, tight=False)
 
 # %%
@@ -403,7 +408,7 @@ for b in buildtypes:
     fig, axs = plot_strong_scaling_wallclock(
         path2builds, [b], executable, ngbxs_nsupers_runs
     )
-    savename = savedir / f"strong_scaling_wallclock_{b}.png"
+    savename = savedir / f"strong_scaling_wallclock_{b}_gbxsensemble.png"
     hfuncs.savefig(savename, tight=False)
 
     fig, axs = plot_strong_scaling_speedup(
@@ -414,7 +419,7 @@ for b in buildtypes:
         executable,
         ngbxs_nsupers_runs,
     )
-    savename = savedir / f"strong_scaling_speedup_{b}.png"
+    savename = savedir / f"strong_scaling_speedup_{b}_gbxsensemble.png"
     hfuncs.savefig(savename, tight=False)
 
     fig, axs = plot_strong_scaling_nthreads_efficiency(
@@ -425,5 +430,5 @@ for b in buildtypes:
         executable,
         ngbxs_nsupers_runs,
     )
-    savename = savedir / f"strong_scaling_efficiency_nthreads_{b}.png"
+    savename = savedir / f"strong_scaling_efficiency_nthreads_{b}_gbxsensemble.png"
     hfuncs.savefig(savename, tight=False)

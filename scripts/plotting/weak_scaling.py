@@ -60,7 +60,7 @@ nthreads_reference = 1
 
 ngbxs_nsupers_runs = ssv.get_ngbxs_nsupers_runs()
 
-nsupers_per_gbx = [128]
+nsupers_per_gbx = [8]
 
 lstyles = hfuncs.buildtype_lstyles
 markers = hfuncs.buildtype_markers
@@ -111,6 +111,7 @@ def plot_weak_scaling_wallclock(
                     path2builds,
                     buildtype,
                     executable,
+                    "gbxs",
                     nsupers,
                 )
             except FileNotFoundError:
@@ -210,6 +211,7 @@ def plot_weak_scaling_speedup(
         path2builds,
         buildtype_reference,
         executable,
+        "gbxs",
         nsupers,
     )
 
@@ -221,6 +223,7 @@ def plot_weak_scaling_speedup(
                     path2builds,
                     buildtype,
                     executable,
+                    "gbxs",
                     nsupers,
                 )
             except FileNotFoundError:
@@ -344,6 +347,7 @@ def plot_weak_scaling_efficiency(
         path2builds,
         buildtype_reference,
         executable,
+        "gbxs",
         nsupers,
     )
 
@@ -355,6 +359,7 @@ def plot_weak_scaling_efficiency(
                     path2builds,
                     buildtype,
                     executable,
+                    "gbxs",
                     nsupers,
                 )
             except FileNotFoundError:
@@ -469,7 +474,7 @@ for nsupers in nsupers_per_gbx:
         cmap,
         norm,
     )
-    savename = savedir / f"weak_scaling_wallclock_nsupers{nsupers}.png"
+    savename = savedir / f"weak_scaling_wallclock_nsupers{nsupers}_gbxsensemble.png"
     hfuncs.savefig(savename, tight=False)
 
 # %%
@@ -486,7 +491,7 @@ for nsupers in nsupers_per_gbx:
         cmap,
         norm,
     )
-    savename = savedir / f"weak_scaling_speedup_nsupers{nsupers}.png"
+    savename = savedir / f"weak_scaling_speedup_nsupers{nsupers}_gbxsensemble.png"
     hfuncs.savefig(savename, tight=False)
 
 # %%
@@ -503,7 +508,7 @@ for nsupers in nsupers_per_gbx:
         cmap,
         norm,
     )
-    savename = savedir / f"weak_scaling_efficiency_nsupers{nsupers}.png"
+    savename = savedir / f"weak_scaling_efficiency_nsupers{nsupers}_gbxsensemble.png"
     hfuncs.savefig(savename, tight=False)
 
 # %%
@@ -519,7 +524,9 @@ for nsupers in nsupers_per_gbx:
             cmap,
             norm,
         )
-        savename = savedir / f"weak_scaling_wallclock_nsupers{nsupers}_{b}.png"
+        savename = (
+            savedir / f"weak_scaling_wallclock_nsupers{nsupers}_{b}_gbxsensemble.png"
+        )
         hfuncs.savefig(savename, tight=False)
 
         fig, axs = plot_weak_scaling_speedup(
@@ -534,7 +541,9 @@ for nsupers in nsupers_per_gbx:
             cmap,
             norm,
         )
-        savename = savedir / f"weak_scaling_speedup_nsupers{nsupers}_{b}.png"
+        savename = (
+            savedir / f"weak_scaling_speedup_nsupers{nsupers}_{b}_gbxsensemble.png"
+        )
         hfuncs.savefig(savename, tight=False)
 
         fig, axs = plot_weak_scaling_efficiency(
@@ -549,6 +558,8 @@ for nsupers in nsupers_per_gbx:
             cmap,
             norm,
         )
-        savename = savedir / f"weak_scaling_efficiency_nsupers{nsupers}_{b}.png"
+        savename = (
+            savedir / f"weak_scaling_efficiency_nsupers{nsupers}_{b}_gbxsensemble.png"
+        )
         hfuncs.savefig(savename, tight=False)
 # %%

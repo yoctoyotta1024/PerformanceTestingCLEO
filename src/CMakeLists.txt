@@ -30,4 +30,5 @@ message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 # add directories of from src
 add_subdirectory(collisions0d EXCLUDE_FROM_ALL)
 add_subdirectory(condensation0d EXCLUDE_FROM_ALL)
+add_subdirectory(motion2d EXCLUDE_FROM_ALL)
 add_subdirectory(constthermo3d EXCLUDE_FROM_ALL)

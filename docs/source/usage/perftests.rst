@@ -11,7 +11,7 @@ Example: Collisions0d Performance Test in Serial
 You can build and compile this example from the root of your performance_testing_cleo directory first
 by building and compiling the exectuabel for a build of your choice (serial, openmp, cuda or threads).
 
-E.g. For a serial build of the colls0d example (see also cond0d and thermo3d):
+E.g. For a serial build of the colls0d example (see also cond0d, motion2d and thermo3d):
 
 #. Build and compile:
 
@@ -39,6 +39,17 @@ E.g. For a serial build of the colls0d example (see also cond0d and thermo3d):
    .. code-block:: console
 
      $ ./scripts/condensation0d/setup_cond0d.sh \
+       /work/bm1183/m300950/bin/envs/perftests/bin/python \
+       /home/m/m300950/CLEO \
+       /home/m/m300950/performance_testing_cleo \
+       /work/bm1183/m300950/performance_testing_cleo/builds \
+       serial openmp cuda threads
+
+#. (Or) If setting up motion2d:
+
+   .. code-block:: console
+
+     $ ./scripts/motion2d/setup_motion2d.sh \
        /work/bm1183/m300950/bin/envs/perftests/bin/python \
        /home/m/m300950/CLEO \
        /home/m/m300950/performance_testing_cleo \

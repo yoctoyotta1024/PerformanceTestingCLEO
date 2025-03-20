@@ -26,6 +26,7 @@ import numpy as np
 from pathlib import Path
 import sys
 from typing import Optional
+import matplotlib.pyplot as plt
 
 path2src = Path(__file__).resolve().parent.parent.parent / "src"
 sys.path.append(str(path2src))  # for helperfuncs module
@@ -95,9 +96,13 @@ def domain_totnsupers(data):
 
 def plot_overall_wallclock_scaling(datasets: dict):
     fig, axs = hfuncs.subplots(figsize=(12, 8), logx=True, logy=True)
-    c1 = "k"
+
+    ncolors = 8  # allows n different values for threads
+    colors = plt.cm.cool(np.linspace(0, 1, ncolors))
+
     a = 0
     for lab, data in datasets.items():
+        c = 0
         for nthreads in data.nthreads:
             x = domain_totnsupers(data)
             summary = data.summary.sel(nthreads=nthreads)
@@ -106,7 +111,7 @@ def plot_overall_wallclock_scaling(datasets: dict):
             slab = None
             if a == 0:
                 slab = "IQR"
-            hfuncs.add_shading(axs, x, lq, uq, c1, lstyles[lab], label=slab)
+            hfuncs.add_shading(axs, x, lq, uq, colors[c], lstyles[lab], label=slab)
 
             llab = None
             if nthreads == data.nthreads[0]:
@@ -114,14 +119,14 @@ def plot_overall_wallclock_scaling(datasets: dict):
             axs.plot(
                 x,
                 y,
-                color=c1,
+                color=colors[c],
                 marker=markers[lab],
                 linestyle=lstyles[lab],
                 label=llab,
             )
-
-            # c2 = "purple"
-            # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip, logaxs=True)
+            c += 1
+            # c2 = "red"
+            # xfit, yfit, m, _ = line_of_best_fit(x, y, skip=skip, logaxs=True)
             # axs.plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
 
             a += 1

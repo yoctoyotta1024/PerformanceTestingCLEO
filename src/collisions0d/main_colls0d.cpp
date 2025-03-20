@@ -25,11 +25,11 @@
 
 #include "zarr/dataset.hpp"
 #include "cartesiandomain/cartesianmaps.hpp"
-#include "cartesiandomain/cartesianmotion.hpp"
 #include "cartesiandomain/createcartesianmaps.hpp"
-#include "cartesiandomain/null_boundary_conditions.hpp"
+#include "cartesiandomain/movement/cartesian_movement.hpp"
 #include "coupldyn_null/nulldynamics.hpp"
 #include "coupldyn_null/nulldyncomms.hpp"
+#include "gridboxes/boundary_conditions.hpp"
 #include "gridboxes/gridboxmaps.hpp"
 #include "initialise/config.hpp"
 #include "initialise/init_all_supers_from_binary.hpp"
@@ -66,9 +66,10 @@ inline GridboxMaps auto create_gbxmaps(const Config &config) {
 
 inline auto create_movement(const CartesianMaps &gbxmaps) {
   const Motion<CartesianMaps> auto motion = NullMotion{};
-  const auto boundary_conditions = NullBoundaryConditions{};
+  const BoundaryConditions<CartesianMaps> auto boundary_conditions =
+      NullBoundaryConditions{};
 
-  return MoveSupersInDomain(gbxmaps, motion, boundary_conditions);
+  return cartesian_movement(gbxmaps, motion, boundary_conditions);
 }
 
 inline MicrophysicalProcess auto create_microphysics(const Config &config,

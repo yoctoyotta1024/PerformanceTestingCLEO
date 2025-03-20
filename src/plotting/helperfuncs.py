@@ -32,36 +32,38 @@ buildtype_lstyles = {
 buildtype_markers = {"serial": "o", "openmp": "s", "cuda": "x", "threads": "d"}
 
 
+def get_grand_dataset_name(
+    binpath: Path, profiler: str, ensembletype: str, n: int
+) -> Path:
+    if ensembletype == "gbxs":
+        return binpath / f"kp_{profiler}_ngbxsensemble_nsupers{n}.zarr"
+    elif ensembletype == "supers":
+        return binpath / f"kp_{profiler}_ngbxs{n}_nsupersensemble.zarr"
+    else:
+        raise ValueError("unknown ensemble type, please choose 'gbxs' or 'supers'")
+
+
 def open_kerneltimer_dataset(
     path2builds: Path,
     buildtype: str,
     executable: str,
-    nsupers: int,
+    ensembletype: str,
+    n: int,
 ):
     import xarray as xr
 
-    path2ds = (
-        path2builds
-        / buildtype
-        / "bin"
-        / executable
-        / f"kp_kerneltimer_ngbxsensemble_nsupers{nsupers}.zarr"
-    )
+    binpath = path2builds / buildtype / "bin" / executable
+    path2ds = get_grand_dataset_name(binpath, "kerneltimer", ensembletype, n)
     return xr.open_zarr(path2ds)
 
 
 def open_spacetimestack_dataset(
-    path2builds: Path, buildtype: str, executable: str, nsupers: int
+    path2builds: Path, buildtype: str, executable: str, ensembletype: str, n: int
 ):
     import xarray as xr
 
-    path2ds = (
-        path2builds
-        / buildtype
-        / "bin"
-        / executable
-        / f"kp_spacetimestack_ngbxsensemble_nsupers{nsupers}.zarr"
-    )
+    binpath = path2builds / buildtype / "bin" / executable
+    path2ds = get_grand_dataset_name(binpath, "spacetimestack", ensembletype, n)
     return xr.open_zarr(path2ds)
 
 
@@ -142,21 +144,38 @@ def extrapolate_ngbxs_coord(data, new_ngbxs):
     return extrapolated
 
 
+def extrapolate_nsupers_coord(data, new_nsupers):
+    extrapolated = data.interp(
+        nsupers=new_nsupers, kwargs={"fill_value": "extrapolate"}
+    )
+    return extrapolated
+
+
 def calculate_speedup(
     time: xr.DataArray,
     time_reference: xr.DataArray,
     extrapolate: Optional[bool] = False,
+    coord: Optional[str] = None,
 ):
     import numpy as np
 
     if extrapolate:
         if time.shape != time_reference.shape or np.any(
-            time.coords["ngbxs"].values != time_reference.coords["ngbxs"].values
+            time.coords[coord].values != time_reference.coords[coord].values
         ):
             print("warning: speedup calculation extrapolating reference")
-            time_reference = extrapolate_ngbxs_coord(
-                time_reference, time.coords["ngbxs"]
-            )
+            if coord == "ngbxs":
+                time_reference = extrapolate_ngbxs_coord(
+                    time_reference, time.coords["ngbxs"]
+                )
+            elif coord == "nsupers":
+                time_reference = extrapolate_nsupers_coord(
+                    time_reference, time.coords["nsupers"]
+                )
+            else:
+                raise ValueError(
+                    f"No extraploation function provided for coord={coord}"
+                )
 
     return time_reference / time
 
@@ -166,6 +185,9 @@ def calculate_efficiency(
     time_reference: xr.DataArray,
     num_processing_units: dict,
     extrapolate: Optional[bool] = False,
+    coord: Optional[str] = None,
 ):
-    speedup = calculate_speedup(time, time_reference, extrapolate=extrapolate)
+    speedup = calculate_speedup(
+        time, time_reference, extrapolate=extrapolate, coord=coord
+    )
     return speedup / num_processing_units

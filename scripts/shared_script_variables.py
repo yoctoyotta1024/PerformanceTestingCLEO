@@ -25,17 +25,14 @@ from typing import Optional
 
 def get_ngbxs_nsupers_runs() -> dict:
     ngbxs_nsupers_runs = {
-        (16, 128): 1,
-        (256, 128): 1,
-        (1024, 128): 1,
-        (2048, 128): 1,
-        (4096, 128): 1,
-        (8192, 128): 1,
-        (16384, 128): 1,
-        (32768, 128): 1,
-        (65536, 128): 1,
-        # (131072, 128): 1,  # no serial
-        # (262144, 128): 1,  # no serial
+        (1, 8): 1,
+        (1, 128): 1,
+        (1, 1024): 1,
+        (1, 4096): 1,
+        (1, 16384): 1,
+        (1, 65536): 1,
+        (1, 131072): 1,
+        (1, 524288): 1,
     }
     return ngbxs_nsupers_runs
 
@@ -49,17 +46,14 @@ def get_ngbxs_nsupers_nthreads(
         }
     else:
         ngbxs_nsupers_nthreads = {
-            (16, 128): [256, 128, 64, 16, 8, 1],
-            (256, 128): [256, 128, 64, 16, 8, 1],
-            (1024, 128): [256, 128, 64, 16, 8],
-            (2048, 128): [256, 128, 64, 16, 8],
-            (4096, 128): [256, 128, 64, 16, 8],
-            (8192, 128): [256, 128, 64, 16, 8],
-            (16384, 128): [256, 128, 64, 16, 8],
-            (32768, 128): [256, 128, 64, 16, 8],
-            (65536, 128): [256, 128, 64, 16, 8],
-            # (131072, 128): [256, 128, 64],  # no serial
-            # (262144, 128): [256, 128, 64],  # no serial
+            (1, 8): [8, 1],
+            (1, 128): [128, 64, 16, 8, 1],
+            (1, 1024): [128, 64, 16, 8, 1],
+            (1, 4096): [128, 64, 16, 8, 1],
+            (1, 16384): [128, 64, 16, 8, 1],
+            (1, 65536): [128, 64, 16, 8, 1],
+            (1, 131072): [128, 64, 16, 8, 1],
+            (1, 524288): [128, 64, 16, 8, 1],
         }
     return ngbxs_nsupers_nthreads
 
@@ -139,7 +133,3 @@ def get_runsensemblestats_dataset_name(
             / f"ngbxs{ngbxs}_nsupers{nsupers}"
             / f"kp_{profiler}_runsensemblestats.zarr"
         )
-
-
-def get_grand_dataset_name(binpath: Path, nsupers: int, profiler: str) -> Path:
-    return binpath / f"kp_{profiler}_ngbxsensemble_nsupers{nsupers}.zarr"

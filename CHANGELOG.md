@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v2.2.1](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/ec8312ad3224eccc38a8ef7c0e5d9b9d195bd817..v2.2.1) - 2025-03-21
+#### Bug Fixes
+- remove unused yac flags - ([ab13860](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/ab13860d9853fcb337fed2de22822b1619a46b57)) - clara.bayley
+- specify hash on levante oneapi package - ([ec8312a](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/ec8312ad3224eccc38a8ef7c0e5d9b9d195bd817)) - clara.bayley
+
+- - -
+
 ## [v2.2.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/63d94bae055dc52cf7dec6ae9675a1eb12cc17d3..v2.2.0) - 2025-03-21
 #### Bug Fixes
 - make strong and weak scaling plots compatible with new open_[...] dataset functions - ([814936a](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/814936aa4991e9b4299795da372fac4c5afb5435)) - clara.bayley

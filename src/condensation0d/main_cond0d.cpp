@@ -104,29 +104,43 @@ inline Observer auto create_superdrops_observer(const unsigned int interval,
   return SuperdropsObserver(interval, dataset, maxchunk, collect_sddata);
 }
 
+/* ---------------------------------------------------------------- */
+/* (!) Choose observer for output or not (!)
+ * To output data comment out create_observer(...){return NullObserver{};}
+ * and uncomment observer which returns "obsX >> obsY >> ... >> obsZ;"
+ */
+
+// template <typename Store>
+// inline Observer auto create_observer(const Config &config,
+//                                      const Timesteps &tsteps,
+//                                      Dataset<Store> &dataset) {
+//   const auto obsstep = tsteps.get_obsstep();
+//   const auto maxchunk = config.get_maxchunk();
+//   const auto ngbxs = config.get_ngbxs();
+
+//   const Observer auto obs1 = StreamOutObserver(obsstep * 10, &step2realtime);
+
+//   const Observer auto obs2 =
+//       TimeObserver(obsstep, dataset, maxchunk, &step2dimlesstime);
+
+//   const Observer auto obs3 = GbxindexObserver(dataset, maxchunk, ngbxs);
+
+//   const Observer auto obs4 = StateObserver(obsstep, dataset, maxchunk,
+//   ngbxs);
+
+//   const Observer auto obs5 =
+//       create_superdrops_observer(obsstep, dataset, maxchunk);
+
+//   return obs5 >> obs4 >> obs3 >> obs2 >> obs1;
+// }
+
 template <typename Store>
 inline Observer auto create_observer(const Config &config,
                                      const Timesteps &tsteps,
                                      Dataset<Store> &dataset) {
-  const auto obsstep = tsteps.get_obsstep();
-  const auto maxchunk = config.get_maxchunk();
-  const auto ngbxs = config.get_ngbxs();
-
-  const Observer auto obs1 = StreamOutObserver(obsstep * 10, &step2realtime);
-
-  const Observer auto obs2 =
-      TimeObserver(obsstep, dataset, maxchunk, &step2dimlesstime);
-
-  const Observer auto obs3 = GbxindexObserver(dataset, maxchunk, ngbxs);
-
-  const Observer auto obs4 = StateObserver(obsstep, dataset, maxchunk, ngbxs);
-
-  const Observer auto obs5 =
-      create_superdrops_observer(obsstep, dataset, maxchunk);
-
-  return obs5 >> obs4 >> obs3 >> obs2 >> obs1;
-  // return NullObserver{};
+  return NullObserver{};
 }
+/* ---------------------------------------------------------------- */
 
 template <typename Store>
 inline auto create_sdm(const Config &config, const Timesteps &tsteps,

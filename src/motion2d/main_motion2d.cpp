@@ -110,24 +110,37 @@ inline Observer auto create_superdrops_observer(const unsigned int interval,
   return SuperdropsObserver(interval, dataset, maxchunk, collect_sddata);
 }
 
+/* ---------------------------------------------------------------- */
+/* (!) Choose observer for output or not (!)
+ * To output data comment out create_observer(...){return NullObserver{};}
+ * and uncomment observer which returns "obsX >> obsY >> ... >> obsZ;"
+ */
+
+// template <typename Store>
+// inline Observer auto create_observer(const Config &config,
+//                                      const Timesteps &tsteps,
+//                                      Dataset<Store> &dataset) {
+//   const auto obsstep = tsteps.get_obsstep();
+//   const auto maxchunk = config.get_maxchunk();
+
+//   const Observer auto obs0 = StreamOutObserver(obsstep, &step2realtime);
+
+//   const Observer auto obs1 =
+//       TimeObserver(obsstep, dataset, maxchunk, &step2dimlesstime);
+
+//   const Observer auto obssd =
+//       create_superdrops_observer(obsstep, dataset, maxchunk);
+
+//   return obssd >> obs1 >> obs0;
+// }
+
 template <typename Store>
 inline Observer auto create_observer(const Config &config,
                                      const Timesteps &tsteps,
                                      Dataset<Store> &dataset) {
-  const auto obsstep = tsteps.get_obsstep();
-  const auto maxchunk = config.get_maxchunk();
-
-  const Observer auto obs0 = StreamOutObserver(obsstep, &step2realtime);
-
-  const Observer auto obs1 =
-      TimeObserver(obsstep, dataset, maxchunk, &step2dimlesstime);
-
-  const Observer auto obssd =
-      create_superdrops_observer(obsstep, dataset, maxchunk);
-
-  return obssd >> obs1 >> obs0;
-  // return NullObserver{};
+  return NullObserver{};
 }
+/* ---------------------------------------------------------------- */
 
 template <typename Store>
 inline auto create_sdm(const Config &config, const Timesteps &tsteps,

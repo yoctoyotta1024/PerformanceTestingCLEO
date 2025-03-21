@@ -2,6 +2,23 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v2.2.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/63d94bae055dc52cf7dec6ae9675a1eb12cc17d3..v2.2.0) - 2025-03-21
+#### Bug Fixes
+- make strong and weak scaling plots compatible with new open_[...] dataset functions - ([814936a](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/814936aa4991e9b4299795da372fac4c5afb5435)) - clara.bayley
+#### Documentation
+- update docs with info on plotting validations - ([da1e3b6](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/da1e3b63d217a0ede89ca8695ebf728e45b8508c)) - clara.bayley
+#### Features
+- new folder for plotting validations of profiled executables - ([5849507](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/58495072798962de5ee126457fd8255fe3ed1019)) - clara.bayley
+- new 2d model of superdroplet motion - ([c7ca5cd](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/c7ca5cdd0d044cc191e8672e876f8ca8ed9c6f4e)) - clara.bayley
+- new 0d box model example of condensation - ([574ff40](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/574ff406940e206aebba89735e4f80247a13f7fb)) - clara.bayley
+#### Miscellaneous Chores
+- update cleo version - ([51d0c99](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/51d0c990348cc4a3b10f978ce1587a089880b2a9)) - clara.bayley
+#### Refactoring
+- make clearer comment about using observers - ([317ea33](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/317ea33b6eb11a4bd7cf3a0c98e0d2bbd1298adf)) - clara.bayley
+- thermo2d -> 3d example - ([63d94ba](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/63d94bae055dc52cf7dec6ae9675a1eb12cc17d3)) - clara.bayley
+
+- - -
+
 ## [v2.1.2](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/0010d11e54d93d0d8bf0d8b282d53b5056d2e9a5..v2.1.2) - 2025-03-20
 #### Bug Fixes
 - make main programs compatible with v.36.0 of CLEO - ([566fca8](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/566fca80013451c7ceabe0fa465edbaab0560089)) - clara.bayley

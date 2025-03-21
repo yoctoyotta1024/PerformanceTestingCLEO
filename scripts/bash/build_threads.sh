@@ -19,7 +19,7 @@
 module purge
 spack unload --all
 module load intel-oneapi-compilers/2023.2.1-gcc-11.2.0
-spack load openmpi@4.1.5%oneapi
+spack load openmpi@4.1.5%oneapi/kutdzbj
 spack load cmake@3.23.1%oneapi
 gxx="/sw/spack-levante/openmpi-4.1.6-ux3zoj/bin/mpic++"
 gcc="/sw/spack-levante/openmpi-4.1.6-ux3zoj/bin/mpicc"
@@ -54,7 +54,7 @@ kokkosdevice=""
 ### ---------------------------------------------------- ###
 
 ### ------------------ choose YAC build ---------------- ###
-yacflags="-DENABLE_YAC_COUPLING=OFF"
+yacflags=""
 ### ---------------------------------------------------- ###
 
 ### ---------------- build CLEO with cmake ------------- ###

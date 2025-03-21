@@ -71,7 +71,7 @@ kokkosdevice="-DKokkos_ENABLE_CUDA=ON -DKokkos_ENABLE_CUDA_LAMBDA=ON \
 ### ---------------------------------------------------- ###
 
 ### ------------------ choose YAC build ---------------- ###
-yacflags="-DENABLE_YAC_COUPLING=OFF"
+yacflags=""
 ### ---------------------------------------------------- ###
 
 ### ---------------- build source with cmake ------------- ###

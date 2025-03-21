@@ -1,0 +1,104 @@
+# ----- CLEO -----
+# File: config_thermo3d.yaml
+# Project: config
+# Created Date: Thursday 5th December 2024
+# Author: Clara Bayley (CB)
+# Additional Contributors:
+# -----
+# Last Modified: Thursday 5th December 2024
+# Modified By: CB
+# -----
+# License: BSD 3-Clause "New" or "Revised" License
+# https://opensource.org/licenses/BSD-3-Clause
+# -----
+# Copyright (c) 2023 MPI-M, Clara Bayley
+# -----
+# File Description:
+# Configuration file for 2D domain with condensation/evaporation, collisions and motion using CLEO.
+# Note: The inital superdroplets data read from file "initsupers_filename" can be made with
+# CLEO's pySD module (see Python script "scripts/constthermo3d0d/setup_thermo3d.py" for usage) and likewise
+# for "grid_filename".
+
+### Initial Conditions Parameters for Python Script ###
+python_initconds:
+  paths:
+    savefigpath: XXX
+    sharepath: XXX
+  grid:
+    zgrid: [0, 1500, X]                                      # [max, min, spacing] of gridbox boundaries in z direction
+    xgrid: [0, 1500, X]                                      # [max, min, spacing] of gridbox boundaries in x direction
+    ygrid: [0, 200, X]                                       # [max, min, spacing] of gridbox boundaries in y direction
+  supers:
+    dryradius_sf: 1.0                                         # dry radius = radius * dry adius_sf
+    rspan: [5.0e-9, 1.0e-6]                                   # max and min range of radii to sample [m]
+    xi_min: 10                                                # minimum value of initial multiplicities
+    geomeans: [0.02e-6, 0.15e-6]                              # means of bi-modal lognormal distribution [m]
+    geosigs: [1.4, 1.6]                                       # stddev of bi-modal lognormal distribution
+    scalefacs: [3, 2]                                         # ratio of heights of modes of distribution
+    numconc: 1.0e+7                                           # total no. conc of real droplets [m^-3]
+  thermo:
+    thermofiles: X                                            # names of thermofiles = thermofiles+"_[variable].dat"
+    PRESS0: 101315                                            # surface pressure[Pa]
+    Zbase: 750                                                # height of cloud layer [m]
+    THETA: 288.15                                             # potential temperature below Zbase [K]
+    qcond_init: 0.0                                           # initial non-superdroplet qcond [Kg/Kg]
+    WMAX: 1.0                                                 # maximum updraught velocity [m/s]
+    Zlength: 1500                                             # divergent flow coord3 (z) lengthscale [m]
+    Xlength: 1500                                             # divergent flow coord1 (x) lengthscale [m]
+    sratios: [0.99, 1.0025]                                   # supersaturation ratios [below, above] Zbase
+    qvapmethod: "sratio"                                      # calculate qvap from supersaturation ratios
+    moistlayer: False                                         # add super-moist layer to updraught
+
+### Kokkos Initialization Parameters ###
+kokkos_settings:
+  num_threads : X                                      # number of threads for host parallel backend
+  map_device_id_by : mpi_rank                          # select device for execution, either "mpi_rank" or "random".
+
+### SDM Runtime Parameters ###
+domain:
+  nspacedims: 3                                                 # no. of spatial dimensions to model
+  ngbxs: X                                                      # total number of Gbxs
+  maxnsupers: X                                                 # maximum number of SDs
+
+timesteps:
+  CONDTSTEP: 1                                                  # time between SD condensation [s]
+  COLLTSTEP: 1                                                  # time between SD collision [s]
+  MOTIONTSTEP: 2                                                # time between SDM motion [s]
+  COUPLTSTEP: 3600                                              # time between dynamic couplings [s]
+  OBSTSTEP: 120                                                 # time between SDM observations [s]
+  T_END: 3600                                                   # time span of integration from 0s to T_END [s]
+
+### Initialisation Parameters ###
+inputfiles:
+  constants_filename: XXX                                       # name of file for values of physical constants
+  grid_filename: XXX                                            # binary filename for initialisation of GBxs / GbxMaps
+
+initsupers:
+  type: frombinary                                              # type of initialisation of super-droplets
+  initsupers_filename: XXX                                      # binary filename for initialisation of SDs
+
+### Output Parameters ###
+outputdata:
+  setup_filename: XXX                                           # .txt filename to copy configuration to
+  zarrbasedir: XXX                                              # zarr store base directory
+  maxchunk: 2500000                                             # maximum no. of elements in chunks of zarr store array
+
+### Microphysics Parameters ###
+microphysics:
+  condensation:
+    do_alter_thermo : false                                   # true = cond/evap alters the thermodynamic state
+    maxniters : 50                                              # maximum no. iterations of Newton Raphson Method
+    MINSUBTSTEP : 0.001                                         # minimum subtimestep in cases of substepping [s]
+    rtol : 0.0                                                # relative tolerance for implicit Euler integration
+    atol : 0.01                                               # absolute tolerance for implicit Euler integration
+
+### Coupled Dynamics Parameters ###
+coupled_dynamics:
+  type : fromfile                                             # type of coupled dynamics to configure
+  press : X                                                   # binary filename for pressure
+  temp : X                                                    # binary filename for temperature
+  qvap : X                                                    # binary filename for vapour mixing ratio
+  qcond : X                                                   # binary filename for liquid mixing ratio
+  wvel : X                                                    # binary filename for vertical (coord3) velocity
+  uvel : X                                                    # binary filename for eastwards (coord1) velocity
+  vvel : X                                                    # binary filename for northwards (coord2) velocity

@@ -13,3 +13,4 @@ xarray
 pre-commit
 ruamel.yaml
 zarr
+awkward

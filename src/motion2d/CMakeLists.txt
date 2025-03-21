@@ -4,15 +4,15 @@ if(NOT DEFINED CMAKE_MINIMUM_REQUIRED_VERSION)
 endif()
 
 # set project name and print directory of this CMakeLists.txt (source directory of project)
-project("constthermo2d")
+project("motion2d")
 message("PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
 
 # Set libraries from CLEO to link with executable
 set(CLEOLIBS gridboxes initialise observers runcleo superdrops zarr)
 
 # create primary executable
-set(exec thermo2d)
-add_executable(${exec} EXCLUDE_FROM_ALL "main_thermo2d.cpp")
+set(exec motion2d)
+add_executable(${exec} EXCLUDE_FROM_ALL "main_motion2d.cpp")
 
 # Add directories and link libraries to target
 target_link_libraries(${exec} PRIVATE coupldyn_fromfile cartesiandomain "${CLEOLIBS}")

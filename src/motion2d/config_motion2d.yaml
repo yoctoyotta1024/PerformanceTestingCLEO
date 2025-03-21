@@ -1,11 +1,11 @@
 # ----- CLEO -----
-# File: config_thermo2d.yaml
+# File: config_motion2d.yaml
 # Project: config
-# Created Date: Thursday 5th December 2024
+# Created Date: Thursday 20th March 2025
 # Author: Clara Bayley (CB)
 # Additional Contributors:
 # -----
-# Last Modified: Thursday 5th December 2024
+# Last Modified: Thursday 20th March 2025
 # Modified By: CB
 # -----
 # License: BSD 3-Clause "New" or "Revised" License
@@ -14,9 +14,9 @@
 # Copyright (c) 2023 MPI-M, Clara Bayley
 # -----
 # File Description:
-# Configuration file for 2D domain with condensation/evaporation, collisions and motion using CLEO.
+# Configuration file for motion of superdroplets in 2-d divergence free flow using CLEO.
 # Note: The inital superdroplets data read from file "initsupers_filename" can be made with
-# CLEO's pySD module (see Python script "scripts/constthermo2d0d/setup_thermo2d.py" for usage) and likewise
+# CLEO's pySD module (see Python script "scripts/motion2d/setup_motion2d.py" for usage) and likewise
 # for "grid_filename".
 
 ### Initial Conditions Parameters for Python Script ###
@@ -27,14 +27,10 @@ python_initconds:
   grid:
     zgrid: [0, 1500, X]                                      # [max, min, spacing] of gridbox boundaries in z direction
     xgrid: [0, 1500, X]                                      # [max, min, spacing] of gridbox boundaries in x direction
+    ygrid: [0, 10, 10]                                       # [max, min, spacing] of gridbox boundaries in y direction
   supers:
-    dryradius_sf: 1.0                                         # dry radius = radius * dry adius_sf
-    rspan: [5.0e-9, 1.0e-6]                                   # max and min range of radii to sample [m]
-    xi_min: 10                                                # minimum value of initial multiplicities
-    geomeans: [0.02e-6, 0.15e-6]                              # means of bi-modal lognormal distribution [m]
-    geosigs: [1.4, 1.6]                                       # stddev of bi-modal lognormal distribution
-    scalefacs: [3, 2]                                         # ratio of heights of modes of distribution
-    numconc: 1.0e+7                                           # total no. conc of real droplets [m^-3]
+    mono_radius: 0.05e-6                                      # monodisperse droplet radii [m]
+    numconc: 500.0e+6                                         # total no. conc of real droplets [m^-3]
   thermo:
     thermofiles: X                                            # names of thermofiles = thermofiles+"_[variable].dat"
     PRESS0: 101315                                            # surface pressure[Pa]
@@ -44,9 +40,8 @@ python_initconds:
     WMAX: 1.0                                                 # maximum updraught velocity [m/s]
     Zlength: 1500                                             # divergent flow coord3 (z) lengthscale [m]
     Xlength: 1500                                             # divergent flow coord1 (x) lengthscale [m]
-    sratios: [0.99, 1.0025]                                   # supersaturation ratios [below, above] Zbase
+    sratios: [1.0, 1.0]                                       # supersaturation ratios [below, above] Zbase
     qvapmethod: "sratio"                                      # calculate qvap from supersaturation ratios
-    moistlayer: False                                         # add super-moist layer to updraught
 
 ### Kokkos Initialization Parameters ###
 kokkos_settings:
@@ -62,9 +57,9 @@ domain:
 timesteps:
   CONDTSTEP: 1                                                  # time between SD condensation [s]
   COLLTSTEP: 1                                                  # time between SD collision [s]
-  MOTIONTSTEP: 2                                                # time between SDM motion [s]
+  MOTIONTSTEP: 5                                                # time between SDM motion [s]
   COUPLTSTEP: 3600                                              # time between dynamic couplings [s]
-  OBSTSTEP: 120                                                 # time between SDM observations [s]
+  OBSTSTEP: 300                                                 # time between SDM observations [s]
   T_END: 3600                                                   # time span of integration from 0s to T_END [s]
 
 ### Initialisation Parameters ###
@@ -81,15 +76,6 @@ outputdata:
   setup_filename: XXX                                           # .txt filename to copy configuration to
   zarrbasedir: XXX                                              # zarr store base directory
   maxchunk: 2500000                                             # maximum no. of elements in chunks of zarr store array
-
-### Microphysics Parameters ###
-microphysics:
-  condensation:
-    do_alter_thermo : false                                   # true = cond/evap alters the thermodynamic state
-    maxniters : 50                                              # maximum no. iterations of Newton Raphson Method
-    MINSUBTSTEP : 0.001                                         # minimum subtimestep in cases of substepping [s]
-    rtol : 0.0                                                # relative tolerance for implicit Euler integration
-    atol : 0.01                                               # absolute tolerance for implicit Euler integration
 
 ### Coupled Dynamics Parameters ###
 coupled_dynamics:

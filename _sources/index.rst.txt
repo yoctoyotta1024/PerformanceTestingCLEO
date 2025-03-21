@@ -31,6 +31,7 @@ Contents
 
    usage/getstart
    usage/perftests
+   usage/validations
    usage/ourdocs
 
    GitHub Repo <https://github.com/yoctoyotta1024/PerformanceTestingCLEO.git>

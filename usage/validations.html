@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="References" href="../references.html" /><link rel="prev" title="Contributing" href="contributing.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Our Docs" href="ourdocs.html" /><link rel="prev" title="Running the Performance Tests" href="perftests.html" />
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
-        <title>Contact Us! - PerformanceTestingCLEO 1.0.0 documentation</title>
+        <title>Running Validations - PerformanceTestingCLEO 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -202,11 +202,11 @@
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="getstart.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="perftests.html">Running the Performance Tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="validations.html">Running Validations</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Running Validations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ourdocs.html">Our Docs</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/yoctoyotta1024/PerformanceTestingCLEO.git">GitHub Repo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Contact Us!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact Us!</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
 </ul>
 
@@ -228,7 +228,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="../_sources/usage/contact.rst.txt" title="View this page">
+  <a class="muted-link" href="../_sources/usage/validations.rst.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -248,28 +248,51 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="contact-us">
-<span id="contact"></span><h1>Contact Us!<a class="headerlink" href="#contact-us" title="Link to this heading">¶</a></h1>
-<section id="via-github">
-<h2>via GitHub:<a class="headerlink" href="#via-github" title="Link to this heading">¶</a></h2>
-</section>
-<section id="create-a-github-issue">
-<h2>Create a <a class="reference external" href="https://github.com/yoctoyotta1024/PerformanceTestingCLEO/issues/new">GitHub issue</a><a class="headerlink" href="#create-a-github-issue" title="Link to this heading">¶</a></h2>
-</section>
-<section id="create-a-github-merge-request">
-<span id="merge"></span><h2>Create a <a class="reference external" href="https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare">GitHub merge request</a><a class="headerlink" href="#create-a-github-merge-request" title="Link to this heading">¶</a></h2>
-<section id="main-developers">
-<h3>Main Developers<a class="headerlink" href="#main-developers" title="Link to this heading">¶</a></h3>
-</section>
-</section>
-<section id="max-planck-institut-fur-meteorologie">
-<h2>Max Planck Institut Für Meteorologie<a class="headerlink" href="#max-planck-institut-fur-meteorologie" title="Link to this heading">¶</a></h2>
-</section>
-<section id="email-clara-bayley-mpimet-mpg-de">
-<h2>Email: <a class="reference external" href="mailto:clara&#46;bayley&#37;&#52;&#48;mpimet&#46;mpg&#46;de">clara<span>&#46;</span>bayley<span>&#64;</span>mpimet<span>&#46;</span>mpg<span>&#46;</span>de</a><a class="headerlink" href="#email-clara-bayley-mpimet-mpg-de" title="Link to this heading">¶</a></h2>
-</section>
-<section id="phone-49-0-4041173317">
-<h2>Phone +49 (0) 4041173317<a class="headerlink" href="#phone-49-0-4041173317" title="Link to this heading">¶</a></h2>
+          <section id="running-validations">
+<span id="validations"></span><h1>Running Validations<a class="headerlink" href="#running-validations" title="Link to this heading">¶</a></h1>
+<p>Having cloned the repository, start by building, compiling and running a test
+in a build directory of your choice, as you would for a performance test.</p>
+<section id="example-condensation0d-validation-in-serial">
+<h2>Example: Condensation0d Validation in Serial<a class="headerlink" href="#example-condensation0d-validation-in-serial" title="Link to this heading">¶</a></h2>
+<p>You can build and compile this example from the root of your performance_testing_cleo directory.
+See <a class="reference internal" href="perftests.html#perftests"><span class="std std-ref">running the performance tests</span></a> for more instructions.</p>
+<p>_Note:_ Before compiling the example you may need to activate data output for the test case
+by changing the Observer returned by the <code class="docutils literal notranslate"><span class="pre">`inline</span> <span class="pre">Observer</span> <span class="pre">auto</span> <span class="pre">create_observer`</span></code> function in
+your executables <code class="docutils literal notranslate"><span class="pre">main_[xxx].cpp</span></code> file. E.g. uncomment the lines leading to
+<code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">obssd</span> <span class="pre">&gt;&gt;</span> <span class="pre">obs1</span> <span class="pre">&gt;&gt;</span> <span class="pre">obs0;</span></code> and comment out the line <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">NullObserver{};</span></code></p>
+<p>#. Then you could perform one normal run with e.g.
+<code class="docutils literal notranslate"><span class="pre">./builds/serial/condensation0d/cond0d</span> <span class="pre">./builds/serial/tmp/cond0d/config_1_128_1_0.yaml</span></code></p>
+<blockquote>
+<div><p>(it is recomended that you create the output directory before running the model). Or
+you can run the example with Kokkos performance tool(s), e.g.</p>
+<blockquote>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/bash/run_profiling.sh<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/work/bm1183/m300950/bin/envs/perftests/bin/python<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/home/m/m300950/performance_testing_cleo<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>cond0d<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>kerneltimer.spacetimestack.memoryevents.memoryusage<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>TRUE<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda<span class="w"> </span>threads
+</pre></div>
+</div>
+</div></blockquote>
+</div></blockquote>
+<ol class="arabic">
+<li><p>Finally plot the results with the validation script, e.g.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/bash/validation.sh<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/work/bm1183/m300950/bin/envs/perftests/bin/python<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/home/m/m300950/CLEO<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/home/m/m300950/performance_testing_cleo<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>cond0d<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="m">1</span><span class="w"> </span><span class="m">128</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>sol.zarr<span class="w"> </span>setup.txt<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda<span class="w"> </span>threads
+</pre></div>
+</div>
+</li>
+</ol>
 </section>
 </section>
 
@@ -278,23 +301,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="../references.html">
+          <a class="next-page" href="ourdocs.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">References</div>
+                <div class="title">Our Docs</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="contributing.html">
+          <a class="prev-page" href="perftests.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Contributing</div>
+                <div class="title">Running the Performance Tests</div>
                 
               </div>
             </a>
@@ -329,16 +352,8 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Contact Us!</a><ul>
-<li><a class="reference internal" href="#via-github">via GitHub:</a></li>
-<li><a class="reference internal" href="#create-a-github-issue">Create a GitHub issue</a></li>
-<li><a class="reference internal" href="#create-a-github-merge-request">Create a GitHub merge request</a><ul>
-<li><a class="reference internal" href="#main-developers">Main Developers</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#max-planck-institut-fur-meteorologie">Max Planck Institut Für Meteorologie</a></li>
-<li><a class="reference internal" href="#email-clara-bayley-mpimet-mpg-de">Email: clara.bayley&#64;mpimet.mpg.de</a></li>
-<li><a class="reference internal" href="#phone-49-0-4041173317">Phone +49 (0) 4041173317</a></li>
+<li><a class="reference internal" href="#">Running Validations</a><ul>
+<li><a class="reference internal" href="#example-condensation0d-validation-in-serial">Example: Condensation0d Validation in Serial</a></li>
 </ul>
 </li>
 </ul>

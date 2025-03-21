@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Our Docs" href="ourdocs.html" /><link rel="prev" title="Getting Started" href="getstart.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Running Validations" href="validations.html" /><link rel="prev" title="Getting Started" href="getstart.html" />
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
         <title>Running the Performance Tests - PerformanceTestingCLEO 1.0.0 documentation</title>
@@ -202,6 +202,7 @@
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="getstart.html">Getting Started</a></li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Running the Performance Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="validations.html">Running Validations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ourdocs.html">Our Docs</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/yoctoyotta1024/PerformanceTestingCLEO.git">GitHub Repo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
@@ -254,8 +255,8 @@ in a build directory of your choice.</p>
 <section id="example-collisions0d-performance-test-in-serial">
 <h2>Example: Collisions0d Performance Test in Serial<a class="headerlink" href="#example-collisions0d-performance-test-in-serial" title="Link to this heading">¶</a></h2>
 <p>You can build and compile this example from the root of your performance_testing_cleo directory first
-by building and compiling the exectuabel for a build of your choice (serial, openmp, cuda or threads).</p>
-<p>E.g. For a serial build of the colls0d example (see also thermo2d):</p>
+by building and compiling the exectuable for a build of your choice (serial, openmp, cuda or threads).</p>
+<p>E.g. For a serial build of the colls0d example (see also cond0d, motion2d and thermo3d):</p>
 <ol class="arabic">
 <li><p>Build and compile:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mkdir<span class="w"> </span>/work/bm1183/m300950/performance_testing_cleo/builds
@@ -279,8 +280,28 @@ by building and compiling the exectuabel for a build of your choice (serial, ope
 </pre></div>
 </div>
 </li>
-<li><p>(Or) If setting up thermo2d:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/constthermo2d/setup_thermo2d.sh<span class="w"> </span><span class="se">\</span>
+<li><p>(Or) If setting up cond0d:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/condensation0d/setup_cond0d.sh<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/work/bm1183/m300950/bin/envs/perftests/bin/python<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/home/m/m300950/CLEO<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/home/m/m300950/performance_testing_cleo<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda<span class="w"> </span>threads
+</pre></div>
+</div>
+</li>
+<li><p>(Or) If setting up motion2d:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/motion2d/setup_motion2d.sh<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/work/bm1183/m300950/bin/envs/perftests/bin/python<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/home/m/m300950/CLEO<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/home/m/m300950/performance_testing_cleo<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda<span class="w"> </span>threads
+</pre></div>
+</div>
+</li>
+<li><p>(Or) If setting up thermo3d:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/constthermo3d/setup_thermo3d.sh<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/work/bm1183/m300950/bin/envs/perftests/bin/python<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/home/m/m300950/CLEO<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/home/m/m300950/performance_testing_cleo<span class="w"> </span><span class="se">\</span>
@@ -291,10 +312,10 @@ by building and compiling the exectuabel for a build of your choice (serial, ope
 </li>
 </ol>
 <p>#. a) Then you could perform one normal run with e.g.
-<code class="docutils literal notranslate"><span class="pre">./builds/serial/collisions0d/colls0d</span> <span class="pre">./builds/serial/tmp/colls0d/config_8_0.yaml</span></code></p>
+<code class="docutils literal notranslate"><span class="pre">./builds/serial/collisions0d/colls0d</span> <span class="pre">./builds/serial/tmp/colls0d/config_1_128_1_0.yaml</span></code></p>
 <ol class="arabic">
 <li><ol class="loweralpha simple" start="2">
-<li><p>Or e.g. run the example with the Kokkos kernel timer performance tool:</p></li>
+<li><p>Or e.g. run the example with Kokkos performance tool(s):</p></li>
 </ol>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/bash/run_profiling.sh<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>/work/bm1183/m300950/bin/envs/perftests/bin/python<span class="w"> </span><span class="se">\</span>
@@ -338,12 +359,12 @@ sequentially</p></li>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="ourdocs.html">
+          <a class="next-page" href="validations.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Our Docs</div>
+                <div class="title">Running Validations</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -368,7 +389,7 @@ sequentially</p></li>
             
             <a href="https://github.com/pradyunsg/furo">Furo</a>
             <div class="last-updated">
-              Last updated on 20 March 2025</div>
+              Last updated on 21 March 2025</div>
           </div>
           <div class="right-details">
             

@@ -9,9 +9,9 @@ in a build directory of your choice.
 Example: Collisions0d Performance Test in Serial
 ------------------------------------------------
 You can build and compile this example from the root of your performance_testing_cleo directory first
-by building and compiling the exectuabel for a build of your choice (serial, openmp, cuda or threads).
+by building and compiling the exectuable for a build of your choice (serial, openmp, cuda or threads).
 
-E.g. For a serial build of the colls0d example (see also thermo2d):
+E.g. For a serial build of the colls0d example (see also cond0d, motion2d and thermo3d):
 
 #. Build and compile:
 
@@ -34,11 +34,33 @@ E.g. For a serial build of the colls0d example (see also thermo2d):
        /work/bm1183/m300950/performance_testing_cleo/builds \
        serial openmp cuda threads
 
-#. (Or) If setting up thermo2d:
+#. (Or) If setting up cond0d:
 
    .. code-block:: console
 
-     $ ./scripts/constthermo2d/setup_thermo2d.sh \
+     $ ./scripts/condensation0d/setup_cond0d.sh \
+       /work/bm1183/m300950/bin/envs/perftests/bin/python \
+       /home/m/m300950/CLEO \
+       /home/m/m300950/performance_testing_cleo \
+       /work/bm1183/m300950/performance_testing_cleo/builds \
+       serial openmp cuda threads
+
+#. (Or) If setting up motion2d:
+
+   .. code-block:: console
+
+     $ ./scripts/motion2d/setup_motion2d.sh \
+       /work/bm1183/m300950/bin/envs/perftests/bin/python \
+       /home/m/m300950/CLEO \
+       /home/m/m300950/performance_testing_cleo \
+       /work/bm1183/m300950/performance_testing_cleo/builds \
+       serial openmp cuda threads
+
+#. (Or) If setting up thermo3d:
+
+   .. code-block:: console
+
+     $ ./scripts/constthermo3d/setup_thermo3d.sh \
        /work/bm1183/m300950/bin/envs/perftests/bin/python \
        /home/m/m300950/CLEO \
        /home/m/m300950/performance_testing_cleo \
@@ -46,9 +68,9 @@ E.g. For a serial build of the colls0d example (see also thermo2d):
        serial openmp cuda threads
 
 #. a) Then you could perform one normal run with e.g.
-``./builds/serial/collisions0d/colls0d ./builds/serial/tmp/colls0d/config_8_0.yaml``
+``./builds/serial/collisions0d/colls0d ./builds/serial/tmp/colls0d/config_1_128_1_0.yaml``
 
-#. b) Or e.g. run the example with the Kokkos kernel timer performance tool:
+#. b) Or e.g. run the example with Kokkos performance tool(s):
 
    .. code-block:: console
 

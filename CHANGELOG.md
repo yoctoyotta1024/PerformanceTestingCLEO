@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v2.2.2](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/cd3428a5e926a066750d688b4ad48d4b8b7f33be..v2.2.2) - 2025-03-24
+#### Bug Fixes
+- resolve conflicst with Merge branch 'main' into hotfix - ([2eea614](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/2eea61468a5450691d4dee0af1c52dc3b245b8a9)) - yoctoyotta1024
+- remove unused yac flags - ([0978f77](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/0978f77743022d186054b27dcc787972befd145b)) - clara.bayley
+- specify hash on levante oneapi package - ([cd3428a](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/cd3428a5e926a066750d688b4ad48d4b8b7f33be)) - clara.bayley
+#### Miscellaneous Chores
+- update CLEO version - ([a0f7917](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/a0f7917d6e574df5d489f3693aa6c29a4800fefd)) - clara.bayley
+
+- - -
+
 ## [v2.2.1](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/ec8312ad3224eccc38a8ef7c0e5d9b9d195bd817..v2.2.1) - 2025-03-21
 #### Bug Fixes
 - remove unused yac flags - ([ab13860](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/ab13860d9853fcb337fed2de22822b1619a46b57)) - clara.bayley

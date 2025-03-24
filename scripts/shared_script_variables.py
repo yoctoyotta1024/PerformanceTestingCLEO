@@ -31,7 +31,6 @@ def get_ngbxs_nsupers_runs() -> dict:
         (1024, 128): 3,
         (16384, 128): 3,
         (131072, 128): 3,
-        (16777216, 128): 3,
     }
     return ngbxs_nsupers_runs
 
@@ -51,7 +50,6 @@ def get_ngbxs_nsupers_nthreads(
             (1024, 128): [128, 64, 16, 1],
             (16384, 128): [128, 64, 16, 1],
             (131072, 128): [128, 64, 16, 1],
-            (16777216, 128): [128, 64, 16, 1],
         }
     return ngbxs_nsupers_nthreads
 

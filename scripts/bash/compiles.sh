@@ -33,7 +33,7 @@ for buildtype in "${buildtypes[@]}"; do
     then
         ### ------------------- load packages ------------------ ###
         module load intel-oneapi-compilers/2023.2.1-gcc-11.2.0
-        spack load openmpi@4.1.5%oneapi/kutdzbj
+        spack load openmpi@4.1.5%oneapi/3ccjsdq
         spack load cmake@3.23.1%oneapi
         # load nvhpc compilers if compiling cuda build
         if [[ "${buildtype}" == "cuda" ]]

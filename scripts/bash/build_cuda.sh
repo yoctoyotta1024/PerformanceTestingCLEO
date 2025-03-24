@@ -9,8 +9,8 @@
 #SBATCH --mail-user=clara.bayley@mpimet.mpg.de
 #SBATCH --mail-type=FAIL
 #SBATCH --account=bm1183
-#SBATCH --output=./build/bin/cudaopenmpbuild_out.%j.out
-#SBATCH --error=./build/bin/cudaopenmpbuild_err.%j.out
+#SBATCH --output=./cudaopenmpbuild_out.%j.out
+#SBATCH --error=./cudaopenmpbuild_err.%j.out
 
 ### ------------------------------------------------------------------------ ###
 ### ------- You MUST edit these lines to set your default compiler(s) ------ ###

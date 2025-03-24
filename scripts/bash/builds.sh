@@ -8,8 +8,8 @@
 #SBATCH --mail-user=clara.bayley@mpimet.mpg.de
 #SBATCH --mail-type=FAIL
 #SBATCH --account=bm1183
-#SBATCH --output=./build/bin/builds_out.%j.out
-#SBATCH --error=./build/bin/builds_err.%j.out
+#SBATCH --output=./builds_out.%j.out
+#SBATCH --error=./builds_err.%j.out
 
 
 path2src=$1      # required

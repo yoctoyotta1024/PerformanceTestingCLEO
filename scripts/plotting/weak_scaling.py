@@ -60,7 +60,7 @@ nthreads_reference = 1
 
 ngbxs_nsupers_runs = ssv.get_ngbxs_nsupers_runs()
 
-nsupers_per_gbx = [8]
+nsupers_per_gbx = [128]
 
 lstyles = hfuncs.buildtype_lstyles
 markers = hfuncs.buildtype_markers
@@ -69,8 +69,8 @@ savedir = Path("/home/m/m300950/performance_testing_cleo/plots/")
 
 cmap = plt.get_cmap("plasma")
 norm = LogNorm(vmin=1, vmax=1e9)
-ngbxs_max = 1048576
-nthreads_max = 256
+ngbxs_max = 131072
+nthreads_max = 128
 
 
 # %% funtion definitions for weak scaling plots

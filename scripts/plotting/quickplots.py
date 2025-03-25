@@ -53,8 +53,8 @@ executable = args.executable
 
 buildtypes = ["serial", "openmp", "cuda", "threads"]
 
-ensembletype = "supers"
-fixed_ensemb_vals = [1]
+ensembletype = "gbxs"
+fixed_ensemb_vals = [128]
 
 lstyles = hfuncs.buildtype_lstyles
 markers = hfuncs.buildtype_markers
@@ -97,7 +97,7 @@ def domain_totnsupers(data):
 def plot_overall_wallclock_scaling(datasets: dict):
     fig, axs = hfuncs.subplots(figsize=(12, 8), logx=True, logy=True)
 
-    ncolors = 8  # allows n different values for threads
+    ncolors = 4  # allows n different values for threads
     colors = plt.cm.cool(np.linspace(0, 1, ncolors))
 
     a = 0
@@ -115,7 +115,8 @@ def plot_overall_wallclock_scaling(datasets: dict):
 
             llab = None
             if nthreads == data.nthreads[0]:
-                llab = lab
+                llab = lab + f", nthreads={nthreads.values}"
+            print(f"colour_index={c}, threads={nthreads.values}")
             axs.plot(
                 x,
                 y,

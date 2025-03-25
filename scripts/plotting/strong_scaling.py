@@ -64,7 +64,7 @@ lstyles = hfuncs.buildtype_lstyles
 markers = hfuncs.buildtype_markers
 
 cmap = plt.get_cmap("plasma")
-norm = LogNorm(vmin=1, vmax=1e9)
+norm = LogNorm(vmin=1, vmax=1e7)
 ngbxs_nsupers_colors = {}
 for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
     color = cmap(norm(ngbxs * nsupers))

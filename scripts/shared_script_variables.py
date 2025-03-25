@@ -30,7 +30,7 @@ def get_ngbxs_nsupers_runs() -> dict:
         (128, 128): 3,
         (1024, 128): 3,
         (16384, 128): 3,  # not for cond0d
-        (131072, 128): 3,  # not for cond0d
+        (131072, 128): 3,  # not for cond0d, motion2d or thermo3d
     }
     return ngbxs_nsupers_runs
 
@@ -49,7 +49,7 @@ def get_ngbxs_nsupers_nthreads(
             (128, 128): [128, 64, 16, 1],
             (1024, 128): [128, 64, 16, 1],
             (16384, 128): [128, 64, 16, 1],  # not for cond0d
-            (131072, 128): [128, 64, 16, 1],  # not for cond0d
+            (131072, 128): [128, 64, 16, 1],  # not for cond0d, motion2d or thermo3d
         }
     return ngbxs_nsupers_nthreads
 

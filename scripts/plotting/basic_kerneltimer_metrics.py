@@ -132,8 +132,8 @@ def plot_speedup_scaling(
 
         for nthreads in ds.nthreads:
             x = domain_totnsupers(ds)
-            total_time = ds.timestep_sdm.sel(nthreads=nthreads)[:, 0, 0]
-            total_time_ref = ref.timestep_sdm.sel(nthreads=nthreads_ref)[:, 0, 0]
+            total_time = ds.timestep.sel(nthreads=nthreads)[:, 0, 0]
+            total_time_ref = ref.timestep.sel(nthreads=nthreads_ref)[:, 0, 0]
             speedup = hfuncs.calculate_speedup(
                 total_time, total_time_ref, extrapolate=True, coord=f"n{ensembletype}"
             )
@@ -145,7 +145,7 @@ def plot_speedup_scaling(
                 linestyle=lstyles[buildtype],
                 label=f"n={n}, nthreads={nthreads.values}",
             )
-    axs[2].set_title("timestepping (SDM only)")
+    axs[2].set_title("timestepping")
 
     for ax in axs:
         ax.hlines(
@@ -230,8 +230,8 @@ def plot_nthreads_efficiency_scaling(
         ref = references[n]
         for nthreads in ds.nthreads:
             x = domain_totnsupers(ds)
-            total_time = ds.timestep_sdm.sel(nthreads=nthreads)[:, 0, 0]
-            total_time_ref = ref.timestep_sdm.sel(nthreads=nthreads_ref)[:, 0, 0]
+            total_time = ds.timestep.sel(nthreads=nthreads)[:, 0, 0]
+            total_time_ref = ref.timestep.sel(nthreads=nthreads_ref)[:, 0, 0]
             efficiency = hfuncs.calculate_efficiency(
                 total_time,
                 total_time_ref,
@@ -247,7 +247,7 @@ def plot_nthreads_efficiency_scaling(
                 linestyle=lstyles[buildtype],
                 label=f"n={n}, nthreads={nthreads.values}",
             )
-    axs[2].set_title("timestepping (SDM only)")
+    axs[2].set_title("timestepping")
 
     for ax in axs:
         ax.hlines(

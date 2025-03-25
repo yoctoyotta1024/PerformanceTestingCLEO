@@ -8,8 +8,8 @@
 #SBATCH --mail-user=clara.bayley@mpimet.mpg.de
 #SBATCH --mail-type=FAIL
 #SBATCH --account=bm1183
-#SBATCH --output=./build/bin/install_kokkos_tools_out.%j.out
-#SBATCH --error=./build/bin/install_kokkos_tools_err.%j.out
+#SBATCH --output=./install_kokkos_tools_out.%j.out
+#SBATCH --error=./install_kokkos_tools_err.%j.out
 
 ### ------------------------------------------------------- ###
 ### running script sucessfully installs kokkos tools for

@@ -8,8 +8,8 @@
 #SBATCH --mail-user=clara.bayley@mpimet.mpg.de
 #SBATCH --mail-type=FAIL
 #SBATCH --account=bm1183
-#SBATCH --output=./build/bin/serialbuild_out.%j.out
-#SBATCH --error=./build/bin/serialbuild_err.%j.out
+#SBATCH --output=./serialbuild_out.%j.out
+#SBATCH --error=./serialbuild_err.%j.out
 
 ### ------------------------------------------------------------------------ ###
 ### ------- You MUST edit these lines to set your default compiler(s) ------ ###

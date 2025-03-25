@@ -57,8 +57,8 @@ buildtype = args.buildtype
 buildtype_references = "serial"
 nthreads_reference = 1
 
-ensembletype = "supers"
-fixed_ensemb_vals = [1]
+ensembletype = "gbxs"
+fixed_ensemb_vals = [128]
 
 lstyles = hfuncs.buildtype_lstyles
 markers = hfuncs.buildtype_markers

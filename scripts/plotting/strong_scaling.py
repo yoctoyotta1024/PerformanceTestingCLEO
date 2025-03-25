@@ -64,7 +64,7 @@ lstyles = hfuncs.buildtype_lstyles
 markers = hfuncs.buildtype_markers
 
 cmap = plt.get_cmap("plasma")
-norm = LogNorm(vmin=1, vmax=1e9)
+norm = LogNorm(vmin=1, vmax=1e7)
 ngbxs_nsupers_colors = {}
 for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
     color = cmap(norm(ngbxs * nsupers))
@@ -97,7 +97,7 @@ def plot_strong_scaling_wallclock(
         label="total nsupers",
     )
 
-    variables = ["summary", "init", "timestep"]
+    variables = ["timestep_sdm", "timestep_sdm_movement", "timestep_sdm_microphysics"]
 
     for ax, var in zip(axs, variables):
         for buildtype in buildtypes:
@@ -179,7 +179,7 @@ def plot_strong_scaling_speedup(
         label="total nsupers",
     )
 
-    variables = ["summary", "init", "timestep"]
+    variables = ["timestep_sdm", "timestep_sdm_movement", "timestep_sdm_microphysics"]
 
     for ax, var in zip(axs, variables):
         for buildtype in buildtypes:
@@ -278,7 +278,7 @@ def plot_strong_scaling_nthreads_efficiency(
         label="total nsupers",
     )
 
-    variables = ["summary", "init", "timestep"]
+    variables = ["timestep_sdm", "timestep_sdm_movement", "timestep_sdm_microphysics"]
 
     for ax, var in zip(axs, variables):
         for buildtype in buildtypes:
@@ -376,7 +376,7 @@ def plot_strong_scaling_nthreads_efficiency(
 fig, axs = plot_strong_scaling_wallclock(
     path2builds, all_buildtypes, executable, ngbxs_nsupers_runs
 )
-savename = savedir / "strong_scaling_wallclock_gbxsensemble.png"
+savename = savedir / "strong_scaling_wallclock_sdmonly_gbxsensemble.png"
 hfuncs.savefig(savename, tight=False)
 
 # %%
@@ -388,7 +388,7 @@ fig, axs = plot_strong_scaling_speedup(
     executable,
     ngbxs_nsupers_runs,
 )
-savename = savedir / "strong_scaling_speedup_gbxsensemble.png"
+savename = savedir / "strong_scaling_speedup_sdmonly_gbxsensemble.png"
 hfuncs.savefig(savename, tight=False)
 
 # %%
@@ -400,7 +400,7 @@ fig, axs = plot_strong_scaling_nthreads_efficiency(
     executable,
     ngbxs_nsupers_runs,
 )
-savename = savedir / "strong_scaling_efficiency_nthreads_gbxsensemble.png"
+savename = savedir / "strong_scaling_efficiency_nthreads_sdmonly_gbxsensemble.png"
 hfuncs.savefig(savename, tight=False)
 
 # %%
@@ -408,7 +408,7 @@ for b in buildtypes:
     fig, axs = plot_strong_scaling_wallclock(
         path2builds, [b], executable, ngbxs_nsupers_runs
     )
-    savename = savedir / f"strong_scaling_wallclock_{b}_gbxsensemble.png"
+    savename = savedir / f"strong_scaling_wallclock_sdmonly_{b}_gbxsensemble.png"
     hfuncs.savefig(savename, tight=False)
 
     fig, axs = plot_strong_scaling_speedup(
@@ -419,7 +419,7 @@ for b in buildtypes:
         executable,
         ngbxs_nsupers_runs,
     )
-    savename = savedir / f"strong_scaling_speedup_{b}_gbxsensemble.png"
+    savename = savedir / f"strong_scaling_speedup_sdmonly_{b}_gbxsensemble.png"
     hfuncs.savefig(savename, tight=False)
 
     fig, axs = plot_strong_scaling_nthreads_efficiency(
@@ -430,5 +430,7 @@ for b in buildtypes:
         executable,
         ngbxs_nsupers_runs,
     )
-    savename = savedir / f"strong_scaling_efficiency_nthreads_{b}_gbxsensemble.png"
+    savename = (
+        savedir / f"strong_scaling_efficiency_nthreads_sdmonly_{b}_gbxsensemble.png"
+    )
     hfuncs.savefig(savename, tight=False)

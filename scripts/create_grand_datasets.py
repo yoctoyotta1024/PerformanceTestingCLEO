@@ -67,16 +67,16 @@ buildtype = args.buildtype
 executable = args.executable
 profiler = args.profiler
 do_write_runs_datasets = True
-do_write_grand_gbxs_dataset = False
-do_write_grand_supers_dataset = True
+do_write_grand_gbxs_dataset = True
+do_write_grand_supers_dataset = False
 if args.allow_overwrite == "TRUE":
     allow_overwrite = True
 else:
     allow_overwrite = False
 binpath = path2build / "bin" / executable
 
-nsupers_grand_gbxs_datasets = []
-ngbxs_grand_supers_datasets = [1]
+nsupers_grand_gbxs_datasets = [128]
+ngbxs_grand_supers_datasets = []
 
 ngbxs_nsupers_runs = ssv.get_ngbxs_nsupers_runs()
 ngbxs_nsupers_nthreads = ssv.get_ngbxs_nsupers_nthreads(

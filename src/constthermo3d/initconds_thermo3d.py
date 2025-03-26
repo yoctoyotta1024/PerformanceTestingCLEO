@@ -147,7 +147,7 @@ def thermodynamic_conditions(path2CLEO, config_filename, isfigures=[False, False
 
     sys.path.append(path2CLEO)  # for imports from pySD package
     from pySD import geninitconds as gic
-    from pySD.thermobinary_src import thermodyngen, thermogen
+    from pySD.thermobinary_src import thermodyngen, thermogen, windsgen
 
     config = yaml.safe_load(open(config_filename))
     pyconfig = config["python_initconds"]
@@ -164,19 +164,22 @@ def thermodynamic_conditions(path2CLEO, config_filename, isfigures=[False, False
     savelabel = f"_{ngbxs}"
 
     # thermodynamics generator
+    qcond = 0.0
     VVEL = 0.0
-    thermog = thermogen.DryHydrostaticAdiabatic2TierRelH(
+    thermog = thermogen.HydrostaticLapseRates(
         config_filename,
         constants_filename,
-        pyconfig["thermo"]["PRESSz0"],
-        pyconfig["thermo"]["THETA"],
-        pyconfig["thermo"]["qvapmethod"],
-        pyconfig["thermo"]["sratios"],
+        pyconfig["thermo"]["PRESS0"],
+        pyconfig["thermo"]["TEMP0"],
+        pyconfig["thermo"]["qvap0"],
         pyconfig["thermo"]["Zbase"],
-        pyconfig["thermo"]["qcond_init"],
-        pyconfig["thermo"]["moistlayer"],
+        pyconfig["thermo"]["TEMPlapses"],
+        pyconfig["thermo"]["qvaplapses"],
+        qcond,
     )
-    windsg = thermog.create_default_windsgen(
+    windsg = windsgen.Simple2DFlowField(
+        config_filename,
+        constants_filename,
         pyconfig["thermo"]["WMAX"],
         pyconfig["thermo"]["Zlength"],
         pyconfig["thermo"]["Xlength"],

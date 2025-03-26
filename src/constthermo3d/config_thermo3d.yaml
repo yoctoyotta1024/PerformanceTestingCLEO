@@ -35,7 +35,7 @@ python_initconds:
     geomeans: [0.02e-6, 0.15e-6]                              # means of bi-modal lognormal distribution [m]
     geosigs: [1.4, 1.6]                                       # stddev of bi-modal lognormal distribution
     scalefacs: [3, 2]                                         # ratio of heights of modes of distribution
-    numconc: 1.0e+7                                           # total no. conc of real droplets [m^-3]
+    numconc: 500.0e+6                                         # total no. conc of real droplets [m^-3]
   thermo:
     thermofiles: X                                            # names of thermofiles = thermofiles+"_[variable].dat"
     PRESS0: 101315                                            # surface pressure [Pa]

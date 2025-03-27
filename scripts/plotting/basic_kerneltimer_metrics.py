@@ -42,7 +42,7 @@ parser.add_argument(
     type=str,
     choices=["colls0d", "cond0d", "motion2d", "thermo3d"],
     help="Executable name, e.g. colls0d",
-    default="colls0d",
+    default="thermo3d",
 )
 parser.add_argument(
     "--buildtype",
@@ -58,7 +58,7 @@ buildtype_references = "serial"
 nthreads_reference = 1
 
 ensembletype = "gbxs"
-fixed_ensemb_vals = [128]
+fixed_ensemb_vals = [256]
 
 lstyles = hfuncs.buildtype_lstyles
 markers = hfuncs.buildtype_markers

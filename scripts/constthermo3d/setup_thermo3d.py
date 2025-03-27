@@ -118,14 +118,17 @@ for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
             params["ngbxs"] = ngbxs
             params["grid_filename"] = str(get_grid_filename(sharepath, ngbxs))
 
-            log2ngbxs = np.log2(ngbxs)
-            assert log2ngbxs % 1 == 0.0, "ngbxs must be an integer power of 2"
-            log2ny = int(np.floor(log2ngbxs / 3))
-            log2nx = int(np.floor((log2ngbxs - log2ny) / 2)) + 1
-            log2nz = int(np.ceil((log2ngbxs - log2ny) / 2)) - 1
-            ndim_y = 2**log2ny
-            ndim_x = 2**log2nx
-            ndim_z = 2**log2nz
+            if ngbxs == 1:
+                ndim_y = ndim_x = ndim_z = 1
+            else:
+                log2ngbxs = np.log2(ngbxs)
+                assert log2ngbxs % 1 == 0.0, "ngbxs must be an integer power of 2"
+                log2ny = int(np.floor(log2ngbxs / 3))
+                log2nx = int(np.floor((log2ngbxs - log2ny) / 2)) + 1
+                log2nz = int(np.ceil((log2ngbxs - log2ny) / 2)) - 1
+                ndim_y = 2**log2ny
+                ndim_x = 2**log2nx
+                ndim_z = 2**log2nz
             assert (
                 ndim_x * ndim_z * ndim_y == ngbxs
             ), "product of ndims must equal ngbxs"

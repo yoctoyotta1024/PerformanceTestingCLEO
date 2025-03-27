@@ -2,6 +2,39 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v2.2.3](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/40634d94f221967de9eac51ce18eb3ec7a2e0a7c..v2.2.3) - 2025-03-27
+#### Bug Fixes
+- setup for ngbxs=1 - ([bec7fc6](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/bec7fc64b8d0540bee9b4e5615f4f9bbb758f066)) - clara.bayley
+#### Miscellaneous Chores
+- update cleo version - ([805a62d](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/805a62dbf526dacf259e72fc2af8cb1953e44be2)) - clara.bayley
+#### Performance Improvements
+- change colorbar max - ([b8bd34f](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/b8bd34f90f60efeceddd9752ce2d95549e52281d)) - clara.bayley
+- change path of slurm output - ([fa5da42](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/fa5da4248067a01da53c5d23b7837b6aa15819cc)) - clara.bayley
+#### Refactoring
+- add plotting only SDM, movement and microphysics to plots - ([ca8b225](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/ca8b225e0f29d604f3c1a6e3cf5f910fe12c3d03)) - clara.bayley
+- decrease motion timestep from 5s to 3s - ([9c3cf64](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/9c3cf6472b766e0b147b407f9cbd82104f94f08a)) - clara.bayley
+- set default plots to thermo3d setup - ([fb60760](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/fb6076065e384e08cb5d9dd7f3d22836b09c76e3)) - clara.bayley
+- change scaling test number of gridboxes and number of superdroplets - ([f1a6ed2](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/f1a6ed2b76bb18e9cf2ad01c28e3eda95622deb5)) - clara.bayley
+- increase real droplet number concentration - ([46e7cff](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/46e7cff22b56e9def29fb761c8fa5f4c01422182)) - clara.bayley
+- use lapse rates for thermodynamic profile with 2-D flow field - ([82b9baf](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/82b9bafe558590031c3af3f9f3299fc3ca1e6e46)) - clara.bayley
+- change motion and observation timesteps and total runtime - ([ae362f6](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/ae362f6a89a12538b5ad3453a92bf0e9d4fcd2f7)) - clara.bayley
+- change ngbxs in each direction in thermo3d and size of domain - ([7b176ed](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/7b176ed6c492f9d7283bf70850f80312b7c6e33b)) - clara.bayley
+- modify slurm settings for validation plots - ([ee96c70](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/ee96c70d0ecf410d8be1e3c89ad6f99f8b2c742d)) - clara.bayley
+- make thermodynamics from file generation compatible with cleo v0.39.0 - ([e852770](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/e8527703037063ba4114bd4fadd4d1abd48ad819)) - clara.bayley
+- strong/weak scaling plots for SDM timestepping only (microphysics and movement) - ([cac94cb](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/cac94cbeca731d4395cb8d597f2aaed690bbf1aa)) - clara.bayley
+- revert "refactor: basic kernel plots for SDM timestepping only (movement and microphysics)" - ([b80014f](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/b80014f0e44753b7216ade85a9ed5d93f5d6bc42)) - clara.bayley
+- basic kernel plots for SDM timestepping only (movement and microphysics) - ([c4fd184](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/c4fd184ba7bd99d3c9b7b08a51ed5a8c2bd31f8e)) - clara.bayley
+- revert "plots for only timestepping cost of SDM (not dynamics solver)" - ([f1cfc6f](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/f1cfc6fd54dc28a3b74f49f0df9b8c690d5e48a4)) - clara.bayley
+- plots for only timestepping cost of SDM (not dynamics solver) - ([8cb034c](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/8cb034ce1067a8b635147fc9d61c8412af332102)) - clara.bayley
+- datasets and plotting configuration for preliminary runs - ([0aa20fb](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/0aa20fb2661c504f1f31f121961501f1a7d4d399)) - clara.bayley
+- preliminary runs note on motion2d and thermo3d - ([ad6000e](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/ad6000ecda566bcf5dd3723fcbe41b30d8aef941)) - clara.bayley
+- preliminary runs note on cond0d - ([ad32065](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/ad32065514febf9b6618246bb4da023a6ccc3d0d)) - clara.bayley
+- increase slurm mem for setup scripts - ([642d97c](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/642d97c0880226f4279db869431ef95e4319c435)) - clara.bayley
+- preliminary runs - ([cb23b00](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/cb23b0070fd832489c38c6938a9791714ad6872e)) - clara.bayley
+- preliminary runs - ([40634d9](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/40634d94f221967de9eac51ce18eb3ec7a2e0a7c)) - clara.bayley
+
+- - -
+
 ## [v2.2.2](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/cd3428a5e926a066750d688b4ad48d4b8b7f33be..v2.2.2) - 2025-03-24
 #### Bug Fixes
 - resolve conflicst with Merge branch 'main' into hotfix - ([2eea614](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/2eea61468a5450691d4dee0af1c52dc3b245b8a9)) - yoctoyotta1024

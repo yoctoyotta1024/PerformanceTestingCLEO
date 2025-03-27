@@ -139,7 +139,7 @@ def thermodynamic_conditions(path2CLEO, config_filename, isfigures=[False, False
 
     sys.path.append(path2CLEO)  # for imports from pySD package
     from pySD import geninitconds as gic
-    from pySD.thermobinary_src import thermogen
+    from pySD.thermobinary_src import thermodyngen, thermogen, windsgen
 
     config = yaml.safe_load(open(config_filename))
     pyconfig = config["python_initconds"]
@@ -157,20 +157,25 @@ def thermodynamic_conditions(path2CLEO, config_filename, isfigures=[False, False
 
     # thermodynamics generator
     VVEL = None
-    thermodyngen = thermogen.SimpleThermo2DFlowField(
+    thermog = thermogen.Simple2TierRelativeHumidity(
         config_filename,
         constants_filename,
-        pyconfig["thermo"]["PRESS0"],
+        pyconfig["thermo"]["PRESS"],
         pyconfig["thermo"]["THETA"],
         pyconfig["thermo"]["qvapmethod"],
         pyconfig["thermo"]["sratios"],
         pyconfig["thermo"]["Zbase"],
         pyconfig["thermo"]["qcond_init"],
+    )
+    windsg = windsgen.Simple2DFlowField(
+        config_filename,
+        constants_filename,
         pyconfig["thermo"]["WMAX"],
         pyconfig["thermo"]["Zlength"],
         pyconfig["thermo"]["Xlength"],
         VVEL,
     )
+    thermodyngen = thermodyngen.ThermodynamicsGenerator(thermog, windsg)
     ### ---------------------------------------------------------------- ###
 
     ### -------------------- INPUT FILES GENERATION -------------------- ###

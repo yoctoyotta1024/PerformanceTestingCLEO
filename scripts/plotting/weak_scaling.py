@@ -26,6 +26,7 @@ import sys
 import matplotlib.pyplot as plt
 from matplotlib.cm import ScalarMappable
 from matplotlib.colors import LogNorm
+from matplotlib.gridspec import GridSpec
 
 path2src = Path(__file__).resolve().parent.parent.parent / "src"
 sys.path.append(str(path2src))  # for helperfuncs module
@@ -60,7 +61,7 @@ nthreads_reference = 1
 
 ngbxs_nsupers_runs = ssv.get_ngbxs_nsupers_runs()
 
-nsupers_per_gbx = [128]
+nsupers_per_gbx = [256]
 
 lstyles = hfuncs.buildtype_lstyles
 markers = hfuncs.buildtype_markers
@@ -68,8 +69,8 @@ markers = hfuncs.buildtype_markers
 savedir = Path("/home/m/m300950/performance_testing_cleo/plots/")
 
 cmap = plt.get_cmap("plasma")
-norm = LogNorm(vmin=1, vmax=1e9)
-ngbxs_max = 131072
+norm = LogNorm(vmin=1, vmax=1e8)
+ngbxs_max = 1048576
 nthreads_max = 128
 
 
@@ -84,12 +85,15 @@ def plot_weak_scaling_wallclock(
     cmap,
     norm,
 ):
-    fig, axes = hfuncs.subplots(
-        figsize=(12, 20), nrows=4, ncols=1, hratios=[0.25] + [7] * 3
-    )
-    cax = axes[0]
-    axs = axes[1:]
+    fig = plt.figure(figsize=(16, 20))
+    gs = GridSpec(4, 2, figure=fig, height_ratios=[0.25, 7, 7, 7])
+    cax = fig.add_subplot(gs[0, :])
+    axs = []
+    for j in range(2):
+        for i in range(1, 4):
+            axs.append(fig.add_subplot(gs[i, j]))
     for ax in axs:
+        ax.spines[["right", "top"]].set_visible(False)
         ax.set_xscale("log")
         ax.set_yscale("log")
 
@@ -101,7 +105,14 @@ def plot_weak_scaling_wallclock(
         label="total nsupers",
     )
 
-    variables = ["timestep_sdm", "timestep_sdm_movement", "timestep_sdm_microphysics"]
+    variables = [
+        "summary",
+        "init",
+        "timestep",
+        "timestep_sdm",
+        "timestep_sdm_movement",
+        "timestep_sdm_microphysics",
+    ]
 
     for ax, var in zip(axs, variables):
         for buildtype in buildtypes:
@@ -189,13 +200,16 @@ def plot_weak_scaling_speedup(
     cmap,
     norm,
 ):
-    fig, axes = hfuncs.subplots(
-        figsize=(10, 20), nrows=4, ncols=1, hratios=[0.25] + [7] * 3
-    )
-    cax = axes[0]
-    axs = axes[1:]
+    fig = plt.figure(figsize=(16, 20))
+    gs = GridSpec(4, 2, figure=fig, height_ratios=[0.25, 7, 7, 7])
+    cax = fig.add_subplot(gs[0, :])
+    axs = []
+    for j in range(2):
+        for i in range(1, 4):
+            axs.append(fig.add_subplot(gs[i, j]))
     for ax in axs:
-        ax.set_aspect("equal")
+        ax.spines[["right", "top"]].set_visible(False)
+        # ax.set_aspect("equal")
 
     fig.suptitle("Weak Scaling: Speedup")
     fig.colorbar(
@@ -205,7 +219,14 @@ def plot_weak_scaling_speedup(
         label="total nsupers",
     )
 
-    variables = ["timestep_sdm", "timestep_sdm_movement", "timestep_sdm_microphysics"]
+    variables = [
+        "summary",
+        "init",
+        "timestep",
+        "timestep_sdm",
+        "timestep_sdm_movement",
+        "timestep_sdm_microphysics",
+    ]
 
     ref = hfuncs.open_kerneltimer_dataset(
         path2builds,
@@ -327,11 +348,15 @@ def plot_weak_scaling_efficiency(
     cmap,
     norm,
 ):
-    fig, axes = hfuncs.subplots(
-        figsize=(12, 20), nrows=4, ncols=1, hratios=[0.25] + [7] * 3
-    )
-    cax = axes[0]
-    axs = axes[1:]
+    fig = plt.figure(figsize=(16, 20))
+    gs = GridSpec(4, 2, figure=fig, height_ratios=[0.25, 7, 7, 7])
+    cax = fig.add_subplot(gs[0, :])
+    axs = []
+    for j in range(2):
+        for i in range(1, 4):
+            axs.append(fig.add_subplot(gs[i, j]))
+    for ax in axs:
+        ax.spines[["right", "top"]].set_visible(False)
 
     fig.suptitle("Weak Scaling: Efficiency")
     fig.colorbar(
@@ -341,7 +366,14 @@ def plot_weak_scaling_efficiency(
         label="total nsupers",
     )
 
-    variables = ["timestep_sdm", "timestep_sdm_movement", "timestep_sdm_microphysics"]
+    variables = [
+        "summary",
+        "init",
+        "timestep",
+        "timestep_sdm",
+        "timestep_sdm_movement",
+        "timestep_sdm_microphysics",
+    ]
 
     ref = hfuncs.open_kerneltimer_dataset(
         path2builds,

@@ -45,7 +45,7 @@ parser.add_argument(
     type=str,
     choices=["colls0d", "cond0d", "motion2d", "thermo3d"],
     help="Executable name, e.g. colls0d",
-    default="colls0d",
+    default="thermo3d",
 )
 args, unknown = parser.parse_known_args()
 path2builds = args.path2builds
@@ -54,7 +54,7 @@ executable = args.executable
 buildtypes = ["serial", "openmp", "cuda", "threads"]
 
 ensembletype = "gbxs"
-fixed_ensemb_vals = [128]
+fixed_ensemb_vals = [256]
 
 lstyles = hfuncs.buildtype_lstyles
 markers = hfuncs.buildtype_markers
@@ -125,12 +125,13 @@ def plot_overall_wallclock_scaling(datasets: dict):
                 linestyle=lstyles[lab],
                 label=llab,
             )
-            c += 1
+
             # c2 = "red"
             # xfit, yfit, m, _ = line_of_best_fit(x, y, skip=skip, logaxs=True)
             # axs.plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
 
             a += 1
+            c += 1
     axs.legend()
     axs.set_title("Entire Program")
     axs.set_ylabel("Wall Clock Time /s")
@@ -141,108 +142,61 @@ def plot_overall_wallclock_scaling(datasets: dict):
 
 def plot_simple_wallclock_scaling(datasets: dict):
     fig, axs = hfuncs.subplots(
-        figsize=(12, 20), nrows=3, sharex=True, logx=True, logy=True
+        figsize=(16, 20), nrows=3, ncols=2, sharex=True, logx=True, logy=True
     )
-    c1 = "k"
-    a = 0
-    for lab, data in datasets.items():
-        for nthreads in data.nthreads:
-            x = domain_totnsupers(data)
-            summary = data.summary.sel(nthreads=nthreads)
-            y = summary[:, 0, 0]
-            lq, uq = summary[:, 2, 0], summary[:, 3, 0]
-            slab = None
-            if a == 0:
-                slab = "IQR"
-            hfuncs.add_shading(axs[0], x, lq, uq, c1, lstyles[lab], label=slab)
 
-            llab = None
-            if nthreads == data.nthreads[0]:
-                llab = lab
+    ncolors = 4  # allows n different values for threads
+    colors = plt.cm.cool(np.linspace(0, 1, ncolors))
 
-            axs[0].plot(
-                x,
-                y,
-                color=c1,
-                marker=markers[lab],
-                linestyle=lstyles[lab],
-                label=llab,
-            )
+    variables = [
+        "summary",
+        "timestep_sdm",
+        "runcleo",
+        "timestep_sdm_movement",
+        "timestep",
+        "timestep_sdm_microphysics",
+    ]
+    for var, ax in zip(variables, axs.flatten()):
+        a = 0
+        for lab, data in datasets.items():
+            c = 0
+            for nthreads in data.nthreads:
+                x = domain_totnsupers(data)
+                time = data[var].sel(nthreads=nthreads)
+                y = time[:, 0, 0]
+                lq, uq = time[:, 2, 0], time[:, 3, 0]
+                slab = None
+                if a == 0:
+                    slab = "IQR"
+                hfuncs.add_shading(ax, x, lq, uq, colors[c], lstyles[lab], label=slab)
 
-            # c2 = "purple"
-            # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip, logaxs=True)
-            # axs[0].plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
+                llab = None
+                if nthreads == data.nthreads[0]:
+                    llab = lab
 
-            a += 1
-    axs[0].set_title("Entire Program")
+                ax.plot(
+                    x,
+                    y,
+                    color=colors[c],
+                    marker=markers[lab],
+                    linestyle=lstyles[lab],
+                    label=llab,
+                )
 
-    for lab, data in datasets.items():
-        for nthreads in data.nthreads:
-            x = domain_totnsupers(data)
-            runcleo = data.runcleo.sel(nthreads=nthreads)
-            y = runcleo[:, 0, 0]
-            lq, uq = runcleo[:, 2, 0], runcleo[:, 3, 0]
-            slab = None
-            if a == 0:
-                slab = "IQR"
-            hfuncs.add_shading(axs[1], x, lq, uq, c1, lstyles[lab], label=slab)
+                # c2 = "purple"
+                # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip, logaxs=True)
+                # ax.plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
 
-            llab = None
-            if nthreads == data.nthreads[0]:
-                llab = lab
+                a += 1
+                c += 1
+        ax.set_title(var)
 
-            axs[1].plot(
-                x,
-                y,
-                color=c1,
-                marker=markers[lab],
-                linestyle=lstyles[lab],
-                label=llab,
-            )
-
-            # c2 = "purple"
-            # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip, logaxs=True)
-            # axs[1].plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
-
-            a += 1
-    axs[1].set_title("RunCLEO")
-
-    for lab, data in datasets.items():
-        for nthreads in data.nthreads:
-            x = domain_totnsupers(data)
-            timestep = data.timestep.sel(nthreads=nthreads)
-            y = timestep[:, 0, 0]
-            lq, uq = timestep[:, 2, 0], timestep[:, 3, 0]
-            slab = None
-            if a == 0:
-                slab = "IQR"
-            hfuncs.add_shading(axs[2], x, lq, uq, c1, lstyles[lab], label=slab)
-
-            llab = None
-            if nthreads == data.nthreads[0]:
-                llab = lab
-
-            axs[2].plot(
-                x,
-                y,
-                color=c1,
-                marker=markers[lab],
-                linestyle=lstyles[lab],
-                label=llab,
-            )
-
-            # c2 = "purple"
-            # xfit, yfit, m, c = line_of_best_fit(x, y, skip=skip, logaxs=True)
-            # axs[2].plot(xfit, yfit, color=c2, linestyle=lstyles[lab], label=f"scaling={m:.2f}")
-
-            a += 1
-    axs[2].set_title("Timestepping")
-
-    for ax in axs:
+    for ax in axs[:, 0]:
         ax.set_ylabel("Wall Clock Time /s")
 
-    axs[0].legend()
-    axs[-1].set_xlabel("Total Superdroplets in Domain")
+    axs[0, 0].legend()
+    axs[-1, 0].set_xlabel("Total Superdroplets in Domain")
+    axs[-1, 1].set_xlabel("Total Superdroplets in Domain")
 
     return fig, axs
 

@@ -35,19 +35,18 @@ python_initconds:
     geomeans: [0.02e-6, 0.15e-6]                              # means of bi-modal lognormal distribution [m]
     geosigs: [1.4, 1.6]                                       # stddev of bi-modal lognormal distribution
     scalefacs: [3, 2]                                         # ratio of heights of modes of distribution
-    numconc: 1.0e+7                                           # total no. conc of real droplets [m^-3]
+    numconc: 500.0e+6                                         # total no. conc of real droplets [m^-3]
   thermo:
     thermofiles: X                                            # names of thermofiles = thermofiles+"_[variable].dat"
-    PRESS0: 101315                                            # surface pressure[Pa]
+    PRESS0: 101315                                            # surface pressure [Pa]
+    TEMP0: 297.9                                              # surface temperature [K]
+    qvap0: 0.016                                              # vapour mass mixing ratio, qv, at surface [Kg/Kg]
     Zbase: 750                                                # height of cloud layer [m]
-    THETA: 288.15                                             # potential temperature below Zbase [K]
-    qcond_init: 0.0                                           # initial non-superdroplet qcond [Kg/Kg]
+    TEMPlapses: [9.8, 6.5]                                    # temperature lapse rates below/above Zbase [K/km]
+    qvaplapses: [2.97, "saturated"]                           # qv lapse rates below/above Zbase [g/Kg/km]
     WMAX: 1.0                                                 # maximum updraught velocity [m/s]
     Zlength: 1500                                             # divergent flow coord3 (z) lengthscale [m]
     Xlength: 1500                                             # divergent flow coord1 (x) lengthscale [m]
-    sratios: [0.99, 1.0025]                                   # supersaturation ratios [below, above] Zbase
-    qvapmethod: "sratio"                                      # calculate qvap from supersaturation ratios
-    moistlayer: False                                         # add super-moist layer to updraught
 
 ### Kokkos Initialization Parameters ###
 kokkos_settings:
@@ -63,10 +62,10 @@ domain:
 timesteps:
   CONDTSTEP: 1                                                  # time between SD condensation [s]
   COLLTSTEP: 1                                                  # time between SD collision [s]
-  MOTIONTSTEP: 2                                                # time between SDM motion [s]
-  COUPLTSTEP: 3600                                              # time between dynamic couplings [s]
-  OBSTSTEP: 120                                                 # time between SDM observations [s]
-  T_END: 3600                                                   # time span of integration from 0s to T_END [s]
+  MOTIONTSTEP: 3                                                # time between SDM motion [s]
+  COUPLTSTEP: 4800                                              # time between dynamic couplings [s]
+  OBSTSTEP: 15                                                  # time between SDM observations [s]
+  T_END: 4800                                                   # time span of integration from 0s to T_END [s]
 
 ### Initialisation Parameters ###
 inputfiles:

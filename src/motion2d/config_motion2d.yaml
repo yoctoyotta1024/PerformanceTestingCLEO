@@ -33,7 +33,7 @@ python_initconds:
     numconc: 500.0e+6                                         # total no. conc of real droplets [m^-3]
   thermo:
     thermofiles: X                                            # names of thermofiles = thermofiles+"_[variable].dat"
-    PRESS0: 101315                                            # surface pressure[Pa]
+    PRESS: 101315                                             # surface pressure[Pa]
     Zbase: 750                                                # height of cloud layer [m]
     THETA: 288.15                                             # potential temperature below Zbase [K]
     qcond_init: 0.0                                           # initial non-superdroplet qcond [Kg/Kg]

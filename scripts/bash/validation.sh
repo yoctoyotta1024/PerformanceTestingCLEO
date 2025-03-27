@@ -1,15 +1,15 @@
 #!/bin/bash
-#SBATCH --job-name=verifycond0d
+#SBATCH --job-name=validation
 #SBATCH --partition=compute
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --mem=940M
+#SBATCH --mem=60G
 #SBATCH --time=00:10:00
 #SBATCH --mail-user=clara.bayley@mpimet.mpg.de
 #SBATCH --mail-type=FAIL
 #SBATCH --account=bm1183
-#SBATCH --output=./verifycond0d_out.%j.out
-#SBATCH --error=./verifycond0d_err.%j.out
+#SBATCH --output=./validation_out.%j.out
+#SBATCH --error=./validation_err.%j.out
 
 ### ------------------------------------------------------------------------ ###
 ### -------------- PLEASE NOTE: this script assumes you have --------------- ###

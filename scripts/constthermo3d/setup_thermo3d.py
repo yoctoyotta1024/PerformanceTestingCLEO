@@ -117,21 +117,25 @@ for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
 
             params["ngbxs"] = ngbxs
             params["grid_filename"] = str(get_grid_filename(sharepath, ngbxs))
-            ndim_y = 2
-            if ngbxs < ndim_y:
-                ndim_y = ngbxs
-            assert ngbxs % ndim_y == 0.0, "ngbxs must be an integer multiple of ndim_y"
-            assert (
-                np.log2(ngbxs / ndim_y) % 1 == 0.0
-            ), "ngbxs must be an integer power of 2"
-            ndim_x = 2 ** int(np.floor(np.log2(ngbxs / ndim_y) / 2))
-            ndim_z = 2 ** int(np.ceil(np.log2(ngbxs / ndim_y) / 2))
+
+            if ngbxs == 1:
+                ndim_y = ndim_x = ndim_z = 1
+            else:
+                log2ngbxs = np.log2(ngbxs)
+                assert log2ngbxs % 1 == 0.0, "ngbxs must be an integer power of 2"
+                log2ny = int(np.floor(log2ngbxs / 3))
+                log2nx = int(np.floor((log2ngbxs - log2ny) / 2)) + 1
+                log2nz = int(np.ceil((log2ngbxs - log2ny) / 2)) - 1
+                ndim_y = 2**log2ny
+                ndim_x = 2**log2nx
+                ndim_z = 2**log2nz
             assert (
                 ndim_x * ndim_z * ndim_y == ngbxs
             ), "product of ndims must equal ngbxs"
+
             params["zgrid"] = [0, 1500, 1500 / ndim_z]
-            params["xgrid"] = [0, 1500, 1500 / ndim_x]
-            params["ygrid"] = [0, 200, 200 / ndim_y]
+            params["xgrid"] = [0, 6000, 6000 / ndim_x]
+            params["ygrid"] = [0, 300, 300 / ndim_y]
 
             thermofiles = get_thermodynamics_filenames(sharepath, ngbxs)
             params["thermofiles"] = str(thermofiles)

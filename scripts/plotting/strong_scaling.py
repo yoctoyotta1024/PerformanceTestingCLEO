@@ -26,6 +26,7 @@ import sys
 import matplotlib.pyplot as plt
 from matplotlib.cm import ScalarMappable
 from matplotlib.colors import LogNorm
+from matplotlib.gridspec import GridSpec
 
 path2src = Path(__file__).resolve().parent.parent.parent / "src"
 sys.path.append(str(path2src))  # for helperfuncs module
@@ -64,7 +65,7 @@ lstyles = hfuncs.buildtype_lstyles
 markers = hfuncs.buildtype_markers
 
 cmap = plt.get_cmap("plasma")
-norm = LogNorm(vmin=1, vmax=1e7)
+norm = LogNorm(vmin=1, vmax=1e8)
 ngbxs_nsupers_colors = {}
 for ngbxs, nsupers in ngbxs_nsupers_runs.keys():
     color = cmap(norm(ngbxs * nsupers))
@@ -80,12 +81,15 @@ def plot_strong_scaling_wallclock(
     executable: str,
     ngbxs_nsupers_runs: dict,
 ):
-    fig, axes = hfuncs.subplots(
-        figsize=(12, 20), nrows=4, ncols=1, hratios=[0.25] + [7] * 3
-    )
-    cax = axes[0]
-    axs = axes[1:]
+    fig = plt.figure(figsize=(16, 20))
+    gs = GridSpec(4, 2, figure=fig, height_ratios=[0.25, 7, 7, 7])
+    cax = fig.add_subplot(gs[0, :])
+    axs = []
+    for j in range(2):
+        for i in range(1, 4):
+            axs.append(fig.add_subplot(gs[i, j]))
     for ax in axs:
+        ax.spines[["right", "top"]].set_visible(False)
         ax.set_xscale("log")
         ax.set_yscale("log")
 
@@ -97,7 +101,14 @@ def plot_strong_scaling_wallclock(
         label="total nsupers",
     )
 
-    variables = ["timestep_sdm", "timestep_sdm_movement", "timestep_sdm_microphysics"]
+    variables = [
+        "summary",
+        "init",
+        "timestep",
+        "timestep_sdm",
+        "timestep_sdm_movement",
+        "timestep_sdm_microphysics",
+    ]
 
     for ax, var in zip(axs, variables):
         for buildtype in buildtypes:
@@ -163,13 +174,16 @@ def plot_strong_scaling_speedup(
     executable: str,
     ngbxs_nsupers_runs: dict,
 ):
-    fig, axes = hfuncs.subplots(
-        figsize=(10, 20), nrows=4, ncols=1, hratios=[0.25] + [7] * 3
-    )
-    cax = axes[0]
-    axs = axes[1:]
+    fig = plt.figure(figsize=(16, 20))
+    gs = GridSpec(4, 2, figure=fig, height_ratios=[0.25, 7, 7, 7])
+    cax = fig.add_subplot(gs[0, :])
+    axs = []
+    for j in range(2):
+        for i in range(1, 4):
+            axs.append(fig.add_subplot(gs[i, j]))
     for ax in axs:
-        ax.set_aspect("equal")
+        ax.spines[["right", "top"]].set_visible(False)
+        # ax.set_aspect("equal")
 
     fig.suptitle("Strong Scaling: Speedup")
     fig.colorbar(
@@ -179,7 +193,14 @@ def plot_strong_scaling_speedup(
         label="total nsupers",
     )
 
-    variables = ["timestep_sdm", "timestep_sdm_movement", "timestep_sdm_microphysics"]
+    variables = [
+        "summary",
+        "init",
+        "timestep",
+        "timestep_sdm",
+        "timestep_sdm_movement",
+        "timestep_sdm_microphysics",
+    ]
 
     for ax, var in zip(axs, variables):
         for buildtype in buildtypes:
@@ -263,12 +284,15 @@ def plot_strong_scaling_nthreads_efficiency(
     executable: str,
     ngbxs_nsupers_runs: dict,
 ):
-    fig, axes = hfuncs.subplots(
-        figsize=(12, 20), nrows=4, ncols=1, hratios=[0.25] + [7] * 3
-    )
-
-    cax = axes[0]
-    axs = axes[1:]
+    fig = plt.figure(figsize=(16, 20))
+    gs = GridSpec(4, 2, figure=fig, height_ratios=[0.25, 7, 7, 7])
+    cax = fig.add_subplot(gs[0, :])
+    axs = []
+    for j in range(2):
+        for i in range(1, 4):
+            axs.append(fig.add_subplot(gs[i, j]))
+    for ax in axs:
+        ax.spines[["right", "top"]].set_visible(False)
 
     fig.suptitle("Strong Scaling: Efficiency")
     fig.colorbar(
@@ -278,7 +302,14 @@ def plot_strong_scaling_nthreads_efficiency(
         label="total nsupers",
     )
 
-    variables = ["timestep_sdm", "timestep_sdm_movement", "timestep_sdm_microphysics"]
+    variables = [
+        "summary",
+        "init",
+        "timestep",
+        "timestep_sdm",
+        "timestep_sdm_movement",
+        "timestep_sdm_microphysics",
+    ]
 
     for ax, var in zip(axs, variables):
         for buildtype in buildtypes:

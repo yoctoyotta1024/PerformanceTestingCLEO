@@ -2,7 +2,7 @@
 Copyright (c) 2024 MPI-M, Clara Bayley
 
 -----  PerformanceTestingCLEO -----
-File: prettyplots.py
+File: prettyplots_kerneltimer.py
 Project: plotting
 Created Date: Thursday 27th March 2025
 Author: Clara Bayley (CB)
@@ -16,7 +16,7 @@ https://opensource.org/licenses/BSD-3-Clause
 -----
 File Description:
 Standalone script for pretty plotting specific scaling plots of specific datasets.
-Intented for use on output of thermo3d test.
+Intented for use on output of thermo3d test kerneltimer datasets.
 """
 
 # %%

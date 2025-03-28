@@ -1,0 +1,261 @@
+"""
+Copyright (c) 2024 MPI-M, Clara Bayley
+
+-----  PerformanceTestingCLEO -----
+File: prettyplots_spacetimestack.py
+Project: plotting
+Created Date: Friday 28th March 2025
+Author: Clara Bayley (CB)
+Additional Contributors:
+-----
+Last Modified: Friday 28th March 2025
+Modified By: CB
+-----
+License: BSD 3-Clause "New" or "Revised" License
+https://opensource.org/licenses/BSD-3-Clause
+-----
+File Description:
+Standalone script for pretty plotting specific scaling plots of specific datasets.
+Intented for use on output of thermo3d test spacetimestack datasets.
+"""
+
+# %%
+import numpy as np
+import matplotlib.pyplot as plt
+import xarray as xr
+from matplotlib.colors import LogNorm
+from matplotlib.gridspec import GridSpec
+from pathlib import Path
+from typing import Optional
+
+# %%
+### ---------- input parameters ---------- ###
+### path to directory to save plots in
+path4plots = Path("/home") / "m" / "m300950" / "performance_testing_cleo" / "plots"
+
+### paths to datatsets for each build type
+path2builds = (
+    Path("/work") / "bm1183" / "m300950" / "performance_testing_cleo" / "builds"
+)
+serial = path2builds / "serial" / "bin" / "thermo3d"
+openmp = path2builds / "openmp" / "bin" / "thermo3d"
+threads = path2builds / "threads" / "bin" / "thermo3d"
+cuda = path2builds / "cuda" / "bin" / "thermo3d"
+
+### datatsets for average over ensemble of runs for varioud ngbxs and threads for each build type
+nsupers = 256  # number of superdroplets per gridbox in datasets
+datasets = {
+    "Serial": xr.open_zarr(
+        serial / f"kp_spacetimestack_ngbxsensemble_nsupers{nsupers}.zarr"
+    ),
+    "CUDA": xr.open_zarr(
+        cuda / f"kp_spacetimestack_ngbxsensemble_nsupers{nsupers}.zarr"
+    ),
+    "OpenMP": xr.open_zarr(
+        openmp / f"kp_spacetimestack_ngbxsensemble_nsupers{nsupers}.zarr"
+    ),
+    "C++Threads": xr.open_zarr(
+        threads / f"kp_spacetimestack_ngbxsensemble_nsupers{nsupers}.zarr"
+    ),
+}
+### -------------------------------------- ###
+
+
+# %%
+### --------- plotting functions --------- ###
+def save_figure(savename: Path, dpi: Optional[int] = 128, tight: Optional[bool] = True):
+    plt.savefig(savename, dpi=dpi, bbox_inches="tight")
+    print(f"figure saved as {str(savename)}")
+
+
+def extrapolate_variable(
+    var: xr.DataArray,
+    new_coords: xr.DataArray,
+):
+    # extrapolate gbxs dimension of var to match new_coords
+    if len(var.coords["ngbxs"]) != len(new_coords) or np.any(
+        var.coords["ngbxs"].values != new_coords.values
+    ):
+        print(f"warning: extrapolating ngbxs coordinate of {var.name}")
+        var = var.interp(ngbxs=new_coords, kwargs={"fill_value": "extrapolate"})
+
+    return var
+
+
+# %%
+def plot_space_time_stack_memory_allocations_vs_nthreads(
+    datasets: dict, ngbxs2plot: dict, nsupers: int
+):
+    fig = plt.figure(figsize=(10, 8))
+    gs = GridSpec(2, 2, figure=fig, height_ratios=[2, 1])
+    ax0 = fig.add_subplot(gs[0, :])
+    ax0b = ax0.twinx()  # for max memory consumption
+    ax1 = fig.add_subplot(gs[1, 0])
+    ax2 = fig.add_subplot(gs[1, 1])
+
+    for ax in [ax0, ax1, ax2]:
+        ax.spines[["right", "top"]].set_visible(False)
+    ax0b.spines[["left", "top"]].set_visible(False)
+
+    # buildtype: linestyle
+    linestyles = {
+        "Serial": (0, (1, 1)),  # densely dotted
+        "CUDA": "-.",  # CUDA_host
+        "CUDA_device": (0, (3, 5, 1, 5)),  # dashdotted
+        "OpenMP": "-",
+        "C++Threads": "--",
+    }
+
+    colors = {}
+    cmap = plt.get_cmap("plasma")
+    norm = LogNorm(vmin=1e2, vmax=1e8)
+    for ngbxs in list(ngbxs2plot.values())[0]:
+        colors[ngbxs] = cmap(norm(ngbxs * nsupers))
+
+    ds_serial = datasets["Serial"]
+
+    totnsupers_serial = ds_serial.ngbxs * ds_serial.attrs["nsupers"]
+    highwater_serial = ds_serial.host_high_water_memory_consumption.sel(
+        nthreads=1, statistic="mean"
+    )  # kB
+    maxalloc_host_serial = ds_serial.max_memory_allocation.sel(
+        nthreads=1, statistic="mean", spaces="HOST"
+    )  # kB
+    ax0.plot(
+        totnsupers_serial / 1e6,
+        highwater_serial / 1e6,
+        color="green",
+        linestyle=linestyles["Serial"],
+    )
+    ax0b.plot(
+        totnsupers_serial / 1e6,
+        maxalloc_host_serial / 1e6,
+        color="brown",
+        linestyle=linestyles["Serial"],
+    )
+    ax0b.set_ylim(ax0.get_ylim())
+    ax0.set_xlabel("total number of superdroplets in domain / 10$^6$")
+    ax0.set_ylabel("host high water memory consumption /GB", color="green")
+    ax0b.set_ylabel("maximum memory allocation / GB", color="brown")
+    lines0_lab = ax0.plot(
+        totnsupers_serial / 1e6,
+        highwater_serial / 1e6,
+        color="k",
+        linestyle=linestyles["Serial"],
+        zorder=0,
+    )
+    ax0.legend(labels=["Serial"], handles=lines0_lab, loc="upper left")
+    ax0.set_xlim(left=0)
+    ax0.set_ylim(bottom=0.0)
+
+    handles1 = {}  # for totnsupers colours
+    handles2 = {}  # for build types linestyles
+    for build in ngbxs2plot.keys():
+        ds = datasets[build]
+        highwater_serial = extrapolate_variable(highwater_serial, ds.ngbxs)
+        maxalloc_host_serial = extrapolate_variable(maxalloc_host_serial, ds.ngbxs)
+        for ngbxs in ngbxs2plot[build]:
+            highwater = ds.host_high_water_memory_consumption.sel(
+                ngbxs=ngbxs, statistic="mean"
+            )  # kB
+            highwater = highwater / highwater_serial.sel(ngbxs=ngbxs)
+            ax1.plot(
+                ds.nthreads, highwater, linestyle=linestyles[build], color=colors[ngbxs]
+            )
+
+            maxalloc_host = ds.max_memory_allocation.sel(
+                ngbxs=ngbxs, statistic="mean", spaces="HOST"
+            )  # kB
+            maxalloc_host = maxalloc_host / maxalloc_host_serial.sel(ngbxs=ngbxs)
+            lines = ax2.plot(
+                ds.nthreads,
+                maxalloc_host,
+                linestyle=linestyles[build],
+                color=colors[ngbxs],
+            )
+
+            if build == "CUDA":
+                maxalloc_device = ds.max_memory_allocation.sel(
+                    ngbxs=ngbxs, statistic="mean", spaces="CUDA"
+                )  # kB
+                maxalloc_device = maxalloc_device / maxalloc_host_serial.sel(
+                    ngbxs=ngbxs
+                )
+                ax2.plot(
+                    ds.nthreads,
+                    maxalloc_device,
+                    linestyle=linestyles["CUDA_device"],
+                    color=colors[ngbxs],
+                )
+
+            if build == list(ngbxs2plot.keys())[0]:  # best if == "OpenMP"
+                totnsupers = ngbxs * ds.attrs["nsupers"]
+                handles1[totnsupers] = lines[0]
+
+        lines_lab = ax2.plot(
+            ds.nthreads, maxalloc_host, linestyle=linestyles[build], color="k", zorder=0
+        )
+        if build == "CUDA":
+            linesb_lab = ax2.plot(
+                ds.nthreads,
+                maxalloc_device,
+                linestyle=linestyles["CUDA_device"],
+                color="k",
+                zorder=0,
+            )
+            handles2["CUDA host"] = lines_lab[0]
+            handles2["CUDA device"] = linesb_lab[0]
+        else:
+            handles2[build] = lines_lab[0]
+
+    ax1.set_xlim([0, 130])
+    ax1.set_xlabel("number of CPU threads")
+    ax1.set_ylabel(
+        "host high water memory consumption\nrelative to serial", color="green"
+    )
+    ax1.legend(
+        handles=list(handles1.values()), labels=list(handles1.keys()), loc="upper right"
+    )
+
+    ax2.set_xlim([0, 130])
+    ax2.set_xlabel("number of CPU threads")
+    ax2.set_ylabel("maximum memory allocation\nrelative to serial", color="brown")
+    ax2.legend(
+        handles=list(handles2.values()), labels=list(handles2.keys()), loc="upper left"
+    )
+
+    fig.tight_layout()
+
+    return fig, [ax0, ax0b, ax1, ax2]
+
+
+### -------------------------------------- ###
+
+### -------------- plotting -------------- ###
+
+# %%
+ngbxs2plot = {
+    "OpenMP": [64, 512, 4096, 32768, 131072],
+    "C++Threads": [64, 512, 4096, 32768, 131072],
+    "CUDA": [64, 512, 4096, 32768, 131072],
+}
+fig, axs = plot_space_time_stack_memory_allocations_vs_nthreads(
+    datasets, ngbxs2plot, nsupers
+)
+savename = path4plots / "memory_vs_totnsupers.png"
+save_figure(savename)
+
+# %%
+ngbxs2plot = {
+    "OpenMP": [1, 64, 512, 4096, 32768, 131072],
+    "C++Threads": [1, 64, 512, 4096, 32768, 131072],
+    "CUDA": [1, 64, 512, 4096, 32768, 131072],
+}
+for build in ngbxs2plot.keys():
+    fig, axs = plot_space_time_stack_memory_allocations_vs_nthreads(
+        datasets, {build: ngbxs2plot[build]}, nsupers
+    )
+    savename = path4plots / f"memory_vs_totnsupers_{build}.png"
+    save_figure(savename)
+
+# %%

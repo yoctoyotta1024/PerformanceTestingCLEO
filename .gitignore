@@ -5,6 +5,7 @@ bin
 *.dat
 *.png
 *.gif
+*.zarr
 
 ##### Documentation Build Artifacts #####
 docs/source/_autosummary

@@ -33,8 +33,7 @@ def get_ngbxs_nsupers_runs() -> dict:
         (4096, 256): 1,
         (16384, 256): 1,
         (32768, 256): 1,
-        (131072, 256): 1,
-        (1048576, 256): 1,
+        (131072, 256): 1,  # not for nthreads=1 on serial, openmp or threads
     }
     return ngbxs_nsupers_runs
 
@@ -56,8 +55,12 @@ def get_ngbxs_nsupers_nthreads(
             (4096, 256): [128, 64, 16, 1],
             (16384, 256): [128, 64, 16, 1],
             (32768, 256): [128, 64, 16, 1],
-            (131072, 256): [128, 64, 16, 1],
-            (1048576, 256): [128, 64, 16, 1],
+            (131072, 256): [
+                128,
+                64,
+                16,
+                1,
+            ],  # not for nthreads=1 on serial, openmp or threads
         }
     return ngbxs_nsupers_nthreads
 

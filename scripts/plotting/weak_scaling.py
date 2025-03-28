@@ -506,9 +506,7 @@ for nsupers in nsupers_per_gbx:
         cmap,
         norm,
     )
-    savename = (
-        savedir / f"weak_scaling_wallclock_sdmonly_nsupers{nsupers}_gbxsensemble.png"
-    )
+    savename = savedir / f"weak_scaling_wallclock_nsupers{nsupers}_gbxsensemble.png"
     hfuncs.savefig(savename, tight=False)
 
 # %%
@@ -525,9 +523,7 @@ for nsupers in nsupers_per_gbx:
         cmap,
         norm,
     )
-    savename = (
-        savedir / f"weak_scaling_speedup_sdmonly_nsupers{nsupers}_gbxsensemble.png"
-    )
+    savename = savedir / f"weak_scaling_speedup_nsupers{nsupers}_gbxsensemble.png"
     hfuncs.savefig(savename, tight=False)
 
 # %%
@@ -544,9 +540,7 @@ for nsupers in nsupers_per_gbx:
         cmap,
         norm,
     )
-    savename = (
-        savedir / f"weak_scaling_efficiency_sdmonly_nsupers{nsupers}_gbxsensemble.png"
-    )
+    savename = savedir / f"weak_scaling_efficiency_nsupers{nsupers}_gbxsensemble.png"
     hfuncs.savefig(savename, tight=False)
 
 # %%
@@ -563,8 +557,7 @@ for nsupers in nsupers_per_gbx:
             norm,
         )
         savename = (
-            savedir
-            / f"weak_scaling_wallclock_sdmonly_nsupers{nsupers}_{b}_gbxsensemble.png"
+            savedir / f"weak_scaling_wallclock_nsupers{nsupers}_{b}_gbxsensemble.png"
         )
         hfuncs.savefig(savename, tight=False)
 
@@ -581,8 +574,7 @@ for nsupers in nsupers_per_gbx:
             norm,
         )
         savename = (
-            savedir
-            / f"weak_scaling_speedup_sdmonly_nsupers{nsupers}_{b}_gbxsensemble.png"
+            savedir / f"weak_scaling_speedup_nsupers{nsupers}_{b}_gbxsensemble.png"
         )
         hfuncs.savefig(savename, tight=False)
 
@@ -599,8 +591,7 @@ for nsupers in nsupers_per_gbx:
             norm,
         )
         savename = (
-            savedir
-            / f"weak_scaling_efficiency_sdmonly_nsupers{nsupers}_{b}_gbxsensemble.png"
+            savedir / f"weak_scaling_efficiency_nsupers{nsupers}_{b}_gbxsensemble.png"
         )
         hfuncs.savefig(savename, tight=False)
 # %%

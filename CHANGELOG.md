@@ -2,6 +2,18 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v2.3.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/6ee92b454695afa13770e71ccf3bc4da65c4f740..v2.3.0) - 2025-03-28
+#### Features
+- new script for pretty plots - ([05837dc](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/05837dc67512f76254c1276e3e9273449068a9e7)) - clara.bayley
+#### Refactoring
+- change names of saved figures - ([6e98a72](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/6e98a720ff9d54d56be5d0caa01a522ff60b48e0)) - clara.bayley
+- change variables in quickplots - ([d54fa59](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/d54fa5982c0528d60eb22d180d1df5cc91849ea8)) - clara.bayley
+- note about failed runs - ([cfd1afd](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/cfd1afdcb76b525391d932a5d230613d1bb04078)) - clara.bayley
+- better way to seup environment - ([844a873](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/844a873f23d44bf634c1e4143d77318a13a28bd0)) - clara.bayley
+- zarr files in gitignore - ([6ee92b4](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/6ee92b454695afa13770e71ccf3bc4da65c4f740)) - clara.bayley
+
+- - -
+
 ## [v2.2.3](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/40634d94f221967de9eac51ce18eb3ec7a2e0a7c..v2.2.3) - 2025-03-27
 #### Bug Fixes
 - setup for ngbxs=1 - ([bec7fc6](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/bec7fc64b8d0540bee9b4e5615f4f9bbb758f066)) - clara.bayley

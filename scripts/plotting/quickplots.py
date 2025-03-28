@@ -150,10 +150,10 @@ def plot_simple_wallclock_scaling(datasets: dict):
 
     variables = [
         "summary",
-        "timestep_sdm",
-        "runcleo",
-        "timestep_sdm_movement",
         "timestep",
+        "init",
+        "timestep_sdm_movement",
+        "runcleo",
         "timestep_sdm_microphysics",
     ]
     for var, ax in zip(variables, axs.flatten()):

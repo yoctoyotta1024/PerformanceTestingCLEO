@@ -2,7 +2,7 @@
 Copyright (c) 2024 MPI-M, Clara Bayley
 
 -----  PerformanceTestingCLEO -----
-File: prettyplots.py
+File: prettyplots_kerneltimer.py
 Project: plotting
 Created Date: Thursday 27th March 2025
 Author: Clara Bayley (CB)
@@ -16,7 +16,7 @@ https://opensource.org/licenses/BSD-3-Clause
 -----
 File Description:
 Standalone script for pretty plotting specific scaling plots of specific datasets.
-Intented for use on output of thermo3d test.
+Intented for use on output of thermo3d test kerneltimer datasets.
 """
 
 # %%
@@ -88,6 +88,13 @@ def calculate_speedup(
     return time_reference / time
 
 
+def perfect_scaling(x1, x2, y1, m=1):
+    """straight line on log-log plot with gradient 'm' from (x1,y1) to (x2,y2)
+    such that y = A * x^m and goes through (x1, y1)"""
+    log10_y2 = np.log10(y1) + m * (np.log10(x2) - np.log10(x1))  # straight line
+    return [x1, x2], [y1, 10**log10_y2]  # [x, y]
+
+
 # %%
 def plot_wallclock_vs_total_num_supers(
     datasets: dict, nthreads2plot: dict, simulated_time: float
@@ -143,11 +150,12 @@ def plot_wallclock_vs_total_num_supers(
             )
 
         if build == "Serial":
+            linear = perfect_scaling(x[0], x[-1], y[0])
             perf = ax.plot(
-                ax.get_xlim(),
-                ax.get_ylim(),
+                linear[0],
+                linear[1],
                 linewidth=0.5,
-                color="grey",
+                color="dimgrey",
                 label="1:1 scaling",
             )
             axb = axs[0].twinx()
@@ -430,7 +438,7 @@ def plot_speedup_strong_scaling_for_total_num_supers(
     ax_tmp.set_xticks([])
     ax_tmp.set_yticks([])
     labels = [formatted_labels[i] for i in handles2.keys()]
-    labels[0] = f"#SDs in domain = {labels[0]}"
+    labels[0] = f"#SDs = {labels[0]}"
     ax_tmp.legend(handles=list(handles2.values()), labels=labels, loc="upper right")
 
     axs[0].set_ylabel("speed-up")

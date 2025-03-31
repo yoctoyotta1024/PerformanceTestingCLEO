@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v2.4.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/6f82d07d0810f09d065fa6812b9b7ab41994dc86..v2.4.0) - 2025-03-31
+#### Bug Fixes
+- correct linear scaling for kernel timer pretty plot - ([6fcb56e](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/6fcb56e284cd2585ad606ad899a808f867d7930a)) - clara.bayley
+#### Features
+- new script for pretty plots of memory allocations - ([62199d9](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/62199d912f8a67dda0e1b0ac92531b97f55fc3bf)) - clara.bayley
+- new script for pretty plots of memory allocations - ([3eec542](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/3eec5424e096a2b6f0fefa9baeb881a274e0a4a3)) - clara.bayley
+#### Refactoring
+- file rename - ([6f82d07](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/6f82d07d0810f09d065fa6812b9b7ab41994dc86)) - clara.bayley
+
+- - -
+
 ## [v2.3.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/6ee92b454695afa13770e71ccf3bc4da65c4f740..v2.3.0) - 2025-03-28
 #### Features
 - new script for pretty plots - ([05837dc](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/05837dc67512f76254c1276e3e9273449068a9e7)) - clara.bayley

@@ -153,7 +153,7 @@ def plot_serial_space_time_stack_memory_allocations_vs_total_num_supers(
     legb = ax0b.legend(labels=[labelb], handles=[lines_fitb[0]], loc="lower right")
     plt.setp(legb.get_texts()[0], color="brown")
 
-    return ax0, ax0b, highwater_serial, maxalloc_host_serial
+    return ax0, ax0b, highwater_serial * 1e6, maxalloc_host_serial * 1e6  # memory in kB
 
 
 def plot_space_time_stack_memory_allocations_vs_nthreads(

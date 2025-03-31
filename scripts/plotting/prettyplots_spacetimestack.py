@@ -82,20 +82,91 @@ def extrapolate_variable(
     return var
 
 
+def linear_scaling(x, y):
+    """fit straight line with gradient 'm' from (x[0],y[0]) to (x[-1],y[-1])"""
+    m = (y[-1] - y[0]) / (x[-1] - x[0])
+    return (
+        [x[0], x[-1]],
+        [y[0], y[-1]],
+        m,
+    )  # x and y of 2 points and gradient of straight line
+
+
 # %%
+def plot_serial_space_time_stack_memory_allocations_vs_total_num_supers(
+    ax0, ds_serial: xr.Dataset, linestyle: str
+):
+    ax0b = ax0.twinx()  # for max memory consumption
+    ax0b.spines[["left", "top"]].set_visible(False)
+
+    totnsupers_serial = (
+        ds_serial.ngbxs * ds_serial.attrs["nsupers"] / 1e6
+    )  # per 1e6 SDs
+    highwater_serial = (
+        ds_serial.host_high_water_memory_consumption.sel(nthreads=1, statistic="mean")
+        / 1e6
+    )  # GB
+    maxalloc_host_serial = (
+        ds_serial.max_memory_allocation.sel(nthreads=1, statistic="mean", spaces="HOST")
+        / 1e6
+    )  # GB
+    ax0.plot(
+        totnsupers_serial,
+        highwater_serial,
+        color="green",
+        linestyle=linestyle,
+        linewidth=2,
+    )
+    ax0b.plot(
+        totnsupers_serial,
+        maxalloc_host_serial,
+        color="brown",
+        linestyle=linestyle,
+        linewidth=2,
+    )
+
+    x0, y0, m0 = linear_scaling(totnsupers_serial, highwater_serial)
+    lines_fit0 = ax0.plot(x0, y0, color="dimgrey", linestyle="-", linewidth=0.5)
+    x1, y1, m1 = linear_scaling(totnsupers_serial, maxalloc_host_serial)
+    lines_fitb = ax0b.plot(x1, y1, color="dimgrey", linestyle="-", linewidth=0.5)
+
+    ax0.set_xlabel("total number of superdroplets in domain / 10$^6$")
+    ax0.set_ylabel("host high water memory consumption /GB", color="green")
+    ax0b.set_ylabel("maximum memory allocation / GB", color="brown")
+    ax0.set_xlim(left=0)
+    ax0.set_ylim(bottom=0.0)
+    ax0b.set_ylim(ax0.get_ylim())
+
+    lines0 = ax0.plot(
+        totnsupers_serial,
+        highwater_serial,
+        color="k",
+        linestyle=linestyle,
+        linewidth=2,
+        zorder=0,
+    )
+    labels = ["serial", "linear fit, m={:.3f}".format(m0.values)]
+    handles = [lines0[0], lines_fit0[0]]
+    leg = ax0.legend(labels=labels, handles=handles, loc="upper left")
+    plt.setp(leg.get_texts()[1], color="green")
+    labelb = "linear fit, m={:.3f}".format(m1.values)
+    legb = ax0b.legend(labels=[labelb], handles=[lines_fitb[0]], loc="lower right")
+    plt.setp(legb.get_texts()[0], color="brown")
+
+    return ax0, ax0b, highwater_serial, maxalloc_host_serial
+
+
 def plot_space_time_stack_memory_allocations_vs_nthreads(
     datasets: dict, ngbxs2plot: dict, nsupers: int
 ):
     fig = plt.figure(figsize=(10, 8))
     gs = GridSpec(2, 2, figure=fig, height_ratios=[2, 1])
     ax0 = fig.add_subplot(gs[0, :])
-    ax0b = ax0.twinx()  # for max memory consumption
     ax1 = fig.add_subplot(gs[1, 0])
     ax2 = fig.add_subplot(gs[1, 1])
 
     for ax in [ax0, ax1, ax2]:
         ax.spines[["right", "top"]].set_visible(False)
-    ax0b.spines[["left", "top"]].set_visible(False)
 
     # buildtype: linestyle
     linestyles = {
@@ -112,41 +183,25 @@ def plot_space_time_stack_memory_allocations_vs_nthreads(
     for ngbxs in list(ngbxs2plot.values())[0]:
         colors[ngbxs] = cmap(norm(ngbxs * nsupers))
 
-    ds_serial = datasets["Serial"]
+    # total number of superdroplets in domain: formatted number
+    formatted_labels = {
+        256: "3x10$^2$",
+        16384: "2x10$^4$",
+        131072: "1x10$^5$",
+        1048576: "1x10$^6$",
+        8388608: "8x10$^6$",
+        33554432: "3x10$^7$",
+    }
 
-    totnsupers_serial = ds_serial.ngbxs * ds_serial.attrs["nsupers"]
-    highwater_serial = ds_serial.host_high_water_memory_consumption.sel(
-        nthreads=1, statistic="mean"
-    )  # kB
-    maxalloc_host_serial = ds_serial.max_memory_allocation.sel(
-        nthreads=1, statistic="mean", spaces="HOST"
-    )  # kB
-    ax0.plot(
-        totnsupers_serial / 1e6,
-        highwater_serial / 1e6,
-        color="green",
-        linestyle=linestyles["Serial"],
+    ds_serial = datasets["Serial"]
+    (
+        ax0,
+        ax0b,
+        highwater_serial,
+        maxalloc_host_serial,
+    ) = plot_serial_space_time_stack_memory_allocations_vs_total_num_supers(
+        ax0, ds_serial, linestyles["Serial"]
     )
-    ax0b.plot(
-        totnsupers_serial / 1e6,
-        maxalloc_host_serial / 1e6,
-        color="brown",
-        linestyle=linestyles["Serial"],
-    )
-    ax0b.set_ylim(ax0.get_ylim())
-    ax0.set_xlabel("total number of superdroplets in domain / 10$^6$")
-    ax0.set_ylabel("host high water memory consumption /GB", color="green")
-    ax0b.set_ylabel("maximum memory allocation / GB", color="brown")
-    lines0_lab = ax0.plot(
-        totnsupers_serial / 1e6,
-        highwater_serial / 1e6,
-        color="k",
-        linestyle=linestyles["Serial"],
-        zorder=0,
-    )
-    ax0.legend(labels=["Serial"], handles=lines0_lab, loc="upper left")
-    ax0.set_xlim(left=0)
-    ax0.set_ylim(bottom=0.0)
 
     handles1 = {}  # for totnsupers colours
     handles2 = {}  # for build types linestyles
@@ -213,9 +268,9 @@ def plot_space_time_stack_memory_allocations_vs_nthreads(
     ax1.set_ylabel(
         "host high water memory consumption\nrelative to serial", color="green"
     )
-    ax1.legend(
-        handles=list(handles1.values()), labels=list(handles1.keys()), loc="upper right"
-    )
+    labels = [formatted_labels[i] for i in handles1.keys()]
+    labels[0] = f"#SDs = {labels[0]}"
+    ax1.legend(handles=list(handles1.values()), labels=labels, loc="upper right")
 
     ax2.set_xlim([0, 130])
     ax2.set_xlabel("number of CPU threads")

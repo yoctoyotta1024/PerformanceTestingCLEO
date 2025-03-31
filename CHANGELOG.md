@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v2.4.1](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/2e1ab0d6c2fe0d6a7565fef3e88edf77c7004626..v2.4.1) - 2025-03-31
+#### Bug Fixes
+- convter back to kB before return - ([2e1ab0d](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/2e1ab0d6c2fe0d6a7565fef3e88edf77c7004626)) - clara.bayley
+
+- - -
+
 ## [v2.4.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/6f82d07d0810f09d065fa6812b9b7ab41994dc86..v2.4.0) - 2025-03-31
 #### Bug Fixes
 - correct linear scaling for kernel timer pretty plot - ([6fcb56e](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/6fcb56e284cd2585ad606ad899a808f867d7930a)) - clara.bayley

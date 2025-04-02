@@ -117,9 +117,9 @@ def plot_wallclock_vs_total_num_supers(
         alpha = 0.3
 
         if build == "OpenMP" or build == "C++Threads":
-            ax.set_title(f"{build} with {nthreads} threads")
+            ax.set_title(f"{build} with {nthreads} Threads")
         elif build == "CUDA":
-            ax.set_title(f"{build} with 1 GPU and {nthreads} CPU threads")
+            ax.set_title(f"{build} with 1 GPU and {nthreads} CPU Threads")
         else:
             ax.set_title(build)
 
@@ -127,8 +127,8 @@ def plot_wallclock_vs_total_num_supers(
         vars = {
             "summary": ["total", "tab:blue"],
             "timestep_sdm": ["SDM", "tab:cyan"],
-            "timestep_sdm_movement": ["movement", "tab:purple"],
-            "timestep_sdm_microphysics": ["microphysics", "tab:red"],
+            "timestep_sdm_movement": ["Motion", "tab:purple"],
+            "timestep_sdm_microphysics": ["Microphysics", "tab:red"],
         }
 
         for var, props in vars.items():
@@ -219,8 +219,8 @@ def plot_wallclock_strong_scaling_for_total_num_supers(
     # variable_name: [label, colour]
     vars = {
         "timestep_sdm": ["SDM", "tab:cyan"],
-        "timestep_sdm_microphysics": ["microphysics", "tab:red"],
-        "timestep_sdm_movement": ["movement", "tab:purple"],
+        "timestep_sdm_microphysics": ["Microphysics", "tab:red"],
+        "timestep_sdm_movement": ["Motion", "tab:purple"],
     }
 
     for ax, var in zip(axs, vars.keys()):
@@ -329,8 +329,8 @@ def plot_speedup_strong_scaling_for_total_num_supers(
     # variable_name: [label, colour]
     vars = {
         "timestep_sdm": ["SDM", "tab:cyan"],
-        "timestep_sdm_microphysics": ["microphysics", "tab:red"],
-        "timestep_sdm_movement": ["movement", "tab:purple"],
+        "timestep_sdm_microphysics": ["Microphysics", "tab:red"],
+        "timestep_sdm_movement": ["Motion", "tab:purple"],
     }
 
     # total number of superdroplets in domain: formatted number
@@ -438,7 +438,7 @@ def plot_speedup_strong_scaling_for_total_num_supers(
     ax_tmp.set_xticks([])
     ax_tmp.set_yticks([])
     labels = [formatted_labels[i] for i in handles2.keys()]
-    labels[0] = f"#SDs = {labels[0]}"
+    labels[0] = f"#SDs={labels[0]}"
     ax_tmp.legend(handles=list(handles2.values()), labels=labels, loc="upper right")
 
     axs[0].set_ylabel("speed-up")

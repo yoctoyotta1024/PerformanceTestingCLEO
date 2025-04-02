@@ -131,8 +131,8 @@ def plot_serial_space_time_stack_memory_allocations_vs_total_num_supers(
     lines_fitb = ax0b.plot(x1, y1, color="dimgrey", linestyle="-", linewidth=0.5)
 
     ax0.set_xlabel("total number of superdroplets in domain / 10$^6$")
-    ax0.set_ylabel("host high water memory consumption /GB", color="green")
-    ax0b.set_ylabel("maximum memory allocation / GB", color="brown")
+    ax0.set_ylabel("CPU high-water memory consumption /GB", color="green")
+    ax0b.set_ylabel("maximum memory allocation /GB", color="brown")
     ax0.set_xlim(left=0)
     ax0.set_ylim(bottom=0.0)
     ax0b.set_ylim(ax0.get_ylim())
@@ -159,8 +159,8 @@ def plot_serial_space_time_stack_memory_allocations_vs_total_num_supers(
 def plot_space_time_stack_memory_allocations_vs_nthreads(
     datasets: dict, ngbxs2plot: dict, nsupers: int
 ):
-    fig = plt.figure(figsize=(10, 8))
-    gs = GridSpec(2, 2, figure=fig, height_ratios=[2, 1])
+    fig = plt.figure(figsize=(9, 6.5))
+    gs = GridSpec(2, 2, figure=fig, height_ratios=[5, 4])
     ax0 = fig.add_subplot(gs[0, :])
     ax1 = fig.add_subplot(gs[1, 0])
     ax2 = fig.add_subplot(gs[1, 1])
@@ -258,25 +258,30 @@ def plot_space_time_stack_memory_allocations_vs_nthreads(
                 color="k",
                 zorder=0,
             )
-            handles2["CUDA host"] = lines_lab[0]
-            handles2["CUDA device"] = linesb_lab[0]
+            handles2["CUDA CPU"] = lines_lab[0]
+            handles2["CUDA GPU"] = linesb_lab[0]
         else:
             handles2[build] = lines_lab[0]
 
     ax1.set_xlim([0, 130])
     ax1.set_xlabel("number of CPU threads")
     ax1.set_ylabel(
-        "host high water memory consumption\nrelative to serial", color="green"
+        "CPU high-water memory consumption\nrelative to serial", color="green"
     )
     labels = [formatted_labels[i] for i in handles1.keys()]
     labels[0] = f"#SDs = {labels[0]}"
-    ax1.legend(handles=list(handles1.values()), labels=labels, loc="upper right")
+    ax1.legend(
+        handles=list(handles1.values()), labels=labels, loc="upper right", fontsize=9
+    )
 
     ax2.set_xlim([0, 130])
     ax2.set_xlabel("number of CPU threads")
     ax2.set_ylabel("maximum memory allocation\nrelative to serial", color="brown")
     ax2.legend(
-        handles=list(handles2.values()), labels=list(handles2.keys()), loc="upper left"
+        handles=list(handles2.values()),
+        labels=list(handles2.keys()),
+        loc="upper left",
+        fontsize=9,
     )
 
     fig.tight_layout()

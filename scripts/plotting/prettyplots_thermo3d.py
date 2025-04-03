@@ -20,6 +20,7 @@ Intented for use on output dataset of thermo3d test with non-null observer compi
 """
 
 # %%
+import awkward as ak
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
@@ -215,6 +216,93 @@ thermo, winds = pyzarr.get_thermodata(
 ### save figure for initial conditions
 fig, axs = plot_initial_conditions(gbxs, thermo, sddata)
 savename = path4plots / Path("thermo3d_initial_conditions.png")
+save_figure(savename)
+
+
+# %%
+times2plot = time.mins
+nsample = 500
+range1 = [1500, 3000]
+range2 = [gbxs["yhalf"][0], gbxs["yhalf"][1]]
+
+
+def define_variable_subset(var, minmax):
+    booleans = np.where(var >= minmax[0], True, False)
+    booleans = np.where(var < minmax[1], booleans, False)
+    return booleans
+
+
+def variable_in_ranges(var, subsets):
+    for subset in subsets:
+        var = np.where(subset, var, np.nan)
+    return var[~np.isnan(var)]
+
+
+tslice = [
+    int(np.argmin(abs(t - time.mins))) for t in times2plot
+]  # turn time into time index
+set2 = define_variable_subset(sddata.coord2[tslice], range2)
+set1 = define_variable_subset(sddata.coord1[tslice], range1)
+
+sdid = variable_in_ranges(sddata.sdId[tslice], [set2, set1])
+radius = variable_in_ranges(sddata.radius[tslice], [set2, set1])
+coord3 = variable_in_ranges(sddata.coord3[tslice], [set2, set1])
+coord1 = variable_in_ranges(sddata.coord1[tslice], [set2, set1])
+
+# %%
+sds2sample = np.random.choice(sdid[0], size=nsample, replace=False)
+
+radius_sample = []
+coord3_sample = []
+coord1_sample = []
+for t in range(len(times2plot)):
+    sdid_sample, idxs, _ = np.intersect1d(
+        sdid[t], sds2sample, assume_unique=True, return_indices=True
+    )
+    idxs = ak.to_numpy(idxs).astype("int32")
+
+    coord3_tsample = coord3[t][idxs]
+    coord1_tsample = coord1[t][idxs]
+    radius_tsample = radius[t][idxs]
+
+    if len(sdid_sample) != nsample:
+        missing_sds = np.setdiff1d(sds2sample, sdid_sample, assume_unique=True)
+        missing_idxs = np.searchsorted(sdid_sample, missing_sds)
+        coord3_tsample = np.insert(coord3_tsample, missing_idxs, np.nan)
+        coord1_tsample = np.insert(coord1_tsample, missing_idxs, np.nan)
+        radius_tsample = np.insert(radius_tsample, missing_idxs, np.nan)
+    coord3_sample.append(coord3_tsample)
+    coord1_sample.append(coord1_tsample)
+    radius_sample.append(radius_tsample)
+coord3_sample = np.asarray(coord3_sample)
+coord1_sample = np.asarray(coord1_sample)
+radius_sample = np.asarray(radius_sample)
+
+# %%
+fig = plt.figure(figsize=(12, 6))
+gs = GridSpec(1, 2, figure=fig, width_ratios=[3, 2])
+ax0 = fig.add_subplot(gs[0, 0])
+ax1 = fig.add_subplot(gs[0, 1])
+
+ax0.plot(coord1_sample, coord3_sample)
+ax0.set_aspect("equal")
+ax0.set_xlabel("x /m")
+ax0.set_ylabel("z /m")
+ax0.set_aspect("equal")
+ax0.set_xlim([range1[0], range1[1]])
+ax0.set_ylim([0, 1500])
+ax0.spines[["left", "right"]].set_visible(False)
+
+ax1.plot(radius_sample / 1e3, coord3_sample)
+ax1.set_ylabel("z /m")
+ax1.set_xlabel("radius /mm")
+ax1.set_ylim([0, 1500])
+ax1.set_xscale("log")
+ax1.spines[["right", "top"]].set_visible(False)
+
+fig.tight_layout()
+
+savename = path4plots / Path("thermo3d_superdroplet_tracing.png")
 save_figure(savename)
 
 # %%

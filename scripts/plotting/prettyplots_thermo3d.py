@@ -74,6 +74,49 @@ def save_figure(savename: Path, dpi: Optional[int] = 128):
     print(f"figure saved as {str(savename)}")
 
 
+def plot_superdroplet_distribution(fig, ax2, gbxs, sddata):
+    t = 0  # time slice to plot
+    vol = gbxs["gbxvols"][0, 0, 0] * 1e6  # [cm^3]
+    gbxindex = 0  # gridbox to plot
+
+    def get_attributes(sddata, attrs, t, gbxindex):
+        vars = []
+        for attr in attrs:
+            var = np.where(sddata.sdgbxindex[t] == gbxindex, sddata[attr][t], np.nan)
+            vars.append(var[~np.isnan(var)])
+        return vars
+
+    radius, xi, dss = get_attributes(
+        sddata, ["radius", "xi", "sdgbxindex"], t, gbxindex
+    )
+
+    ax2.scatter(
+        radius,
+        xi / vol,
+        marker=".",
+        color="teal",
+        label="superdroplets",
+        zorder=-1,
+    )
+
+    nbins = int(len(radius))
+    hedgs = np.linspace(np.log10(5e-3), np.log10(1), nbins + 1)  # edges to bins
+    wghts = xi / vol  # [cm^-3]
+    hist, hedgs = np.histogram(
+        np.log10(radius), bins=hedgs, weights=wghts, density=None
+    )
+    hcens = (hedgs[1:] + hedgs[:-1]) / 2
+    ax2.step(10**hcens, hist, where="mid", color="dimgrey", label="binned distribution")
+
+    ax2.set_xscale("log")
+    ax2.set_yscale("log")
+    ax2.set_xlim([5e-3, 1])
+    ax2.set_xlabel("radius /\u03BCm")
+    ax2.set_ylabel("aerosol number concentration / cm$^{-3}$")
+    ax2.legend()
+    ax2.spines[["right", "top"]].set_visible(False)
+
+
 def plot_thermodynamics_conditions(fig, ax0, ax1, ax3, cax, gbxs, thermo):
     t = 0  # time slice to plot
     y = 0  # y slice to plot
@@ -124,7 +167,7 @@ def plot_thermodynamics_conditions(fig, ax0, ax1, ax3, cax, gbxs, thermo):
     uvel = winds.uvel[t, y, :, :]  # m/s
     magnitude = np.sqrt(wvel**2 + uvel**2)
     ax3.pcolormesh(gbxs["xxh"], gbxs["zzh"], magnitude, cmap=cmap, norm=cmap_norm)
-    ax3.quiver(gbxs["xxf"], gbxs["zzf"], uvel, wvel)
+    ax3.quiver(gbxs["xxf"], gbxs["zzf"], uvel, wvel, pivot="mid", width=0.002, scale=15)
 
     fig.colorbar(
         ScalarMappable(norm=cmap_norm, cmap=cmap),
@@ -150,6 +193,7 @@ def plot_initial_conditions(gbxs, thermo, sddata):
     cax = fig.add_subplot(gs[1, -1])
 
     plot_thermodynamics_conditions(fig, ax0, ax1, ax3, cax, gbxs, thermo)
+    plot_superdroplet_distribution(fig, ax2, gbxs, sddata)
 
     return fig, [ax0, ax1, ax2, ax3, cax]
 

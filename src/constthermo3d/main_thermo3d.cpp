@@ -43,6 +43,7 @@
 #include "observers/massmoments_observer.hpp"
 #include "observers/nsupers_observer.hpp"
 #include "observers/observers.hpp"
+#include "observers/state_observer.hpp"
 #include "observers/streamout_observer.hpp"
 #include "observers/superdrops_observer.hpp"
 #include "observers/time_observer.hpp"
@@ -134,9 +135,10 @@ inline Observer auto create_superdrops_observer(const unsigned int interval,
   CollectDataForDataset<Store> auto msol = CollectMsol(dataset, maxchunk);
   CollectDataForDataset<Store> auto coord3 = CollectCoord3(dataset, maxchunk);
   CollectDataForDataset<Store> auto coord1 = CollectCoord1(dataset, maxchunk);
+  CollectDataForDataset<Store> auto coord2 = CollectCoord2(dataset, maxchunk);
 
   const auto collect_sddata =
-      coord1 >> coord3 >> msol >> radius >> xi >> sdgbxindex >> sdid;
+      coord2 >> coord1 >> coord3 >> msol >> radius >> xi >> sdgbxindex >> sdid;
   return SuperdropsObserver(interval, dataset, maxchunk, collect_sddata);
 }
 
@@ -161,16 +163,19 @@ inline Observer auto create_superdrops_observer(const unsigned int interval,
 
 //   const Observer auto obs2 = GbxindexObserver(dataset, maxchunk, ngbxs);
 
-//   const Observer auto obs3 = NsupersObserver(obsstep, dataset, maxchunk,
+//   const Observer auto obs3 = StateObserver(obsstep, dataset, maxchunk,
 //   ngbxs);
 
-//   const Observer auto obs4 =
+//   const Observer auto obs4 = NsupersObserver(obsstep, dataset, maxchunk,
+//   ngbxs);
+
+//   const Observer auto obs5 =
 //       MassMomentsObserver(obsstep, dataset, maxchunk, ngbxs);
 
 //   const Observer auto obssd =
 //       create_superdrops_observer(obsstep, dataset, maxchunk);
 
-//   return obssd >> obs4 >> obs3 >> obs2 >> obs1 >> obs0;
+//   return obssd >> obs5 >> obs4 >> obs3 >> obs2 >> obs1 >> obs0;
 // }
 
 template <typename Store>

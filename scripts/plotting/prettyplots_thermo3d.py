@@ -70,6 +70,7 @@ setupfile = path2bin / "setup.txt"
 
 
 # %%
+### --------- plotting functions --------- ###
 def save_figure(savename: Path, dpi: Optional[int] = 128):
     plt.savefig(savename, dpi=dpi, bbox_inches="tight")
     print(f"figure saved as {str(savename)}")
@@ -199,6 +200,93 @@ def plot_initial_conditions(gbxs, thermo, sddata):
     return fig, [ax0, ax1, ax2, ax3, cax]
 
 
+def superdroplet_data_within_coordinate_ranges(
+    time, sddata, attrs, times2select, coord1_range, coord2_range
+):
+    def define_variable_subset(var, minmax):
+        booleans = np.where(var >= minmax[0], True, False)
+        booleans = np.where(var < minmax[1], booleans, False)
+        return booleans
+
+    def variable_in_ranges(var, subsets):
+        for subset in subsets:
+            var = np.where(subset, var, np.nan)
+        return var[~np.isnan(var)]
+
+    tslice = [
+        int(np.argmin(abs(t - time.mins))) for t in times2select
+    ]  # turn time into time index
+    set1 = define_variable_subset(sddata.coord1[tslice], coord1_range)
+    set2 = define_variable_subset(sddata.coord2[tslice], coord2_range)
+
+    selected_data = {}
+    for attr in attrs:
+        selected_data[attr] = variable_in_ranges(sddata[attr][tslice], [set2, set1])
+
+    return selected_data
+
+
+def random_sample_superdroplet_data(sddata, nsample, attrs, times2select):
+    sdId = sddata["sdId"]
+    sds2sample = np.random.choice(sdId[0], size=nsample, replace=False)
+
+    data_sample = {}
+    for attr in attrs:
+        data_sample[attr] = []
+
+    for t in range(len(times2select)):
+        sdid_sample, idxs, _ = np.intersect1d(
+            sdId[t], sds2sample, assume_unique=True, return_indices=True
+        )
+        idxs = ak.to_numpy(idxs).astype("int32")
+
+        tsample = {}
+        for attr in attrs:
+            tsample[attr] = sddata[attr][t][idxs]
+
+        if len(sdid_sample) != nsample:
+            missing_sds = np.setdiff1d(sds2sample, sdid_sample, assume_unique=True)
+            missing_idxs = np.searchsorted(sdid_sample, missing_sds)
+            for attr in attrs:
+                tsample[attr] = np.insert(tsample[attr], missing_idxs, np.nan)
+
+        for attr in attrs:
+            data_sample[attr].append(tsample[attr])
+
+    for attr in attrs:
+        data_sample[attr] = np.asarray(data_sample[attr])
+
+    return data_sample
+
+
+def plot_superdroplet_sample_tracing(sample, coord1_range):
+    fig = plt.figure(figsize=(12, 6))
+    gs = GridSpec(1, 2, figure=fig, width_ratios=[3, 2])
+    ax0 = fig.add_subplot(gs[0, 0])
+    ax1 = fig.add_subplot(gs[0, 1])
+
+    ax0.plot(sample["coord1"], sample["coord3"])
+    ax0.set_aspect("equal")
+    ax0.set_xlabel("x /m")
+    ax0.set_ylabel("z /m")
+    ax0.set_aspect("equal")
+    ax0.set_xlim([coord1_range[0], coord1_range[1]])
+    ax0.set_ylim([0, 1500])
+    ax0.spines[["left", "right"]].set_visible(False)
+
+    ax1.plot(sample["radius"] / 1e3, sample["coord3"])
+    ax1.set_ylabel("z /m")
+    ax1.set_xlabel("radius /mm")
+    ax1.set_ylim([0, 1500])
+    ax1.set_xscale("log")
+    ax1.spines[["right", "top"]].set_visible(False)
+
+    fig.tight_layout()
+
+    return fig, axs
+
+
+### -------------------------------------- ###
 # %%
 ### read in constants and intial setup from setup .txt file
 config = pysetuptxt.get_config(setupfile, nattrs=3, isprint=False)
@@ -218,90 +306,22 @@ fig, axs = plot_initial_conditions(gbxs, thermo, sddata)
 savename = path4plots / Path("thermo3d_initial_conditions.png")
 save_figure(savename)
 
-
 # %%
 times2plot = time.mins
 nsample = 500
-range1 = [1500, 3000]
-range2 = [gbxs["yhalf"][0], gbxs["yhalf"][1]]
+coord1_range = [1500, 3000]
+coord2_range = [gbxs["yhalf"][0], gbxs["yhalf"][1]]
 
+attrs4coordrange = ["sdId", "radius", "coord1", "coord3"]
+selected_sddata = superdroplet_data_within_coordinate_ranges(
+    time, sddata, attrs4coordrange, times2plot, coord1_range, coord2_range
+)
+attrs4sample = ["radius", "coord1", "coord3"]
+sample = random_sample_superdroplet_data(
+    selected_sddata, nsample, attrs4sample, times2plot
+)
 
-def define_variable_subset(var, minmax):
-    booleans = np.where(var >= minmax[0], True, False)
-    booleans = np.where(var < minmax[1], booleans, False)
-    return booleans
-
-
-def variable_in_ranges(var, subsets):
-    for subset in subsets:
-        var = np.where(subset, var, np.nan)
-    return var[~np.isnan(var)]
-
-
-tslice = [
-    int(np.argmin(abs(t - time.mins))) for t in times2plot
-]  # turn time into time index
-set2 = define_variable_subset(sddata.coord2[tslice], range2)
-set1 = define_variable_subset(sddata.coord1[tslice], range1)
-
-sdid = variable_in_ranges(sddata.sdId[tslice], [set2, set1])
-radius = variable_in_ranges(sddata.radius[tslice], [set2, set1])
-coord3 = variable_in_ranges(sddata.coord3[tslice], [set2, set1])
-coord1 = variable_in_ranges(sddata.coord1[tslice], [set2, set1])
-
-# %%
-sds2sample = np.random.choice(sdid[0], size=nsample, replace=False)
-
-radius_sample = []
-coord3_sample = []
-coord1_sample = []
-for t in range(len(times2plot)):
-    sdid_sample, idxs, _ = np.intersect1d(
-        sdid[t], sds2sample, assume_unique=True, return_indices=True
-    )
-    idxs = ak.to_numpy(idxs).astype("int32")
-
-    coord3_tsample = coord3[t][idxs]
-    coord1_tsample = coord1[t][idxs]
-    radius_tsample = radius[t][idxs]
-
-    if len(sdid_sample) != nsample:
-        missing_sds = np.setdiff1d(sds2sample, sdid_sample, assume_unique=True)
-        missing_idxs = np.searchsorted(sdid_sample, missing_sds)
-        coord3_tsample = np.insert(coord3_tsample, missing_idxs, np.nan)
-        coord1_tsample = np.insert(coord1_tsample, missing_idxs, np.nan)
-        radius_tsample = np.insert(radius_tsample, missing_idxs, np.nan)
-    coord3_sample.append(coord3_tsample)
-    coord1_sample.append(coord1_tsample)
-    radius_sample.append(radius_tsample)
-coord3_sample = np.asarray(coord3_sample)
-coord1_sample = np.asarray(coord1_sample)
-radius_sample = np.asarray(radius_sample)
-
-# %%
-fig = plt.figure(figsize=(12, 6))
-gs = GridSpec(1, 2, figure=fig, width_ratios=[3, 2])
-ax0 = fig.add_subplot(gs[0, 0])
-ax1 = fig.add_subplot(gs[0, 1])
-
-ax0.plot(coord1_sample, coord3_sample)
-ax0.set_aspect("equal")
-ax0.set_xlabel("x /m")
-ax0.set_ylabel("z /m")
-ax0.set_aspect("equal")
-ax0.set_xlim([range1[0], range1[1]])
-ax0.set_ylim([0, 1500])
-ax0.spines[["left", "right"]].set_visible(False)
-
-ax1.plot(radius_sample / 1e3, coord3_sample)
-ax1.set_ylabel("z /m")
-ax1.set_xlabel("radius /mm")
-ax1.set_ylim([0, 1500])
-ax1.set_xscale("log")
-ax1.spines[["right", "top"]].set_visible(False)
-
-fig.tight_layout()
-
+fig, axs = plot_superdroplet_sample_tracing(sample, coord1_range)
 savename = path4plots / Path("thermo3d_superdroplet_tracing.png")
 save_figure(savename)
 

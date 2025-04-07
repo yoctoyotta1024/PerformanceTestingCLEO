@@ -2,6 +2,19 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v2.5.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/4dc3c67e28a3e7b4cb0f5f4d0c784c6678d2dbe1..v2.5.0) - 2025-04-07
+#### Bug Fixes
+- remove conflicting precommit - ([0c4c2d8](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/0c4c2d89059dcca19659c723a634e3ab730214f8)) - clara.bayley
+#### Features
+- new file for making pretty plots of thermo3d simulation - ([4066bd4](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/4066bd4f2b5fb0a962b1653f796276cae1447faf)) - clara.bayley
+#### Performance Improvements
+- better plot titles - ([c098f5c](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/c098f5cfdd866d8832bbe73dc9eed0282d486dc4)) - clara.bayley
+#### Refactoring
+- add state and coord2 observer to thermo3d - ([cd629dd](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/cd629dd7aaca2bae40bca4972bed7ea07377b247)) - clara.bayley
+- beautify plot size and labels - ([4dc3c67](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/4dc3c67e28a3e7b4cb0f5f4d0c784c6678d2dbe1)) - clara.bayley
+
+- - -
+
 ## [v2.4.1](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/2e1ab0d6c2fe0d6a7565fef3e88edf77c7004626..v2.4.1) - 2025-03-31
 #### Bug Fixes
 - convter back to kB before return - ([2e1ab0d](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/2e1ab0d6c2fe0d6a7565fef3e88edf77c7004626)) - clara.bayley

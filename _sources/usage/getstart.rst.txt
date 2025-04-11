@@ -27,10 +27,11 @@ which will be used when you try to commit something or you execute ``pre-commit 
 more about the powers of pre-commit from `their documentation <https://pre-commit.com>`_.
 
 For now, CLEO's python packages are not readily installable and so you will have to clone the CLEO
-repository to somewhere in your filesystem:
+repository to somewhere in your filesystem and checkout to the performance_testing_cleo branch:
 .. code-block:: console
 
   $ git clone https://github.com/yoctoyotta1024/CLEO.git
+  $ cd CLEO && git switch performance_testing_cleo
 
 
 That's it, you're done! Now maybe you want to compile and run one of the setups in ``src/``.

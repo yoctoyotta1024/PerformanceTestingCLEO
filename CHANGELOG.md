@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v2.5.1](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/1f541ad31d913fe3abf5419d8bb5c674201e8c27..v2.5.1) - 2025-04-16
+#### Bug Fixes
+- don't use return of condensation figure plotting function - ([bc371b2](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/bc371b26f9409a34a44d5b6ca645fea0b2cb7616)) - clara.bayley
+#### Documentation
+- be clear about branch of CLEO to use - ([1f541ad](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/1f541ad31d913fe3abf5419d8bb5c674201e8c27)) - clara.bayley
+
+- - -
+
 ## [v2.5.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/4dc3c67e28a3e7b4cb0f5f4d0c784c6678d2dbe1..v2.5.0) - 2025-04-07
 #### Bug Fixes
 - remove conflicting precommit - ([0c4c2d8](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/0c4c2d89059dcca19659c723a634e3ab730214f8)) - clara.bayley

@@ -80,7 +80,7 @@ def cond0d_validation_plot(time, gbxs, thermo, sddata, w_avg, tau_half):
     sd2plot = sdtracing.attributes_for1superdroplet(sddata, sdid2plot, attrs)
 
     wlab = "<w> = {:.1f}".format(w_avg * 100) + "cm s$^{-1}$"
-    axs = as2017fig.condensation_validation_subplots(
+    as2017fig.condensation_validation_subplots(
         axs, time, sd2plot["radius"], supersat[:, 0, 0, 0], zprof, lwdth=2, lab=wlab
     )
 

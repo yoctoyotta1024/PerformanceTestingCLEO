@@ -512,10 +512,10 @@ ngbxs2plot = {
     "C++Threads": [64, 512, 4096, 131072],
 }
 colors = {
-    64: "orange",
-    512: "crimson",
-    4096: "darkviolet",
-    131072: "mediumblue",
+    64: "indigo",
+    512: "slateblue",
+    4096: "lightseagreen",
+    131072: "yellowgreen",
 }
 fig, axs = plot_speedup_strong_scaling_for_total_num_supers(
     datasets, ngbxs2plot, nsupers, colors=colors

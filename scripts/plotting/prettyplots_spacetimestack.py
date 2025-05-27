@@ -113,26 +113,26 @@ def plot_serial_space_time_stack_memory_allocations_vs_total_num_supers(
     ax0.plot(
         totnsupers_serial,
         highwater_serial,
-        color="green",
+        color="brown",
         linestyle=linestyle,
         linewidth=2,
     )
     ax0b.plot(
         totnsupers_serial,
         maxalloc_host_serial,
-        color="brown",
+        color="grey",
         linestyle=linestyle,
         linewidth=2,
     )
 
     x0, y0, m0 = linear_scaling(totnsupers_serial, highwater_serial)
-    lines_fit0 = ax0.plot(x0, y0, color="dimgrey", linestyle="-", linewidth=0.5)
+    lines_fita = ax0.plot(x0, y0, color="brown", linestyle="-", linewidth=0.5)
     x1, y1, m1 = linear_scaling(totnsupers_serial, maxalloc_host_serial)
-    lines_fitb = ax0b.plot(x1, y1, color="dimgrey", linestyle="-", linewidth=0.5)
+    lines_fitb = ax0b.plot(x1, y1, color="grey", linestyle="-", linewidth=0.5)
 
     ax0.set_xlabel("total number of superdroplets in domain / 10$^6$")
-    ax0.set_ylabel("CPU high-water memory consumption /GB", color="green")
-    ax0b.set_ylabel("maximum memory allocation /GB", color="brown")
+    ax0.set_ylabel("CPU high-water\nmemory consumption /GB", color="brown")
+    ax0b.set_ylabel("maximum memory allocation /GB", color="grey")
     ax0.set_xlim(left=0)
     ax0.set_ylim(bottom=0.0)
     ax0b.set_ylim(ax0.get_ylim())
@@ -145,43 +145,65 @@ def plot_serial_space_time_stack_memory_allocations_vs_total_num_supers(
         linewidth=2,
         zorder=0,
     )
-    labels = ["serial", "linear fit, m={:.3f}".format(m0.values)]
-    handles = [lines0[0], lines_fit0[0]]
+
+    labels = [
+        "Serial",
+        "Linear fit, m={:.3f}".format(m0.values),
+        "Linear fit, m={:.3f}".format(m1.values),
+    ]
+    handles = [lines0[0], lines_fita[0], lines_fitb[0]]
     leg = ax0.legend(labels=labels, handles=handles, loc="upper left")
-    plt.setp(leg.get_texts()[1], color="green")
-    labelb = "linear fit, m={:.3f}".format(m1.values)
-    legb = ax0b.legend(labels=[labelb], handles=[lines_fitb[0]], loc="lower right")
-    plt.setp(legb.get_texts()[0], color="brown")
+    plt.setp(leg.get_texts()[1], color="brown")
+    plt.setp(leg.get_texts()[2], color="grey")
 
     return ax0, ax0b, highwater_serial * 1e6, maxalloc_host_serial * 1e6  # memory in kB
 
 
 def plot_space_time_stack_memory_allocations_vs_nthreads(
-    datasets: dict, ngbxs2plot: dict, nsupers: int
+    datasets: dict,
+    ngbxs2plot: dict,
+    nsupers: int,
+    colors: Optional[dict] = None,
 ):
-    fig = plt.figure(figsize=(9, 6.5))
-    gs = GridSpec(2, 2, figure=fig, height_ratios=[5, 4])
+    fig = plt.figure(figsize=(11, 7))
+    gs = GridSpec(
+        2,
+        3,
+        figure=fig,
+        height_ratios=[1, 1],
+        width_ratios=[8, 8, 1],
+        wspace=0.4,
+        hspace=0.4,
+    )
     ax0 = fig.add_subplot(gs[0, :])
     ax1 = fig.add_subplot(gs[1, 0])
     ax2 = fig.add_subplot(gs[1, 1])
+    legax1 = fig.add_subplot(gs[1, 2])
+    legax2 = legax1.twiny()
+    legax1.set_xticks([])
+    legax1.set_yticks([])
+    legax2.set_xticks([])
+    legax1.spines[["top", "right", "bottom", "left"]].set_visible(False)
+    legax2.spines[["top", "right", "bottom", "left"]].set_visible(False)
 
     for ax in [ax0, ax1, ax2]:
         ax.spines[["right", "top"]].set_visible(False)
 
     # buildtype: linestyle
     linestyles = {
-        "Serial": (0, (1, 1)),  # densely dotted
-        "CUDA": "-.",  # CUDA_host
-        "CUDA_device": (0, (3, 5, 1, 5)),  # dashdotted
+        "Serial": "-.",
+        "CUDA": (0, (1, 3)),  # CUDA_host sparse dotted
+        "CUDA_device": (0, (1, 1)),  # densely dotted
         "OpenMP": "-",
         "C++Threads": "--",
     }
 
-    colors = {}
-    cmap = plt.get_cmap("plasma")
-    norm = LogNorm(vmin=1e2, vmax=1e8)
-    for ngbxs in list(ngbxs2plot.values())[0]:
-        colors[ngbxs] = cmap(norm(ngbxs * nsupers))
+    if colors is None:
+        colors = {}
+        cmap = plt.get_cmap("plasma")
+        norm = LogNorm(vmin=1e2, vmax=1e8)
+        for ngbxs in list(ngbxs2plot.values())[0]:
+            colors[ngbxs] = cmap(norm(ngbxs * nsupers))
 
     # total number of superdroplets in domain: formatted number
     formatted_labels = {
@@ -266,25 +288,25 @@ def plot_space_time_stack_memory_allocations_vs_nthreads(
     ax1.set_xlim([0, 130])
     ax1.set_xlabel("number of CPU threads")
     ax1.set_ylabel(
-        "CPU high-water memory consumption\nrelative to serial", color="green"
-    )
-    labels = [formatted_labels[i] for i in handles1.keys()]
-    labels[0] = f"#SDs = {labels[0]}"
-    ax1.legend(
-        handles=list(handles1.values()), labels=labels, loc="upper right", fontsize=9
+        "CPU high-water memory\nconsumption relative to serial", color="brown"
     )
 
     ax2.set_xlim([0, 130])
     ax2.set_xlabel("number of CPU threads")
-    ax2.set_ylabel("maximum memory allocation\nrelative to serial", color="brown")
-    ax2.legend(
+    ax2.set_ylabel("maximum memory\nallocation relative to serial", color="grey")
+
+    legax1.legend(
         handles=list(handles2.values()),
         labels=list(handles2.keys()),
-        loc="upper left",
+        loc="upper center",
         fontsize=9,
     )
 
-    fig.tight_layout()
+    labels = [formatted_labels[i] for i in handles1.keys()]
+    labels[0] = f"#SDs = {labels[0]}"
+    legax2.legend(
+        handles=list(handles1.values()), labels=labels, loc=(-1.25, 0.15), fontsize=9
+    )
 
     return fig, [ax0, ax0b, ax1, ax2]
 
@@ -295,12 +317,21 @@ def plot_space_time_stack_memory_allocations_vs_nthreads(
 
 # %%
 ngbxs2plot = {
-    "OpenMP": [64, 512, 4096, 32768, 131072],
-    "C++Threads": [64, 512, 4096, 32768, 131072],
-    "CUDA": [64, 512, 4096, 32768, 131072],
+    "OpenMP": [64, 512, 4096, 131072],
+    "C++Threads": [64, 512, 4096, 131072],
+    "CUDA": [64, 512, 4096, 131072],
+}
+colors = {
+    64: "indigo",
+    512: "slateblue",
+    4096: "lightseagreen",
+    131072: "yellowgreen",
 }
 fig, axs = plot_space_time_stack_memory_allocations_vs_nthreads(
-    datasets, ngbxs2plot, nsupers
+    datasets,
+    ngbxs2plot,
+    nsupers,
+    colors=colors,
 )
 savename = path4plots / "memory_vs_totnsupers.png"
 save_figure(savename)

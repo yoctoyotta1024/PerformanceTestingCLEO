@@ -146,8 +146,8 @@ def plot_thermodynamics_conditions(fig, ax0, ax1, ax3, cax, gbxs, thermo):
 
     ax1b = ax1.twiny()
     supersat = thermo.supersaturation()[t, y, x, :] * 100  # %
-    ax1b.plot(supersat, gbxs["zfull"], color="darkorchid")
-    ax1b.set_xlabel("% supersaturation", color="darkorchid")
+    ax1b.plot(supersat, gbxs["zfull"], color="darkslategray")
+    ax1b.set_xlabel("% supersaturation", color="darkslategray")
     ax1b.set_xticks(three_xticks(supersat))
     ax1b.set_xticklabels(["{:.2f}".format(x) for x in three_xticks(supersat)])
 

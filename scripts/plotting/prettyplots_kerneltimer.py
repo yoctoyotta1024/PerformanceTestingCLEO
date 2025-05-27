@@ -99,13 +99,13 @@ def perfect_scaling(x1, x2, y1, m=1):
 def plot_wallclock_vs_total_num_supers(
     datasets: dict, nthreads2plot: dict, simulated_time: float
 ):
-    fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(12, 8), sharex=True)
+    fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(10.5, 7), sharex=True)
     axs = axs.flatten()
 
     # buildtype: linestyle
     linestyles = {
-        "Serial": (0, (1, 1)),  # densely dotted
-        "CUDA": "-.",
+        "Serial": "-.",
+        "CUDA": (0, (1, 1)),  # densely dotted
         "OpenMP": "-",
         "C++Threads": "--",
     }
@@ -117,15 +117,29 @@ def plot_wallclock_vs_total_num_supers(
         alpha = 0.3
 
         if build == "OpenMP" or build == "C++Threads":
-            ax.set_title(f"{build} with {nthreads} Threads")
+            ax.text(
+                0.5,
+                0.93,
+                f"{build} with {nthreads} Threads",
+                ha="center",
+                transform=ax.transAxes,
+                fontsize=11,
+            )
         elif build == "CUDA":
-            ax.set_title(f"{build} with 1 GPU and {nthreads} CPU Threads")
+            ax.text(
+                0.5,
+                0.93,
+                f"{build} with 1 GPU and {nthreads} CPU Threads",
+                ha="center",
+                transform=ax.transAxes,
+                fontsize=11,
+            )
         else:
-            ax.set_title(build)
+            ax.text(0.5, 0.93, build, ha="center", transform=ax.transAxes, fontsize=11)
 
         # variable_name: [label, colour]
         vars = {
-            "summary": ["total", "tab:blue"],
+            "summary": ["Total", "tab:blue"],
             "timestep_sdm": ["SDM", "tab:cyan"],
             "timestep_sdm_movement": ["Motion", "tab:purple"],
             "timestep_sdm_microphysics": ["Microphysics", "tab:red"],
@@ -161,7 +175,7 @@ def plot_wallclock_vs_total_num_supers(
             axb = axs[0].twinx()
             axb.set_yticks([])
             axb.spines[["left", "bottom", "right", "top"]].set_visible(False)
-            axb.legend(handles=perf, loc="upper right")
+            axb.legend(handles=perf, loc="lower left")
 
         ax.set_xscale("log")
         ax.set_yscale("log")
@@ -236,7 +250,7 @@ def plot_wallclock_strong_scaling_for_total_num_supers(
             # for legend
             if build == "CUDA" or build == "Serial":
                 x_ = ds.nthreads.max()
-                y_ = data.sel(nthreads=x_, ngbxs=ds.ngbxs.min())[0, 0]
+                y_ = data.sel(nthreads=x_, ngbxs=data.ngbxs.min())[0, 0]
                 lines = [
                     ax.scatter(
                         x_, y_, color="k", marker=styles[build], label=build, zorder=0
@@ -307,8 +321,9 @@ def plot_speedup_strong_scaling_for_total_num_supers(
     datasets: dict,
     ngbxs2plot: dict,
     nsupers: int,
+    colors: Optional[dict] = None,
 ):
-    fig = plt.figure(figsize=(18, 6))
+    fig = plt.figure(figsize=(13.3, 4.75))
     gs = GridSpec(1, 3, figure=fig)
     axs = []
     for i in range(3):
@@ -320,11 +335,13 @@ def plot_speedup_strong_scaling_for_total_num_supers(
         "OpenMP": "-",  # line
         "C++Threads": "--",  # line
     }
-    colors = {}
-    cmap = plt.get_cmap("plasma")
-    norm = LogNorm(vmin=1e2, vmax=1e8)
-    for ngbxs in ngbxs2plot["CUDA"]:
-        colors[ngbxs] = cmap(norm(ngbxs * nsupers))
+
+    if colors is None:
+        colors = {}
+        cmap = plt.get_cmap("plasma")
+        norm = LogNorm(vmin=1e2, vmax=1e8)
+        for ngbxs in ngbxs2plot["CUDA"]:
+            colors[ngbxs] = cmap(norm(ngbxs * nsupers))
 
     # variable_name: [label, colour]
     vars = {
@@ -371,7 +388,7 @@ def plot_speedup_strong_scaling_for_total_num_supers(
             # for legend
             if build == "CUDA":
                 x_ = ds.nthreads.max()
-                y_ = y.sel(nthreads=x_, ngbxs=ds.ngbxs.min())
+                y_ = y.sel(nthreads=x_, ngbxs=y.ngbxs.min())
                 lines = [
                     ax.scatter(
                         x_, y_, color="k", marker=styles[build], label=build, zorder=0
@@ -490,12 +507,18 @@ save_figure(savename)
 # %%
 ngbxs2plot = {
     "Serial": [1, 64, 512, 4096, 32768],
-    "CUDA": [1, 64, 512, 4096, 32768, 131072],
-    "OpenMP": [1, 64, 512, 4096, 32768, 131072],
-    "C++Threads": [1, 64, 512, 4096, 32768, 131072],
+    "CUDA": [64, 512, 4096, 131072],
+    "OpenMP": [64, 512, 4096, 131072],
+    "C++Threads": [64, 512, 4096, 131072],
+}
+colors = {
+    64: "indigo",
+    512: "slateblue",
+    4096: "lightseagreen",
+    131072: "yellowgreen",
 }
 fig, axs = plot_speedup_strong_scaling_for_total_num_supers(
-    datasets, ngbxs2plot, nsupers
+    datasets, ngbxs2plot, nsupers, colors=colors
 )
 savename = path4plots / "strong_scaling_speedup.png"
 save_figure(savename)

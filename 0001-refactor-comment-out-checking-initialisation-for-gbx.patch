@@ -1,0 +1,46 @@
+From c505dfbe747360ed5de8485421be338db3c3e398 Mon Sep 17 00:00:00 2001
+From: "clara.bayley" <yoctoyotta1024@yahoo.com>
+Date: Tue, 25 Mar 2025 17:45:12 +0100
+Subject: [PATCH] refactor: comment out checking initialisation for gbxs and
+ sds
+
+temporary measure until future version of cleo only includes these checks in debugging builds
+---
+ libs/runcleo/creategbxs.hpp   | 6 +++---
+ libs/runcleo/createsupers.hpp | 4 ++--
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/libs/runcleo/creategbxs.hpp b/libs/runcleo/creategbxs.hpp
+index 51e604a2..6219e075 100644
+--- a/libs/runcleo/creategbxs.hpp
++++ b/libs/runcleo/creategbxs.hpp
+@@ -268,9 +268,9 @@ dualview_gbx create_gbxs(const GbxMaps &gbxmaps, const GbxInitConds &gbxic,
+   const auto domainsupers = allsupers.domain_supers_readonly();
+   const auto gbxs = initialise_gbxs(gbxmaps, gbxic, domainsupers);
+
+-  std::cout << "checking initialisation\n";
+-  is_gbxinit_complete(gbxmaps.get_local_ngridboxes_hostcopy(), gbxs,
+-                      allsupers.get_totsupers_readonly());
++  // std::cout << "checking initialisation\n";
++  // is_gbxinit_complete(gbxmaps.get_local_ngridboxes_hostcopy(), gbxs,
++  //                     allsupers.get_totsupers_readonly());
+
+   // // Print information about the created superdrops
+   // print_gbxs(gbxs.view_host());
+diff --git a/libs/runcleo/createsupers.hpp b/libs/runcleo/createsupers.hpp
+index c1d5b45e..7e1415e2 100644
+--- a/libs/runcleo/createsupers.hpp
++++ b/libs/runcleo/createsupers.hpp
+@@ -124,8 +124,8 @@ SupersInDomain create_supers(const SuperdropInitConds &sdic, const unsigned int
+   auto allsupers = SupersInDomain(totsupers, gbxindex_max);
+
+   // Log message and perform checks on the initialisation of superdrops
+-  std::cout << "checking initialisation\n";
+-  is_sdsinit_complete(allsupers);
++  // std::cout << "checking initialisation\n";
++  // is_sdsinit_complete(allsupers);
+
+   // // Print information about the created superdrops
+   // print_supers(totsupers);
+--
+2.43.7

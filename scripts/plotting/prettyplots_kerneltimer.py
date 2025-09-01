@@ -185,7 +185,7 @@ def plot_wallclock_vs_total_num_supers(
         ax.spines[["right", "top"]].set_visible(False)
 
     handles, labels = axs[2].get_legend_handles_labels()  # solid lines
-    axs[0].legend(handles=handles, labels=labels, loc="upper left")
+    axs[0].legend(handles=handles, labels=labels, loc="lower right")
 
     axs[0].set_ylabel("wall-clock time per simulated second /s")
     axs[2].set_ylabel("wall-clock time per simulated second /s")

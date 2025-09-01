@@ -18,7 +18,7 @@ which you can then view in your preferred browser e.g.
 
   $ open build/html/index.html
 
-Viewing Documentation Files on a Remote Machien Using your Local Browser
+Viewing Documentation Files on a Remote Machine Using your Local Browser
 ------------------------------------------------------------------------
 Let's say you're working on a remote machine (e.g. Levante) and have made some changes to the
 documentation in a branch of your repository. After you built the documentation via
@@ -35,13 +35,13 @@ not your local file system. Here is a good way to solve this problem exampled on
 
 #. SSH to Levante with local port forwarding enabled:
 
-    .. code-block:: console
+   .. code-block:: console
 
-      $ ssh -L 8765:localhost:8765 <userid>@levante.dkrz.de
+    $ ssh -L 8765:localhost:8765 <userid>@levante.dkrz.de
 
 #. Enter the directory than contains the ``index.html`` file and create an http server from it.
 
-    .. code-block:: console
+   .. code-block:: console
 
       $ cd docs/build/html/
       $ python -m http.server 8765

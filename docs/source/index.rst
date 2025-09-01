@@ -5,19 +5,13 @@
 Welcome to PerformanceTestingCLEO's Documentation!
 ==================================================
 
-.. note::
-   Please consider that this project is under active development
-   and our documentation is a work in progress.
-
-   This documentation is built from the latest code in the main branch of the repository.
-   It does not necessarily reflect a released version, and there may be short-commings when compared
-   to the on-going code development. If you have queries related to
-   this or if there is anything you wish to report please please :ref:`contact us! <contact>`.
-
 This repository has been made to document the performance tests of CLEO on Levante for CLEO's
-first model description paper.
+first model description paper. Specifically it tests the branch ``performance_testing_cleo``, which
+is the same as CLEO ``v0.39.0`` with the patch
+``0001-refactor-comment-out-checking-initialisation-for-gbx.patch`` applied.
 
-To (locally) reproduce this project, simply clone the repository. You will need to setup an
+To (locally) reproduce this project, simply clone this repository and ``CLEO`` and checkout ``CLEO``
+to the ``performance_testing_cleo`` branch (or apply the patch). You will need to setup an
 environment with the dependencies installed and then run ``pre-commit install``, but other than
 that everything should work out of the box and you can now run & have fun with the project...
 If not, please raise an issue on the GitHub repository.

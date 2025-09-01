@@ -8,7 +8,7 @@ Created Date: Thursday 5th December 2024
 Author: Clara Bayley (CB)
 Additional Contributors:
 -----
-Last Modified: Thursday 5th December 2024
+Last Modified: Monday 1st September 2025
 Modified By: CB
 -----
 License: BSD 3-Clause "New" or "Revised" License
@@ -22,7 +22,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="PerformanceTestingCLEO",
-    version="1.0.0",
+    version="2.8.0",
     packages=find_packages(),
     install_requires=[
         "sphinx",

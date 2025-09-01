@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v2.8.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/77533c5452e44d4fdb1e3d059c0ff93389f00869..v2.8.0) - 2025-09-01
+#### Documentation
+- formatting - ([dbcb1b3](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/dbcb1b3b9622be34d7bde7866defd9e4849c4ef7)) - clara.bayley
+#### Features
+- comfirmed location for legend - ([1b00e22](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/1b00e225b0e7013c6ba30925f87fae525ecee068)) - clara.bayley
+#### Refactoring
+- version control - ([77533c5](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/77533c5452e44d4fdb1e3d059c0ff93389f00869)) - clara.bayley
+
+- - -
+
 ## [v2.7.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/cb8e6892ebba809bbc18492f4a9385de3ba34e1f..v2.7.0) - 2025-09-01
 #### Features
 - provide patch for difference of tests from CLEO v0.39.0 - ([cb8e689](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/cb8e6892ebba809bbc18492f4a9385de3ba34e1f)) - clara.bayley

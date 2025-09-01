@@ -8,7 +8,7 @@ Created Date: Thursday 27th March 2025
 Author: Clara Bayley (CB)
 Additional Contributors:
 -----
-Last Modified: Thursday 27th March 2025
+Last Modified: Monday 1st September 2025
 Modified By: CB
 -----
 License: BSD 3-Clause "New" or "Revised" License
@@ -97,7 +97,10 @@ def perfect_scaling(x1, x2, y1, m=1):
 
 # %%
 def plot_wallclock_vs_total_num_supers(
-    datasets: dict, nthreads2plot: dict, simulated_time: float
+    datasets: dict,
+    nthreads2plot: dict,
+    simulated_time: float,
+    withlines: Optional[bool] = False,
 ):
     fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(10.5, 7), sharex=True)
     axs = axs.flatten()
@@ -191,6 +194,10 @@ def plot_wallclock_vs_total_num_supers(
 
     for ax in axs:
         ax.set_ylim([5e-5, 5])
+
+    if withlines:
+        for ax in axs:
+            ax.grid(True)
 
     fig.tight_layout()
 
@@ -487,6 +494,12 @@ nthreads2plot = {
 }
 fig, axs = plot_wallclock_vs_total_num_supers(datasets, nthreads2plot, simulated_time)
 savename = path4plots / "wallclock_vs_totnsupers.png"
+save_figure(savename)
+
+fig, axs = plot_wallclock_vs_total_num_supers(
+    datasets, nthreads2plot, simulated_time, withlines=True
+)
+savename = path4plots / "wallclock_vs_totnsupers_withlines.png"
 save_figure(savename)
 # %%
 ngbxs2plot = {

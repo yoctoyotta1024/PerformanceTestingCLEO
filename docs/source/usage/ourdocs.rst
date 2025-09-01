@@ -18,7 +18,7 @@ which you can then view in your preferred browser e.g.
 
   $ open build/html/index.html
 
-Viewing Documentation Files on a Remote Machien Using your Local Browser
+Viewing Documentation Files on a Remote Machine Using your Local Browser
 ------------------------------------------------------------------------
 Let's say you're working on a remote machine (e.g. Levante) and have made some changes to the
 documentation in a branch of your repository. After you built the documentation via

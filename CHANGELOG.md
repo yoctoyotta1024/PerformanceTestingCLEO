@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v2.6.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/1ac099d7bf0f2dedfde54e34dc17eefa6fe39c37..v2.6.0) - 2025-09-01
+#### Documentation
+- formatting - ([c2d8bb8](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/c2d8bb862154bd7c2c389977f5acbc2bf404f1ab)) - clara.bayley
+- typo correction - ([5ba2b40](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/5ba2b40c01c7b6ef4b2777c5c169195808fa8fca)) - clara.bayley
+#### Features
+- allow option to plot gridlines - ([395e243](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/395e2434134ff507aefd342c5684dfcc52c31371)) - clara.bayley
+#### Refactoring
+- beautify spacetimestack plot - ([2a2ae63](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/2a2ae632cc7d4ec98f3a41cba3df29b5a0122f6e)) - clara.bayley
+- change colour scheme - ([0d72114](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/0d721140950681cf3286b4d032b5cc377704b78d)) - clara.bayley
+- beautify kernel timer pretty plots - ([09a8ebd](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/09a8ebd3d5759b2538e6f400f5e4bce28ab5f919)) - clara.bayley
+- less similar colours on same subplot - ([1ac099d](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/1ac099d7bf0f2dedfde54e34dc17eefa6fe39c37)) - clara.bayley
+
+- - -
+
 ## [v2.5.1](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/1f541ad31d913fe3abf5419d8bb5c674201e8c27..v2.5.1) - 2025-04-16
 #### Bug Fixes
 - don't use return of condensation figure plotting function - ([bc371b2](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/bc371b26f9409a34a44d5b6ca645fea0b2cb7616)) - clara.bayley

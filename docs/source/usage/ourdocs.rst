@@ -35,13 +35,13 @@ not your local file system. Here is a good way to solve this problem exampled on
 
 #. SSH to Levante with local port forwarding enabled:
 
-    .. code-block:: console
+   .. code-block:: console
 
-      $ ssh -L 8765:localhost:8765 <userid>@levante.dkrz.de
+    $ ssh -L 8765:localhost:8765 <userid>@levante.dkrz.de
 
 #. Enter the directory than contains the ``index.html`` file and create an http server from it.
 
-    .. code-block:: console
+   .. code-block:: console
 
       $ cd docs/build/html/
       $ python -m http.server 8765

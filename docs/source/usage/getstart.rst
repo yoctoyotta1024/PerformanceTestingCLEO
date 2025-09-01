@@ -28,6 +28,7 @@ more about the powers of pre-commit from `their documentation <https://pre-commi
 
 For now, CLEO's python packages are not readily installable and so you will have to clone the CLEO
 repository to somewhere in your filesystem and checkout to the performance_testing_cleo branch:
+
 .. code-block:: console
 
   $ git clone https://github.com/yoctoyotta1024/CLEO.git

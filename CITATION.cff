@@ -5,6 +5,6 @@ authors:
   given-names: "Clara"
   orcid: "https://orcid.org/0000-0002-4540-9382"
 title: "Performance Tests of CLEO On Levante for First Model Description Paper"
-version: 1.0.0
-date-released: 5th December 2024
+version: 2.8.0
+date-released: 1st September 2025
 url: "https://github.com/yoctoyotta1024/PerformanceTestingCLEO.git"

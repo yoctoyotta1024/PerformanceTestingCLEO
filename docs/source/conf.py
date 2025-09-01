@@ -8,7 +8,7 @@ Created Date: Thursday 5th December 2024
 Author: Clara Bayley (CB)
 Additional Contributors:
 -----
-Last Modified: Thursday 5th December 2024
+Last Modified: Monday 1st September 2025
 Modified By: CB
 -----
 License: BSD 3-Clause "New" or "Revised" License
@@ -42,7 +42,7 @@ project = "PerformanceTestingCLEO"
 license = "BSD 3-Clause"
 copyright = "(2024) MPI-M, Clara Bayley"
 author = "Clara Bayley & Other Developers"
-release = "1.0.0"
+release = "2.8.0"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Our Docs" href="ourdocs.html" /><link rel="prev" title="Running the Performance Tests" href="perftests.html" />
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.07.19 -->
-        <title>Running Validations - PerformanceTestingCLEO 1.0.0 documentation</title>
+        <title>Running Validations - PerformanceTestingCLEO 2.8.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=25af2a20" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -167,7 +167,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">PerformanceTestingCLEO 1.0.0 documentation</div></a>
+      <a href="../index.html"><div class="brand">PerformanceTestingCLEO 2.8.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -190,7 +190,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
-  <span class="sidebar-brand-text">PerformanceTestingCLEO 1.0.0 documentation</span>
+  <span class="sidebar-brand-text">PerformanceTestingCLEO 2.8.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -259,26 +259,17 @@ See <a class="reference internal" href="perftests.html#perftests"><span class="s
 by changing the Observer returned by the <code class="docutils literal notranslate"><span class="pre">`inline</span> <span class="pre">Observer</span> <span class="pre">auto</span> <span class="pre">create_observer`</span></code> function in
 your executables <code class="docutils literal notranslate"><span class="pre">main_[xxx].cpp</span></code> file. E.g. uncomment the lines leading to
 <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">obssd</span> <span class="pre">&gt;&gt;</span> <span class="pre">obs1</span> <span class="pre">&gt;&gt;</span> <span class="pre">obs0;</span></code> and comment out the line <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">NullObserver{};</span></code></p>
-<ol class="arabic simple">
-<li><p>Then you could perform one normal run with e.g.</p></li>
-</ol>
-<blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">./builds/serial/condensation0d/cond0d</span> <span class="pre">./builds/serial/tmp/cond0d/config_1_128_1_0.yaml</span></code>
+<p>#. Then you could perform one normal run with e.g.
+<code class="docutils literal notranslate"><span class="pre">./builds/serial/condensation0d/cond0d</span> <span class="pre">./builds/serial/tmp/cond0d/config_1_128_1_0.yaml</span></code>
 (it is recomended that you create the output directory before running the model). Or
 you can run the example with Kokkos performance tool(s), e.g.</p>
-<blockquote>
-<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/bash/run_profiling.sh<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>/work/bm1183/m300950/bin/envs/perftests/bin/python<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>/home/m/m300950/performance_testing_cleo<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>/work/bm1183/m300950/performance_testing_cleo/builds<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>cond0d<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>kerneltimer.spacetimestack.memoryevents.memoryusage<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>TRUE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>serial<span class="w"> </span>openmp<span class="w"> </span>cuda<span class="w"> </span>threads
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-</div></blockquote>
-</div></blockquote>
+<dl class="simple">
+<dt>$ ./scripts/bash/run_profiling.sh </dt><dd><p>/work/bm1183/m300950/bin/envs/perftests/bin/python /home/m/m300950/performance_testing_cleo /work/bm1183/m300950/performance_testing_cleo/builds cond0d kerneltimer.spacetimestack.memoryevents.memoryusage TRUE serial openmp cuda threads</p>
+</dd>
+</dl>
 <ol class="arabic">
 <li><p>Finally plot the results with the validation script, e.g.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/bash/validation.sh<span class="w"> </span><span class="se">\</span>
@@ -366,7 +357,7 @@ you can run the example with Kokkos performance tool(s), e.g.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=8d563738"></script>
+</div><script src="../_static/documentation_options.js?v=69ff2ef9"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

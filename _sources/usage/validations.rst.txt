@@ -17,20 +17,20 @@ your executables ``main_[xxx].cpp`` file. E.g. uncomment the lines leading to
 ``return obssd >> obs1 >> obs0;`` and comment out the line ``return NullObserver{};``
 
 #. Then you could perform one normal run with e.g.
-  ``./builds/serial/condensation0d/cond0d ./builds/serial/tmp/cond0d/config_1_128_1_0.yaml``
-  (it is recomended that you create the output directory before running the model). Or
-  you can run the example with Kokkos performance tool(s), e.g.
+``./builds/serial/condensation0d/cond0d ./builds/serial/tmp/cond0d/config_1_128_1_0.yaml``
+(it is recomended that you create the output directory before running the model). Or
+you can run the example with Kokkos performance tool(s), e.g.
 
-   .. code-block:: console
+.. code-block:: console
 
-    $ ./scripts/bash/run_profiling.sh \
-      /work/bm1183/m300950/bin/envs/perftests/bin/python \
-      /home/m/m300950/performance_testing_cleo \
-      /work/bm1183/m300950/performance_testing_cleo/builds \
-      cond0d \
-      kerneltimer.spacetimestack.memoryevents.memoryusage \
-      TRUE \
-      serial openmp cuda threads
+$ ./scripts/bash/run_profiling.sh \
+  /work/bm1183/m300950/bin/envs/perftests/bin/python \
+  /home/m/m300950/performance_testing_cleo \
+  /work/bm1183/m300950/performance_testing_cleo/builds \
+  cond0d \
+  kerneltimer.spacetimestack.memoryevents.memoryusage \
+  TRUE \
+  serial openmp cuda threads
 
 #. Finally plot the results with the validation script, e.g.
 

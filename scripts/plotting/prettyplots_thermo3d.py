@@ -50,8 +50,8 @@ path2builds = (
 
 ### paths to particular dataset, setup file and grid file
 buildtype = "cuda"
-ngbxs = 2048
-nsupers = 128
+ngbxs = 2048  # 16384
+nsupers = 128  # 256
 nthreads = 128
 nrun = 0
 
@@ -68,6 +68,19 @@ path2bin = (
 dataset = path2bin / "sol.zarr"
 setupfile = path2bin / "setup.txt"
 ### -------------------------------------- ###
+
+# %% font sizes for beautifying plots
+SMALL_SIZE = 15
+MEDIUM_SIZE = 16
+BIG_SIZE = 18
+
+plt.rc("font", size=SMALL_SIZE)  # controls default text sizes
+plt.rc("axes", titlesize=BIG_SIZE)  # fontsize of the axes title
+plt.rc("axes", labelsize=BIG_SIZE)  # fontsize of the x and y labels
+plt.rc("xtick", labelsize=MEDIUM_SIZE)  # fontsize of the tick labels
+plt.rc("ytick", labelsize=MEDIUM_SIZE)  # fontsize of the tick labels
+plt.rc("legend", fontsize=MEDIUM_SIZE)  # legend fontsize
+plt.rc("figure", titlesize=BIG_SIZE)  # fontsize of the figure title
 
 
 # %%
@@ -109,14 +122,16 @@ def plot_superdroplet_distribution(fig, ax2, gbxs, sddata):
         np.log10(radius), bins=hedgs, weights=wghts, density=None
     )
     hcens = (hedgs[1:] + hedgs[:-1]) / 2
-    ax2.step(10**hcens, hist, where="mid", color="dimgrey", label="binned distribution")
+    ax2.step(
+        10**hcens, hist, where="mid", color="dimgrey", label="binned\ndistribution"
+    )
 
     ax2.set_xscale("log")
     ax2.set_yscale("log")
     ax2.set_xlim([5e-3, 1])
     ax2.set_xlabel("radius /\u03BCm")
-    ax2.set_ylabel("aerosol number concentration / cm$^{-3}$")
-    ax2.legend()
+    ax2.set_ylabel("aerosol number\nconcentration / cm$^{-3}$")
+    ax2.legend(loc=(0.4, 0.9))
     ax2.spines[["right", "top"]].set_visible(False)
 
 
@@ -136,13 +151,13 @@ def plot_thermodynamics_conditions(fig, ax0, ax1, ax3, cax, gbxs, thermo):
     ax0.plot(temp, gbxs["zfull"], color="k")
     ax0.set_xlabel("temperature /K")
     ax0.set_xticks(three_xticks(temp))
-    ax0.set_xticklabels(["{:.2f}".format(x) for x in three_xticks(temp)])
+    ax0.set_xticklabels(["{:.1f}".format(x) for x in three_xticks(temp)])
 
     qvap = thermo.qvap[t, y, x, :]  # g/Kg
     ax1.plot(qvap, gbxs["zfull"], color="darkblue")
     ax1.set_xlabel("q$_{v}$ /g Kg$^{-1}$", color="darkblue")
     ax1.set_xticks(three_xticks(qvap))
-    ax1.set_xticklabels(["{:.2f}".format(x) for x in three_xticks(qvap)])
+    ax1.set_xticklabels(["{:.1f}".format(x) for x in three_xticks(qvap)])
 
     ax1b = ax1.twiny()
     supersat = thermo.supersaturation()[t, y, x, :] * 100  # %
@@ -175,7 +190,7 @@ def plot_thermodynamics_conditions(fig, ax0, ax1, ax3, cax, gbxs, thermo):
     fig.colorbar(
         ScalarMappable(norm=cmap_norm, cmap=cmap),
         cax=cax,
-        label="|wind velocity| /m s${-1}$ ",
+        label="|wind velocity| /m s$^{-1}$ ",
     )
 
     ax3.set_xlabel("x /m")
@@ -187,11 +202,11 @@ def plot_thermodynamics_conditions(fig, ax0, ax1, ax3, cax, gbxs, thermo):
 
 
 def plot_initial_conditions(gbxs, thermo, sddata):
-    fig = plt.figure(figsize=(12, 8))
-    gs = GridSpec(2, 45, figure=fig, height_ratios=[3, 2])
-    ax0 = fig.add_subplot(gs[0, :11])
-    ax1 = fig.add_subplot(gs[0, 15:26])
-    ax2 = fig.add_subplot(gs[0, 30:])
+    fig = plt.figure(figsize=(11.5, 8))
+    gs = GridSpec(2, 50, figure=fig, height_ratios=[3, 2], hspace=0.4, wspace=0.01)
+    ax0 = fig.add_subplot(gs[0, :12])
+    ax1 = fig.add_subplot(gs[0, 18:28])
+    ax2 = fig.add_subplot(gs[0, 37:])
     ax3 = fig.add_subplot(gs[1, :-1])
     cax = fig.add_subplot(gs[1, -1])
 
@@ -308,7 +323,7 @@ def plot_superdroplet_sample_tracing(time, sample, coord1_range):
 
 
 def plot_superdroplet_sample_tracing_version2(sample, coord1_range):
-    fig = plt.figure(figsize=(7, 6))
+    fig = plt.figure(figsize=(7, 5))
     gs = GridSpec(1, 2, figure=fig, width_ratios=[21, 1])
     ax0 = fig.add_subplot(gs[0, 0])
     cax = fig.add_subplot(gs[0, 1])
@@ -362,7 +377,7 @@ thermo, winds = pyzarr.get_thermodata(
 ### save figure for initial conditions
 fig, axs = plot_initial_conditions(gbxs, thermo, sddata)
 savename = path4plots / Path(
-    f"thermo3d_initial_conditions_ngbxs{ngbxs}_nsupers{nsupers}.png"
+    f"thermo3d_initial_conditions_ngbxs{ngbxs}_nsupers{nsupers}.pdf"
 )
 save_figure(savename)
 
@@ -384,14 +399,14 @@ sample = random_sample_superdroplet_data(
 # %%
 fig, axs = plot_superdroplet_sample_tracing(time, sample, coord1_range)
 savename = path4plots / Path(
-    f"thermo3d_superdroplet_tracing_ngbxs{ngbxs}_nsupers{nsupers}.png"
+    f"thermo3d_superdroplet_tracing_ngbxs{ngbxs}_nsupers{nsupers}.pdf"
 )
 save_figure(savename)
 
 # %%
 fig, axs = plot_superdroplet_sample_tracing_version2(sample, coord1_range)
 savename = path4plots / Path(
-    f"thermo3d_superdroplet_tracing_version2_ngbxs{ngbxs}_nsupers{nsupers}.png"
+    f"thermo3d_superdroplet_tracing_version2_ngbxs{ngbxs}_nsupers{nsupers}.pdf"
 )
 save_figure(savename)
 # %%

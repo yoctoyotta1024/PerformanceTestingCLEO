@@ -34,7 +34,7 @@ from typing import Optional
 ### path to CLEO for pySD module
 path2CLEO = Path("/home") / "m" / "m300950" / "CLEO"
 sys.path.append(str(path2CLEO))
-from pySD.sdmout_src import pyzarr, pysetuptxt, pygbxsdat
+from cleopy.sdmout_src import pyzarr, pysetuptxt, pygbxsdat
 
 ### -------------------------------------- ###
 
@@ -85,7 +85,7 @@ def plot_superdroplet_distribution(fig, ax2, gbxs, sddata):
     def get_attributes(sddata, attrs, t, gbxindex):
         vars = []
         for attr in attrs:
-            var = np.where(sddata.sdgbxindex[t] == gbxindex, sddata[attr][t], np.nan)
+            var = np.where(sddata.sdgbxindex()[t] == gbxindex, sddata[attr][t], np.nan)
             vars.append(var[~np.isnan(var)])
         return vars
 
@@ -217,8 +217,8 @@ def superdroplet_data_within_coordinate_ranges(
     tslice = [
         int(np.argmin(abs(t - time.mins))) for t in times2select
     ]  # turn time into time index
-    set1 = define_variable_subset(sddata.coord1[tslice], coord1_range)
-    set2 = define_variable_subset(sddata.coord2[tslice], coord2_range)
+    set1 = define_variable_subset(sddata.coord1()[tslice], coord1_range)
+    set2 = define_variable_subset(sddata.coord2()[tslice], coord2_range)
 
     selected_data = {}
     for attr in attrs:

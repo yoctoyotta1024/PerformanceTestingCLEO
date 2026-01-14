@@ -62,6 +62,19 @@ datasets = {
 simulated_time = 4800  # length of simulation [s]
 ### -------------------------------------- ###
 
+# %% font sizes for beautifying plots
+SMALL_SIZE = 15
+MEDIUM_SIZE = 16
+BIG_SIZE = 18
+
+plt.rc("font", size=SMALL_SIZE)  # controls default text sizes
+plt.rc("axes", titlesize=BIG_SIZE)  # fontsize of the axes title
+plt.rc("axes", labelsize=BIG_SIZE)  # fontsize of the x and y labels
+plt.rc("xtick", labelsize=MEDIUM_SIZE)  # fontsize of the tick labels
+plt.rc("ytick", labelsize=MEDIUM_SIZE)  # fontsize of the tick labels
+plt.rc("legend", fontsize=SMALL_SIZE)  # legend fontsize
+plt.rc("figure", titlesize=BIG_SIZE)  # fontsize of the figure title
+
 
 # %%
 ### --------- plotting functions --------- ###
@@ -102,7 +115,7 @@ def plot_wallclock_vs_total_num_supers(
     simulated_time: float,
     withlines: Optional[bool] = False,
 ):
-    fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(10.5, 7), sharex=True)
+    fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(10.5, 8.35), sharex=True)
     axs = axs.flatten()
 
     # buildtype: linestyle
@@ -118,27 +131,34 @@ def plot_wallclock_vs_total_num_supers(
         nthreads = nthreads2plot[build]
         ds = datasets[build].sel(nthreads=nthreads)
         alpha = 0.3
-
+        axtitle_fontsize = 16
         if build == "OpenMP" or build == "C++Threads":
             ax.text(
                 0.5,
-                0.93,
+                1.025,
                 f"{build} with {nthreads} Threads",
                 ha="center",
                 transform=ax.transAxes,
-                fontsize=11,
+                fontsize=axtitle_fontsize,
             )
         elif build == "CUDA":
             ax.text(
                 0.5,
-                0.93,
+                1.025,
                 f"{build} with 1 GPU and {nthreads} CPU Threads",
                 ha="center",
                 transform=ax.transAxes,
-                fontsize=11,
+                fontsize=axtitle_fontsize,
             )
         else:
-            ax.text(0.5, 0.93, build, ha="center", transform=ax.transAxes, fontsize=11)
+            ax.text(
+                0.5,
+                1.025,
+                build,
+                ha="center",
+                transform=ax.transAxes,
+                fontsize=axtitle_fontsize,
+            )
 
         # variable_name: [label, colour]
         vars = {
@@ -178,19 +198,19 @@ def plot_wallclock_vs_total_num_supers(
             axb = axs[0].twinx()
             axb.set_yticks([])
             axb.spines[["left", "bottom", "right", "top"]].set_visible(False)
-            axb.legend(handles=perf, loc="lower left")
+            axb.legend(handles=perf, loc=(0.015, 0.835))
 
         ax.set_xscale("log")
         ax.set_yscale("log")
         ax.spines[["right", "top"]].set_visible(False)
 
     handles, labels = axs[2].get_legend_handles_labels()  # solid lines
-    axs[0].legend(handles=handles, labels=labels, loc="lower right")
+    axs[0].legend(handles=handles, labels=labels, loc=(0.515, 0.015))
 
-    axs[0].set_ylabel("wall-clock time per simulated second /s")
-    axs[2].set_ylabel("wall-clock time per simulated second /s")
-    axs[2].set_xlabel("total number of superdroplets in domain")
-    axs[3].set_xlabel("total number of superdroplets in domain")
+    axs[0].set_ylabel("wall-clock time per\nsimulated second /s")
+    axs[2].set_ylabel("wall-clock time per\nsimulated second /s")
+    axs[2].set_xlabel("total number of superdroplets\nin domain")
+    axs[3].set_xlabel("total number of superdroplets\nin domain")
 
     for ax in axs:
         ax.set_ylim([5e-5, 5])
@@ -314,7 +334,7 @@ def plot_wallclock_strong_scaling_for_total_num_supers(
         ax.set_xlim([0, 130])
         ax.set_ylim([1e-4, 1e1])
         ax.set_xticks([1, 16, 64, 128])
-        ax.set_xlabel("number of CPU threads")
+        ax.set_xlabel("# CPU threads")
         if a != 0:
             ax.set_yticklabels([])
 
@@ -330,11 +350,18 @@ def plot_speedup_strong_scaling_for_total_num_supers(
     nsupers: int,
     colors: Optional[dict] = None,
 ):
-    fig = plt.figure(figsize=(13.3, 4.75))
-    gs = GridSpec(1, 3, figure=fig)
+    fig = plt.figure(figsize=(11, 8.5))
+    gs = GridSpec(2, 2, figure=fig)
     axs = []
-    for i in range(3):
-        axs.append(fig.add_subplot(gs[0, i]))
+    axs.append(fig.add_subplot(gs[0, 0]))
+    axs.append(fig.add_subplot(gs[1, 0]))
+    axs.append(fig.add_subplot(gs[1, 1]))
+    legaxs = [fig.add_subplot(gs[0, 1])]  # for legend
+    legaxs.append(legaxs[0].twinx())
+    for lax in legaxs:
+        lax.spines[["left", "top", "right", "bottom"]].set_visible(False)
+        lax.set_xticks([])
+        lax.set_yticks([])
 
     # buildtype: line/marker style
     styles = {
@@ -451,36 +478,42 @@ def plot_speedup_strong_scaling_for_total_num_supers(
                         zorder=0,
                     )
             handles[build] = lines[0]
+
+        perf = ax.plot(
+            [1, 128],
+            [1, 128],
+            linewidth=0.5,
+            linestyle=(0, (25, 10)),  # loosely dashed
+            color="dimgrey",
+            label="1:1 scaling",
+            zorder=0,
+        )
         ax.spines[["right", "top"]].set_visible(False)
 
-    axs[0].legend(
-        handles=list(handles.values()), labels=list(handles.keys()), loc="upper left"
-    )
+    handles1 = list(handles.values()) + [perf[0]]
+    labels1 = list(handles.keys()) + [perf[0].get_label()]
+    legaxs[0].legend(handles=handles1, labels=labels1, loc=(0.2, 0.55))
 
-    ax_tmp = axs[0].twinx()
-    ax_tmp.spines[["left", "top", "right", "top"]].set_visible(False)
-    ax_tmp.set_xticks([])
-    ax_tmp.set_yticks([])
-    labels = [formatted_labels[i] for i in handles2.keys()]
-    labels[0] = f"#SDs={labels[0]}"
-    ax_tmp.legend(handles=list(handles2.values()), labels=labels, loc="upper right")
+    labels2 = [formatted_labels[i] for i in handles2.keys()]
+    labels2[0] = f"# SDs = {labels2[0]}"
+    legaxs[1].legend(handles=list(handles2.values()), labels=labels2, loc=(0.2, 0.0))
 
-    axs[0].set_ylabel("speed-up")
-
-    for a, ax in enumerate(axs):
+    for ax in axs:
         ax.set_xlim([0, 130])
         ax.set_ylim([1, 130])
         ax.set_xticks([1, 16, 64, 128])
         ax.set_yticks([1, 32, 64, 96, 128])
-        ax.set_xlabel("number of CPU threads")
+        ax.set_xlabel("# CPU threads")
+        ax.set_ylabel("speed-up")
     axs[2].set_ylim([0, 36])
     axs[2].set_yticks([1, 16, 32])
 
-    fig.tight_layout()
+    plt.subplots_adjust(hspace=0.45, wspace=0.25)
 
     return fig, axs
 
 
+### -------------------------------------- ###
 ### -------------------------------------- ###
 
 ### -------------- plotting -------------- ###
@@ -493,13 +526,13 @@ nthreads2plot = {
     "C++Threads": 128,
 }
 fig, axs = plot_wallclock_vs_total_num_supers(datasets, nthreads2plot, simulated_time)
-savename = path4plots / "wallclock_vs_totnsupers.png"
+savename = path4plots / "wallclock_vs_totnsupers.pdf"
 save_figure(savename)
 
 fig, axs = plot_wallclock_vs_total_num_supers(
     datasets, nthreads2plot, simulated_time, withlines=True
 )
-savename = path4plots / "wallclock_vs_totnsupers_withlines.png"
+savename = path4plots / "wallclock_vs_totnsupers_withlines.pdf"
 save_figure(savename)
 # %%
 ngbxs2plot = {
@@ -514,7 +547,7 @@ fig, axs = plot_wallclock_strong_scaling_for_total_num_supers(
     simulated_time,
     nsupers,
 )
-savename = path4plots / "strong_scaling_wallclock.png"
+savename = path4plots / "strong_scaling_wallclock.pdf"
 save_figure(savename)
 
 # %%
@@ -533,7 +566,7 @@ colors = {
 fig, axs = plot_speedup_strong_scaling_for_total_num_supers(
     datasets, ngbxs2plot, nsupers, colors=colors
 )
-savename = path4plots / "strong_scaling_speedup.png"
+savename = path4plots / "strong_scaling_speedup.pdf"
 save_figure(savename)
 ### -------------------------------------- ###
 

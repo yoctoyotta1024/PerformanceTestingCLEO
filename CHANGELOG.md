@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v2.9.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/abf4143ca48313b9dd13ac6b09fc045b0a1efa1f..v2.9.0) - 2026-02-27
+#### Features
+- add paper preprint reference - ([8e11b12](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/8e11b12b7c419368ed1a9de28cf44c4f233ba5fb)) - clara.bayley
+#### Refactoring
+- larger fonts and save as pdfs for thermo conditions - ([ac6ac10](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/ac6ac108c0092edb6731ac0a02a73a5259a5a8c9)) - clara.bayley
+- larger fonts and save as pdfs for memory plots - ([85cd91d](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/85cd91d0b47bda18cc1a99cdaa3f59185422f866)) - clara.bayley
+- larger fonts and save as pdfs - ([abf4143](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/abf4143ca48313b9dd13ac6b09fc045b0a1efa1f)) - clara.bayley
+
+- - -
+
 ## [v2.8.0](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/compare/77533c5452e44d4fdb1e3d059c0ff93389f00869..v2.8.0) - 2025-09-01
 #### Documentation
 - formatting - ([dbcb1b3](https://github.com/yoctoyotta1024/PerformanceTestingCLEO/commit/dbcb1b3b9622be34d7bde7866defd9e4849c4ef7)) - clara.bayley

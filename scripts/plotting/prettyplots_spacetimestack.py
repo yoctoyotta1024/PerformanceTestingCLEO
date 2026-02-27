@@ -60,6 +60,19 @@ datasets = {
 }
 ### -------------------------------------- ###
 
+# %% font sizes for beautifying plots
+SMALL_SIZE = 15
+MEDIUM_SIZE = 16
+BIG_SIZE = 18
+
+plt.rc("font", size=SMALL_SIZE)  # controls default text sizes
+plt.rc("axes", titlesize=BIG_SIZE)  # fontsize of the axes title
+plt.rc("axes", labelsize=BIG_SIZE)  # fontsize of the x and y labels
+plt.rc("xtick", labelsize=MEDIUM_SIZE)  # fontsize of the tick labels
+plt.rc("ytick", labelsize=MEDIUM_SIZE)  # fontsize of the tick labels
+plt.rc("legend", fontsize=MEDIUM_SIZE)  # legend fontsize
+plt.rc("figure", titlesize=BIG_SIZE)  # fontsize of the figure title
+
 
 # %%
 ### --------- plotting functions --------- ###
@@ -132,7 +145,7 @@ def plot_serial_space_time_stack_memory_allocations_vs_total_num_supers(
 
     ax0.set_xlabel("total number of superdroplets in domain / 10$^6$")
     ax0.set_ylabel("CPU high-water\nmemory consumption /GB", color="brown")
-    ax0b.set_ylabel("maximum memory allocation /GB", color="grey")
+    ax0b.set_ylabel("maximum memory\nallocation /GB", color="grey")
     ax0.set_xlim(left=0)
     ax0.set_ylim(bottom=0.0)
     ax0b.set_ylim(ax0.get_ylim())
@@ -152,7 +165,7 @@ def plot_serial_space_time_stack_memory_allocations_vs_total_num_supers(
         "Linear fit, m={:.3f}".format(m1.values),
     ]
     handles = [lines0[0], lines_fita[0], lines_fitb[0]]
-    leg = ax0.legend(labels=labels, handles=handles, loc="upper left")
+    leg = ax0.legend(labels=labels, handles=handles, loc=(0.01, 0.5))
     plt.setp(leg.get_texts()[1], color="brown")
     plt.setp(leg.get_texts()[2], color="grey")
 
@@ -165,14 +178,14 @@ def plot_space_time_stack_memory_allocations_vs_nthreads(
     nsupers: int,
     colors: Optional[dict] = None,
 ):
-    fig = plt.figure(figsize=(11, 7))
+    fig = plt.figure(figsize=(11, 11))
     gs = GridSpec(
         2,
         3,
         figure=fig,
         height_ratios=[1, 1],
         width_ratios=[8, 8, 1],
-        wspace=0.4,
+        wspace=0.6,
         hspace=0.4,
     )
     ax0 = fig.add_subplot(gs[0, :])
@@ -286,27 +299,22 @@ def plot_space_time_stack_memory_allocations_vs_nthreads(
             handles2[build] = lines_lab[0]
 
     ax1.set_xlim([0, 130])
-    ax1.set_xlabel("number of CPU threads")
+    ax1.set_xlabel("# CPU threads")
     ax1.set_ylabel(
         "CPU high-water memory\nconsumption relative to serial", color="brown"
     )
 
     ax2.set_xlim([0, 130])
-    ax2.set_xlabel("number of CPU threads")
+    ax2.set_xlabel("# CPU threads")
     ax2.set_ylabel("maximum memory\nallocation relative to serial", color="grey")
 
     legax1.legend(
-        handles=list(handles2.values()),
-        labels=list(handles2.keys()),
-        loc="upper center",
-        fontsize=9,
+        handles=list(handles2.values()), labels=list(handles2.keys()), loc=(-2.5, 0.5)
     )
 
     labels = [formatted_labels[i] for i in handles1.keys()]
-    labels[0] = f"#SDs = {labels[0]}"
-    legax2.legend(
-        handles=list(handles1.values()), labels=labels, loc=(-1.25, 0.15), fontsize=9
-    )
+    labels[0] = f"# SDs = {labels[0]}"
+    legax2.legend(handles=list(handles1.values()), labels=labels, loc=(-2.5, 0.0))
 
     return fig, [ax0, ax0b, ax1, ax2]
 
@@ -333,7 +341,7 @@ fig, axs = plot_space_time_stack_memory_allocations_vs_nthreads(
     nsupers,
     colors=colors,
 )
-savename = path4plots / "memory_vs_totnsupers.png"
+savename = path4plots / "memory_vs_totnsupers.pdf"
 save_figure(savename)
 
 # %%
@@ -346,7 +354,7 @@ for build in ngbxs2plot.keys():
     fig, axs = plot_space_time_stack_memory_allocations_vs_nthreads(
         datasets, {build: ngbxs2plot[build]}, nsupers
     )
-    savename = path4plots / f"memory_vs_totnsupers_{build}.png"
+    savename = path4plots / f"memory_vs_totnsupers_{build}.pdf"
     save_figure(savename)
 
 # %%

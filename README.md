@@ -1,4 +1,8 @@
-# Performance Testing of CLEO On Levante for First Model Description Paper
+# Performance Testing of CLEO On Levante for CLEO Model Description Paper-1
+
+Paper pre-print: "Cleo: The Fundamental Design of a New Superdroplet Method
+Model for High Computational Performance (v0.39.0)" by Bayley et al. 2026
+(https://doi.org/10.5194/egusphere-2025-4398)
 
 This repository has been made to document the performance tests of CLEO on Levante for CLEO's
 first model description paper.

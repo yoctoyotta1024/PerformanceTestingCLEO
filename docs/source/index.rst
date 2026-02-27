@@ -6,8 +6,10 @@ Welcome to PerformanceTestingCLEO's Documentation!
 ==================================================
 
 This repository has been made to document the performance tests of CLEO on Levante for CLEO's
-first model description paper. Specifically it tests the branch ``performance_testing_cleo``, which
-is the same as CLEO ``v0.39.0`` with the patch
+model description paper-1 (pre-print: "Cleo: The Fundamental Design of a New Superdroplet Method
+Model for High Computational Performance (v0.39.0)" by Bayley et al. 2026
+(https://doi.org/10.5194/egusphere-2025-4398)) Specifically it tests the branch
+``performance_testing_cleo``, which is the same as CLEO ``v0.39.0`` with the patch
 ``0001-refactor-comment-out-checking-initialisation-for-gbx.patch`` applied.
 
 To (locally) reproduce this project, simply clone this repository and ``CLEO`` and checkout ``CLEO``
